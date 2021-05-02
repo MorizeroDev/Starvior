@@ -490,7 +490,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 12.8, y: 7.19}
+    oldSize: {x: 12.8, y: 7.21}
     newSize: {x: 12.8, y: 7.19}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -712,7 +712,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u80CC\u666F\u6765\u6E90\uFF1A\u753B\u5E08\u6D1B\u5B50roko\r\n"
+  m_Text: "\u80CC\u666F\u6765\u6E90\uFF1A\u753B\u5E08arsenixc\n"
 --- !u!222 &930211967
 CanvasRenderer:
   m_ObjectHideFlags: 0

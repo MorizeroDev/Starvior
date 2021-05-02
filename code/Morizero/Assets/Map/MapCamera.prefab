@@ -160,6 +160,8 @@ MonoBehaviour:
   CheckFore: {fileID: 21300000, guid: fe20143c26e9f4649b433044571eec24, type: 3}
   TalkFore: {fileID: 21300000, guid: e800066301a9d2140841eef06c7dda5c, type: 3}
   CheckText: {fileID: 7293165566797132191}
+  BGM: {fileID: 0}
+  BGS: {fileID: 0}
 --- !u!1 &7293165566797132185
 GameObject:
   m_ObjectHideFlags: 0
@@ -322,7 +324,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: -9.441284, y: 17.309013}

@@ -32,6 +32,11 @@ public class Chara : MonoBehaviour
         pos = GameObject.Find("endDot").transform.localPosition;
         ex = pos.x - size.x; ey = pos.y + size.y * 1.7f; 
         if(Controller) MapCamera.Player = this;
+        if(Controller && MapCamera.initTp != -1){
+            dir = MapCamera.initDir;
+            UploadWalk();
+            this.transform.localPosition = GameObject.Find("tp" + MapCamera.initTp).transform.localPosition;
+        }
     }
 
     void UploadWalk(){

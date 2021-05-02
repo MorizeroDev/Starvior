@@ -24,22 +24,25 @@ public class CheckObj : MonoBehaviour
         if(MapCamera.HitCheck == this.gameObject) MapCamera.HitCheck = null;
     }
 
-    private void Update() {
-        if(MapCamera.HitCheck != this.gameObject) return;
-        if(Input.GetKeyUp(KeyCode.Z) || CheckBtnPressed){
-            // 测试对话喽
-            CheckBtnPressed = false;
-            if(MapCamera.SuspensionDrama) return;
-            if(CheckType == 1){
-                Dramas.Launch(Content,() => {
-                    
-                });
-            }else{
-                Dramas.LaunchCheck(Content,() => {
-                    
-                });
-            }
+    public bool IsActive(){
+        if(MapCamera.HitCheck != this.gameObject) return false;
+        bool ret = (Input.GetKeyUp(KeyCode.Z) || CheckBtnPressed);
+        if(MapCamera.SuspensionDrama) ret = false;
+        CheckBtnPressed = false;
+        return ret;
+    }
 
+    public virtual void Update() {
+        if(!IsActive()) return;
+
+        if(CheckType == 1){
+            Dramas.Launch(Content,() => {
+                
+            });
+        }else{
+            Dramas.LaunchCheck(Content,() => {
+                
+            });
         }
     }
 }

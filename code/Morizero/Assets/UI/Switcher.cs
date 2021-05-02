@@ -13,6 +13,8 @@ public class Switcher : MonoBehaviour
     public static bool isUsing = false;         // 是否在使用
     public static string destination;           // 目标场景
     public static LoadSceneMode loadMode;       // 加载方式
+    public delegate void SwitcherCallback();
+    public static SwitcherCallback Callback;
     public static int task;                     // 任务（0=加载，1=卸载）
     /// <summary>
     /// 场景切换器
@@ -20,8 +22,9 @@ public class Switcher : MonoBehaviour
     /// <param name="scene">场景名</param>
     /// <param name="mode">加载方式</param>
     /// <param name="Task">提交任务（0=加载，1=卸载）</param>
-    public static void Carry(string scene,LoadSceneMode mode = LoadSceneMode.Single,int task = 0){
+    public static void Carry(string scene,LoadSceneMode mode = LoadSceneMode.Single,int task = 0,SwitcherCallback callback = null){
         if(Switcher.isUsing) return;
+        Callback = callback;
         Switcher.isUsing = true; Switcher.destination = scene; Switcher.loadMode = mode; Switcher.task = task;
         GameObject fab = (GameObject)Resources.Load("Prefabs\\Loading");    // 载入母体
         GameObject box = Instantiate(fab,new Vector3(0,0,-1),Quaternion.identity);

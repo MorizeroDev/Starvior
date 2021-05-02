@@ -9,18 +9,90 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3311677961071670908, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
       propertyPath: Drama.Array.size
-      value: 1
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3311677961071670908, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
       propertyPath: Drama.Array.data[0].Speed
       value: 0.03
       objectReference: {fileID: 0}
     - target: {fileID: 3311677961071670908, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
+      propertyPath: Drama.Array.data[1].Speed
+      value: 0.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 3311677961071670908, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
+      propertyPath: Drama.Array.data[2].Speed
+      value: 0.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 3311677961071670908, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
+      propertyPath: Drama.Array.data[3].Speed
+      value: 0.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 3311677961071670908, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
+      propertyPath: Drama.Array.data[4].Speed
+      value: 0.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 3311677961071670908, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
+      propertyPath: Drama.Array.data[5].Speed
+      value: 0.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 3311677961071670908, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
+      propertyPath: Drama.Array.data[1].motion
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3311677961071670908, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
+      propertyPath: Drama.Array.data[2].motion
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3311677961071670908, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
+      propertyPath: Drama.Array.data[4].motion
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3311677961071670908, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
       propertyPath: Drama.Array.data[0].content
-      value: "\u5267\u672C\u8FD8\u6CA1\u5199\u597D\uFF0C\u5148\u4E0D\u8981\u548C\u4EBA\u5BB6\u8BF4\u8BDD\u5566\u3002"
+      value: "\u96E8\u4E00\u76F4\u5728\u4E0B\u5462\u3002"
+      objectReference: {fileID: 0}
+    - target: {fileID: 3311677961071670908, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
+      propertyPath: Drama.Array.data[1].content
+      value: "\u4E0D\u77E5\u9053\u5965\u533B\u751F\u600E\u4E48\u770B\u5462\uFF1F"
+      objectReference: {fileID: 0}
+    - target: {fileID: 3311677961071670908, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
+      propertyPath: Drama.Array.data[2].content
+      value: "\u65E0\u8BBA\u4EC0\u4E48\u65F6\u5019\u7A97\u5916\u90FD\u53EA\u6709\u7EC6\u7EC6\u7684\u5C0F\u96E8\u3002"
+      objectReference: {fileID: 0}
+    - target: {fileID: 3311677961071670908, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
+      propertyPath: Drama.Array.data[3].content
+      value: "\u5408\u4E0A\u773C\u775B\u603B\u89C9\u5F97\u81EA\u5DF1\u6C90\u6D74\u5176\u4E2D..."
+      objectReference: {fileID: 0}
+    - target: {fileID: 3311677961071670908, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
+      propertyPath: Drama.Array.data[4].content
+      value: "\u5F20\u5F00\u53CC\u773C\u53C8\u80FD\u770B\u5230\u660E\u4EAE\u7684\u706F\u5149\u3002"
+      objectReference: {fileID: 0}
+    - target: {fileID: 3311677961071670908, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
+      propertyPath: Drama.Array.data[5].content
+      value: "\u6709\u4E9B\u5B89\u5FC3\uFF0C\u4E5F\u6709\u70B9\u5931\u843D..."
       objectReference: {fileID: 0}
     - target: {fileID: 3311677961071670908, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
       propertyPath: Drama.Array.data[0].Character
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3311677961071670908, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
+      propertyPath: Drama.Array.data[1].Character
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3311677961071670908, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
+      propertyPath: Drama.Array.data[2].Character
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3311677961071670908, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
+      propertyPath: Drama.Array.data[3].Character
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3311677961071670908, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
+      propertyPath: Drama.Array.data[4].Character
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3311677961071670908, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
+      propertyPath: Drama.Array.data[5].Character
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3311677961390988444, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}

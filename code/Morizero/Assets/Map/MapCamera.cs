@@ -9,24 +9,41 @@ public class MapCamera : MonoBehaviour
     public static GameObject HitCheck;
     public static bool SuspensionDrama;
     public static MapCamera mcamera;
+    public static AudioSource bgm,bgs;
+    public static Chara.walkDir initDir = Chara.walkDir.Down;
+    public static int initTp = -1;
 
     public GameObject bindObj;
     public GameObject checkHint;
     public Sprite CheckFore,TalkFore;
     public Image CheckText;
+    public AudioClip BGM,BGS;
     private float sx = float.MinValue,sy = float.MaxValue,ex = float.MaxValue,ey = float.MinValue;
     
     private void Awake() {
+        if(bgm == null){
+            GameObject fab = (GameObject)Resources.Load("Prefabs\\MusicPlayer");    // 载入母体
+            GameObject box = Instantiate(fab,new Vector3(0,0,-1),Quaternion.identity);
+            bgm = box.GetComponent<AudioSource>();
+            box.SetActive(true);
+            box = Instantiate(fab,new Vector3(0,0,-1),Quaternion.identity);
+            bgs = box.GetComponent<AudioSource>();
+            box.SetActive(true);
+            bgs.volume = 0.5f;
+            DontDestroyOnLoad(bgm);
+            DontDestroyOnLoad(bgs);
+        }
+        if(BGM != null && bgm.clip != BGM) {bgm.clip = BGM; bgm.Play();}
+        if(BGS != null && bgs.clip != BGS) {bgs.clip = BGS; bgs.Play();}
         mcamera = this;
         Vector3 cornerPos=Camera.main.ViewportToWorldPoint(new Vector3(1f,1f,Mathf.Abs(-Camera.main.transform.position.z)));
         float w = (cornerPos.x - Camera.main.transform.position.x) * 2;
         float h = (cornerPos.y - Camera.main.transform.position.y) * 2;
         Vector3 size = new Vector3(w / 2,h / 2,0f);
         Vector3 pos = GameObject.Find("startDot").transform.localPosition;
-        sx = pos.x + size.x; sy = pos.y - size.y + 0.9f; 
+        sx = pos.x + size.x; sy = pos.y - size.y + 1.8f; 
         pos = GameObject.Find("endDot").transform.localPosition;
         ex = pos.x - size.x; ey = pos.y + size.y * 1f; 
-       
     }
     private void FixedUpdate() {
         Vector3 t = bindObj.transform.localPosition;
