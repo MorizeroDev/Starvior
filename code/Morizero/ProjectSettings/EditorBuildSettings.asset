@@ -6,8 +6,8 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Experiments/Lab.unity
-    guid: 45e4d1b98c661db45a87f34f1a1dc739
+    path: Assets/Map/ROOM_XUELAN.unity
+    guid: 8315ea68408bf854abff2652c7da8c3d
   - enabled: 1
     path: Assets/Startup/Startup.unity
     guid: 1c54eebc346f30448b3a73029ba8ba0c

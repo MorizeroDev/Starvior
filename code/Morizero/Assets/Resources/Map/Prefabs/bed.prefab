@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7175830897103349654}
   - component: {fileID: 7175830897103349653}
-  - component: {fileID: 7175830897103349655}
+  - component: {fileID: 7175830898249746174}
   m_Layer: 0
   m_Name: bed
   m_TagString: Untagged
@@ -83,8 +83,8 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!61 &7175830897103349655
-BoxCollider2D:
+--- !u!60 &7175830898249746174
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -106,6 +106,18 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.48, y: 0.94}
-  m_EdgeRadius: 0
+  m_Points:
+    m_Paths:
+    - - {x: -0.017815053, y: 0.46798646}
+      - {x: -0.23065613, y: 0.47866514}
+      - {x: -0.23230188, y: -0.4222645}
+      - {x: -0.1780194, y: -0.42112228}
+      - {x: -0.1734705, y: -0.47559357}
+      - {x: -0.12504661, y: -0.47642952}
+      - {x: -0.1243971, y: -0.42629695}
+      - {x: 0.11959791, y: -0.4273459}
+      - {x: 0.1219396, y: -0.47940823}
+      - {x: 0.16995473, y: -0.48}
+      - {x: 0.16806746, y: -0.4242694}
+      - {x: 0.23466061, y: -0.41864252}
+      - {x: 0.22798644, y: 0.4786652}

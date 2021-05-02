@@ -73,9 +73,9 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 3
-  m_Sprite: {fileID: 36465208165432377, guid: a8a561db9af4e7a409f19f34090aa2ae, type: 3}
-  m_Color: {r: 0.47050548, g: 0.52452266, b: 0.8396226, a: 1}
+  m_SortingOrder: 6
+  m_Sprite: {fileID: 6702276555087476945, guid: 50dc36ac2bdce9d4b983f79b3d32140f, type: 3}
+  m_Color: {r: 0.93773586, g: 0.9570691, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -100,6 +100,7 @@ MonoBehaviour:
   Character: "\u4E16\u539F"
   Controller: 1
   dir: 0
+  MoveArrow: {fileID: 0}
 --- !u!60 &5145452784396790147
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -125,8 +126,8 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 0.031633615, y: 0.20964222}
-      - {x: -0.09272132, y: 0.17846043}
+    - - {x: 0.0009355694, y: 0.07150106}
+      - {x: -0.06816288, y: 0.04031922}
       - {x: -0.06431662, y: -0.027946949}
       - {x: -0.03349448, y: -0.06404668}
       - {x: -0.06615824, y: -0.16912898}
@@ -135,7 +136,7 @@ PolygonCollider2D:
       - {x: 0.06564507, y: -0.20620526}
       - {x: 0.061332367, y: -0.07926935}
       - {x: 0.07792624, y: -0.036414802}
-      - {x: 0.07844928, y: 0.15912347}
+      - {x: 0.05696065, y: 0.03940104}
 --- !u!50 &5145452784396790152
 Rigidbody2D:
   serializedVersion: 4

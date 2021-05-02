@@ -29,7 +29,7 @@ public class Dramas : MonoBehaviour
     // 对话集
     [System.Serializable]
     public struct DramaData{
-        public enum Characters{ 林桔,兮,奈美,世原,艾伦,雪兰 }
+        public enum Characters{ 林桔,兮,奈美,世原,艾伦,雪兰,旁白 }
         public enum Motion{ Enter,Leap,Focus }
         public Characters Character;
         public string content;
@@ -51,6 +51,18 @@ public class Dramas : MonoBehaviour
         box.GetComponent<Canvas>().worldCamera = Camera.current;
         box.SetActive(true);
     }
+    public static void LaunchCheck(string content,DramaCallback Callback){
+        callback = Callback;
+        GameObject fab = (GameObject)Resources.Load("Dramas\\Check");    // 载入母体
+        GameObject box = Instantiate(fab,new Vector3(0,0,-1),Quaternion.identity);
+        box.GetComponent<Canvas>().worldCamera = Camera.current;
+        Dramas drama = box.transform.Find("Dialog").GetComponent<Dramas>();
+        DramaData data = drama.Drama[0];
+        data.content = content;
+        drama.Drama[0] = data;
+        drama.Awake();
+        box.SetActive(true);
+    }
     public void DisposeWords(){
         foreach(GameObject word in DisWords) Destroy(word);
     }
@@ -65,18 +77,26 @@ public class Dramas : MonoBehaviour
         Effect = Drama[DramaIndex].Effect;
 
         Title.text = character; 
-        Character.sprite = Resources.Load<Sprite>("Characters\\" + character);
-        Character.SetNativeSize();
+        if(character != "旁白"){
+            Character.sprite = Resources.Load<Sprite>("Characters\\" + character);
+            Character.SetNativeSize();
+        }
 
         x = sWord.localPosition.x;
         y = sWord.localPosition.y;
         step = sWord.sizeDelta.x;
         WordIndex = 0;
     }
+    public void DramaDone(){
+        Destroy(this.gameObject);
+    }
     void Update()
     {
-        if(Input.GetMouseButtonUp(0)){
+        MapCamera.SuspensionDrama = true;
+        if(Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.X)){
             if(DialogState == 0) Speed = 0;
+        }
+        if(Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.Z)){
             if(DialogState == 1) DialogState = 2;
         }
         if(DialogState == 2){
@@ -84,6 +104,9 @@ public class Dramas : MonoBehaviour
             DramaIndex++;
             if(DramaIndex >= Drama.Count){
                 Debug.Log("Done!");
+                DisposeWords();
+                this.transform.parent.GetComponent<Animator>().Play("ExitDrama",0);
+                callback();
                 return;
             }
             ReadDrama();
@@ -96,7 +119,7 @@ public class Dramas : MonoBehaviour
                 DialogState = 1;
                 return;
             }
-            GameObject word = Instantiate(WordChild,new Vector3(0,0,-1),Quaternion.identity,this.transform);
+            GameObject word = Instantiate(WordChild,new Vector3(0,0,-1),new Quaternion(0,0,0,0),this.transform);
             word.GetComponent<RectTransform>().localPosition = new Vector3(x,y,0);
             word.GetComponent<Text>().text = DisplayText[i].ToString();
             word.GetComponent<WordEffect>().basex = x;
