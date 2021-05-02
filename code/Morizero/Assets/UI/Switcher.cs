@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Threading;
 using System.Threading.Tasks;
+using System;
 
 public class Switcher : MonoBehaviour
 {
@@ -19,14 +20,21 @@ public class Switcher : MonoBehaviour
     /// <param name="scene">场景名</param>
     /// <param name="mode">加载方式</param>
     /// <param name="Task">提交任务（0=加载，1=卸载）</param>
-    public async static Task Carry(string scene,LoadSceneMode mode = LoadSceneMode.Single,int task = 0){
-        if(isUsing) return;
-        isUsing = true; destination = scene; loadMode = mode; Switcher.task = task;
+    public static void Carry(string scene,LoadSceneMode mode = LoadSceneMode.Single,int task = 0){
+        if(Switcher.isUsing) return;
+        Switcher.isUsing = true; Switcher.destination = scene; Switcher.loadMode = mode; Switcher.task = task;
         GameObject fab = (GameObject)Resources.Load("Prefabs\\Loading");    // 载入母体
-        Instantiate(fab,new Vector3(0,0,-1),Quaternion.identity).SetActive(true);
-        await Task.Run(() => {
-            while(isUsing) Thread.Sleep(100);
-        });
+        GameObject box = Instantiate(fab,new Vector3(0,0,-1),Quaternion.identity);
+        box.SetActive(true);
+        //box.GetComponent<Switcher>().WaitFor();
+    }
+    [Obsolete]
+    void WaitFor(){
+        StartCoroutine(WaitForAction());
+    }
+    IEnumerator WaitForAction() {
+        while(isUsing)
+            yield return new WaitForSeconds(0.1f);
     }
     // 第一过程
     void Stage1(){
@@ -36,7 +44,6 @@ public class Switcher : MonoBehaviour
             SceneManager.UnloadSceneAsync(destination);         // 异步卸载
         }
         animator.SetFloat("rate",0f);                           // 暂停动画
-        
     }
     // 第二过程（终止过程）
     void Stage2(){

@@ -5,62 +5,97 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Threading;
 using System.Threading.Tasks;
+using System;
 
+public delegate void DramaCallback();
 public class Dramas : MonoBehaviour
 {
-    #region 动态部分
+    // 剧本控制器
+    public static DramaCallback callback;
     public RectTransform sWord;                     // 起始对话框位置
     public RectTransform eWord;                     // 结束对话框位置
     public Text Title;                              // 对话框标题
     public Image Character;                         // 立绘
     public GameObject WordChild;                    // 对话框文本母体
     public Animator Motion;                         // 立绘动画
-    #endregion
-    private static string DisplayText;              // 要显示的对话
-    private static int WaitTicks;                   // 等待计数
-    private static int DialogState;                 // 对话框状态（-1=未就绪，0=等待显示，1=等待确认，2=完毕）
-    public static Dramas Drama;                     // 剧本控制器
-    public static string motion;
-    public static WordEffect.Effect Effect;
+    private float Speed;                            // 等待计数
+    private int DialogState;                        // 对话框状态（-1=未就绪，0=等待显示，1=等待确认，2=完毕）
+    private string motion;
+    private WordEffect.Effect Effect;
+    private string character;
+    private string DisplayText;
     // 记录的文本对象
     private static List<GameObject> DisWords = new List<GameObject>();
-    public async static Task Prepare(){
-        // 载入对话框
-        Drama = null;
-        await Switcher.Carry("Drama",LoadSceneMode.Additive);
-        // 初始化
-        DisplayText = ""; DialogState = -1; WaitTicks = 100;
-        // 等待状态完毕
-        await Task.Run(() => {
-            while(Drama == null) Thread.Sleep(100);
-        });
-        Debug.Log("[Drama] prepred!");
+    // 对话集
+    [System.Serializable]
+    public struct DramaData{
+        public enum Characters{ 林桔,兮,奈美,世原,艾伦,雪兰 }
+        public enum Motion{ Enter,Leap,Focus }
+        public Characters Character;
+        public string content;
+        [Range(0.0f,1.0f)]
+        public float Speed;
+        public WordEffect.Effect Effect;
+        public Motion motion;
     }
-    public async static Task End(){
-        // 卸载对话框
-        await Switcher.Carry("Drama",LoadSceneMode.Additive,1);
+    private int DramaIndex = 0,WordIndex = 0;
+    private float delTime = 0;
+    public List<DramaData> Drama;
+
+    private float x = 0,y = 0,step = 0;
+
+    public static void Launch(string DramaName,DramaCallback Callback){
+        callback = Callback;
+        GameObject fab = (GameObject)Resources.Load("Dramas\\" + DramaName);    // 载入母体
+        GameObject box = Instantiate(fab,new Vector3(0,0,-1),Quaternion.identity);
+        box.GetComponent<Canvas>().worldCamera = Camera.current;
+        box.SetActive(true);
     }
-    public async static Task Msg(string character,string content,string motion,WordEffect.Effect effect = WordEffect.Effect.None){
-        // 销毁旧的文本
-        foreach(GameObject go in DisWords) Destroy(go);
-        DisWords.Clear();
-        // 初始化
-        DisplayText = content; DialogState = 0; WaitTicks = 100; Effect = effect;
-        Dramas.motion = motion;
-        // 启动
-        Drama.Display(character);
-        // 等待状态完毕
-        await Task.Run(() => {
-            while(DialogState != 2) Thread.Sleep(100);
-        });
+    public void DisposeWords(){
+        foreach(GameObject word in DisWords) Destroy(word);
     }
-    public async void Display(string character){
+    public void ReadDrama(){
+        DisposeWords();
+
+        DialogState = 0;
+        character = Enum.GetName(typeof(DramaData.Characters),Drama[DramaIndex].Character);
+        Motion.Play("Drama_" + Enum.GetName(typeof(DramaData.Motion),Drama[DramaIndex].motion),0);
+        Speed = Drama[DramaIndex].Speed;
+        DisplayText = Drama[DramaIndex].content;
+        Effect = Drama[DramaIndex].Effect;
+
         Title.text = character; 
         Character.sprite = Resources.Load<Sprite>("Characters\\" + character);
         Character.SetNativeSize();
-        Motion.Play(motion,0);
-        float x = sWord.localPosition.x,y = sWord.localPosition.y,step = sWord.sizeDelta.x;
-        for(int i = 0;i < DisplayText.Length;i++){
+
+        x = sWord.localPosition.x;
+        y = sWord.localPosition.y;
+        step = sWord.sizeDelta.x;
+        WordIndex = 0;
+    }
+    void Update()
+    {
+        if(Input.GetMouseButtonUp(0)){
+            if(DialogState == 0) Speed = 0;
+            if(DialogState == 1) DialogState = 2;
+        }
+        if(DialogState == 2){
+            DialogState = 0;
+            DramaIndex++;
+            if(DramaIndex >= Drama.Count){
+                Debug.Log("Done!");
+                return;
+            }
+            ReadDrama();
+        }
+        delTime += Time.deltaTime;
+        if(delTime >= Speed){
+            delTime = 0;
+            int i = WordIndex;
+            if(i >= DisplayText.Length){
+                DialogState = 1;
+                return;
+            }
             GameObject word = Instantiate(WordChild,new Vector3(0,0,-1),Quaternion.identity,this.transform);
             word.GetComponent<RectTransform>().localPosition = new Vector3(x,y,0);
             word.GetComponent<Text>().text = DisplayText[i].ToString();
@@ -74,26 +109,10 @@ public class Dramas : MonoBehaviour
                 x = sWord.localPosition.x;
                 y -= step*1.2f;
             }
-            await Task.Run(() => {
-                Thread.Sleep(WaitTicks);
-            });
-        }
-        DialogState = 1;
-    }
-    void Start()
-    {
-        
-    }
-    void Update()
-    {
-        if(Input.GetMouseButtonUp(0)){
-            if(DialogState == 0) WaitTicks = 0;
-            if(DialogState == 1) DialogState = 2;
+            WordIndex++;
         }
     }
     private void Awake() {
-        Dramas.Drama = this.gameObject.GetComponent<Dramas>();
-        DialogState = 0;
-        Debug.Log("[Drama] Drama filled!");
+        ReadDrama();
     }
 }
