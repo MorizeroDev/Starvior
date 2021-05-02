@@ -6,15 +6,15 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Map/ROOM_XUELAN.unity
-    guid: 8315ea68408bf854abff2652c7da8c3d
-  - enabled: 1
     path: Assets/Startup/Startup.unity
     guid: 1c54eebc346f30448b3a73029ba8ba0c
   - enabled: 1
-    path: Assets/Drama/Drama.unity
-    guid: 20ab575956ba7cf4e8154a58b214bbbf
+    path: Assets/Map/ROOM_XUELAN.unity
+    guid: 8315ea68408bf854abff2652c7da8c3d
   - enabled: 1
     path: Assets/Map/Corridor_3F.unity
     guid: b7584772b115578419b145dceaa15457
+  - enabled: 1
+    path: Assets/Drama/Drama.unity
+    guid: 20ab575956ba7cf4e8154a58b214bbbf
   m_configObjects: {}
