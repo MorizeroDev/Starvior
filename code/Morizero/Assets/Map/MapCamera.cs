@@ -20,7 +20,12 @@ public class MapCamera : MonoBehaviour
     public AudioClip BGM,BGS;
     private float sx = float.MinValue,sy = float.MaxValue,ex = float.MaxValue,ey = float.MinValue;
     
+    //游戏的FPS，可在属性窗口中修改
+    public int targetFrameRate = 60;
     private void Awake() {
+        //修改当前的FPS
+        Application.targetFrameRate = targetFrameRate;
+
         if(bgm == null){
             GameObject fab = (GameObject)Resources.Load("Prefabs\\MusicPlayer");    // 载入母体
             GameObject box = Instantiate(fab,new Vector3(0,0,-1),Quaternion.identity);
