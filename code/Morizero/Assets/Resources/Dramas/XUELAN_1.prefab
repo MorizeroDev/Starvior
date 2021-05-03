@@ -77,7 +77,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3311677961071670908, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
       propertyPath: Drama.Array.data[1].Character
-      value: 5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3311677961071670908, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
       propertyPath: Drama.Array.data[2].Character
