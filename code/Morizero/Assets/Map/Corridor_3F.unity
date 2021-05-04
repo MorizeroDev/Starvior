@@ -1897,6 +1897,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Board (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 1616234090020304700, guid: 500cc8f144756cc4eab07f7e330eb59f, type: 3}
+      propertyPath: m_SortingOrder
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 1616234090020304701, guid: 500cc8f144756cc4eab07f7e330eb59f, type: 3}
       propertyPath: m_RootOrder
       value: 36
@@ -3292,6 +3296,10 @@ PrefabInstance:
     - target: {fileID: 1616234090020304689, guid: 500cc8f144756cc4eab07f7e330eb59f, type: 3}
       propertyPath: m_Name
       value: Board
+      objectReference: {fileID: 0}
+    - target: {fileID: 1616234090020304700, guid: 500cc8f144756cc4eab07f7e330eb59f, type: 3}
+      propertyPath: m_SortingOrder
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1616234090020304701, guid: 500cc8f144756cc4eab07f7e330eb59f, type: 3}
       propertyPath: m_RootOrder

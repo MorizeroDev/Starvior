@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class Chara : MonoBehaviour
 {
@@ -63,15 +64,7 @@ public class Chara : MonoBehaviour
             Vector3 mpos = MapCamera.mcamera.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
             mpos.z = 0;
             // 检测点击的位置是否是地板
-            RaycastHit2D[] hit = Physics2D.RaycastAll(mpos,new Vector2(0,0));
-            if(hit.Length > 0){
-                for(int i = 0;i < hit.Length;i++){
-                    if(hit[i].transform.gameObject.layer != 0){
-                        if(hit[i].transform.gameObject.name == "btnBack") CheckObj.CheckBtnPressed = true;
-                        return;
-                    } 
-                }
-            }
+            if (EventSystem.current.IsPointerOverGameObject()) return;
             tMode = true;tx = mpos.x;ty = mpos.y;lx = 0;ly = 0;
             MoveArrow.transform.localPosition = mpos;
             MoveArrow.SetActive(true);
