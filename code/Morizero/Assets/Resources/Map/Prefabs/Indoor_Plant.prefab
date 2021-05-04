@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1477910215}
   - component: {fileID: 1477910214}
   m_Layer: 0
-  m_Name: SF_Outside_B_060
+  m_Name: Indoor_Plant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -73,7 +73,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 3
+  m_SortingOrder: 8
   m_Sprite: {fileID: 21300000, guid: 3b76eb5865b640449acfe08676eb838f, type: 3}
   m_Color: {r: 0.93773586, g: 0.9570691, b: 1, a: 1}
   m_FlipX: 0
@@ -110,22 +110,10 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 0.1271699, y: 0.09466736}
-      - {x: 0.07933472, y: 0.20316789}
-      - {x: -0.09783532, y: 0.1916684}
-      - {x: -0.16400202, y: 0.10783523}
-      - {x: -0.17700094, y: 0.046166882}
-      - {x: -0.16333686, y: 0.01766629}
-      - {x: -0.16333674, y: -0.01700107}
-      - {x: -0.15838265, y: -0.022960275}
-      - {x: -0.103676796, y: -0.08620933}
-      - {x: -0.11083412, y: -0.13933466}
-      - {x: -0.073833175, y: -0.18933472}
-      - {x: 0.027666349, y: -0.18933472}
-      - {x: 0.068500474, y: -0.17}
-      - {x: 0.07950652, y: -0.10745737}
-      - {x: 0.13879836, y: -0.030379891}
-      - {x: 0.16166836, y: -0.008500535}
+    - - {x: 0.024757922, y: -0.18952586}
+      - {x: 0.076774344, y: -0.06054297}
+      - {x: -0.12855889, y: -0.059240922}
+      - {x: -0.0923136, y: -0.18915951}
 --- !u!61 &1477910215
 BoxCollider2D:
   m_ObjectHideFlags: 0

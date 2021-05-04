@@ -48,17 +48,20 @@ MonoBehaviour:
   Range: 5
   Color: {r: 1, g: 1, b: 1, a: 1}
   Intensity: 1
+  SortingLayer: Default
   SortingOrder: -1000
-  FilteringSettings:
-    useTriggers: 0
+  filteringSettings:
     useLayerMask: 1
     layerMask:
       serializedVersion: 2
-      m_Bits: 4294967295
-  OptimizationSettings:
+      m_Bits: 1
+  optimizationSettings:
+    CalculateOnlyOnce: 0
     OptimizedRaycasting: 1
     CameraCulling: {fileID: 0}
+    ChooseMainCamera: 0
   position: {x: 0, y: 0}
+  TransformIsDirty: 1
   needUpdate: 0
   ContactFilter:
     useTriggers: 0
@@ -96,6 +99,8 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -120,3 +125,4 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -1000
+  m_AdditionalVertexStreams: {fileID: 0}
