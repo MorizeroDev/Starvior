@@ -88,7 +88,7 @@ public class Chara : MonoBehaviour
         }
         Vector3 pos = transform.localPosition;
 
-        if(tMode){
+        if(tMode && false){
             if(Mathf.Abs(lx - pos.x) <= 0.04f && Mathf.Abs(ly - pos.y) <= 0.04f){
                 tMode = false;
                 UploadWalk();
