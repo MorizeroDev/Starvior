@@ -40,6 +40,8 @@ namespace TRayMapBuilder_myNamespace
             size = vector2Int;
         }
         public bool[,] buffer;
+        public Vector2Int startPoint;
+        public Vector2Int endPoint;
         public Vector2Int size; //v2 tells how big is this Raymap is
 
         public void LogDump()
@@ -117,9 +119,60 @@ namespace TRayMapBuilder_myNamespace
         private void _Shot(Vector2 outArrowPosition)
         {
             centerPos = cT.position;
+
             Vector2Int sizeInt = new Vector2Int((int)(pictureSize.x / tileSize.x), (int)(pictureSize.y / tileSize.y));
             rayMap = new RayMap(sizeInt);
+
             Vector2Int centerPosInt = new Vector2Int(sizeInt.x / 2, sizeInt.y / 2);
+            rayMap.startPoint = centerPosInt;
+
+            //Vector2ToVector2IntInRayMap
+            #region 
+            if (outArrowPosition.x> (centerPos.x - tileSize.x / 2))
+            {
+                int t_x = 0;
+                for(; outArrowPosition.x > (centerPos.x - tileSize.x/2) ; outArrowPosition -= new Vector2(tileSize.x, 0))
+                {
+                    t_x++;
+                }
+
+                rayMap.endPoint = new Vector2Int(t_x + centerPosInt.x, 0);
+            }
+            else
+            {
+                int t_x = 0;
+                for (; outArrowPosition.x < (centerPos.x + tileSize.x / 2); outArrowPosition += new Vector2(tileSize.x, 0))
+                {
+                    t_x--;
+                }
+
+                rayMap.endPoint = new Vector2Int(t_x + centerPosInt.x, 0);
+            }
+
+            if (outArrowPosition.y > (centerPos.y - tileSize.y / 2))
+            {
+                int t_y = 0;
+                for (; outArrowPosition.y > (centerPos.y - tileSize.y / 2); outArrowPosition -= new Vector2(0, tileSize.y))
+                {
+                    t_y++;
+                }
+
+                rayMap.endPoint += new Vector2Int(0, t_y + centerPosInt.y);
+            }
+            else
+            {
+                int t_y = 0;
+                for (; outArrowPosition.y < (centerPos.y - tileSize.y / 2); outArrowPosition += new Vector2(0, tileSize.y))
+                {
+                    t_y--;
+                }
+
+                rayMap.endPoint += new Vector2Int(0, t_y + centerPosInt.y);
+            }
+
+            Debug.Log("centerPoint: " + rayMap.startPoint.x + " " + rayMap.startPoint.y);
+            Debug.Log("endPoint: " + rayMap.endPoint.x + " " + rayMap.endPoint.y);
+            #endregion
 
             TempFather = new GameObject("Father_TempObjects");
             TempFather.transform.position = new Vector3(0, 0, 0);
@@ -133,7 +186,7 @@ namespace TRayMapBuilder_myNamespace
                 }
             }
 
-            rayMap.LogDump();
+            //rayMap.LogDump();
             //EditorControl.EditorPause();
         }
 
@@ -150,12 +203,13 @@ namespace TRayMapBuilder_myNamespace
         { 
             if (allowScanStatus)
             {
-                //if (Input.GetKeyDown(KeyCode.J))
-                //{
-                //    centerPos = gameObject.transform.position;
-                //    rayMap = _Shot(tileSize, centerPos, pictureSize);
-                //    rayMap.LogDump();
-                //}
+                if (Input.GetKeyDown(KeyCode.C))
+                {
+                    TDTempFather();
+                    //centerPos = gameObject.transform.position;
+                    //rayMap = _Shot(tileSize, centerPos, pictureSize);
+                    //rayMap.LogDump();
+                }
             }
             else { }
         }
