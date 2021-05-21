@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEditor;
-
+using EditorControl_myNamespace;
 
 #region
 namespace EditorControl_myNamespace
@@ -57,8 +57,16 @@ namespace TRayMapBuilder_myNamespace
         }
     }
 
+
+    //----------------------------------------MONO----------------------------------------//
     public class TRayMapBuilder : MonoBehaviour
     {
+        public GameObject character; // Main Player's character Object
+        private Transform cT;
+
+        public Chara chara;
+        public UnityEvent<Vector2> inPosEvent = new UnityEvent<Vector2>();
+
         public Vector2 anchorPosition;
         public GameObject prefab;
 
@@ -67,7 +75,10 @@ namespace TRayMapBuilder_myNamespace
         public bool allowScanStatus = true;
 
         public Vector2 tileSize;
-        public Vector2 centerPos;
+        private Vector2 centerPos;
+        /// <summary>
+        /// floatVector2, for how big this area u want to search (RayCast effect area)
+        /// </summary>
         public Vector2 pictureSize;
         
 
@@ -103,10 +114,11 @@ namespace TRayMapBuilder_myNamespace
             if (colorMe) t.GetComponent<SpriteRenderer>().color = Color.red;
         }
 
-        private RayMap _Shot(Vector2 tileSize,Vector2 centerPos,Vector2 pictureSize)
+        private void _Shot(Vector2 outArrowPosition)
         {
+            centerPos = cT.position;
             Vector2Int sizeInt = new Vector2Int((int)(pictureSize.x / tileSize.x), (int)(pictureSize.y / tileSize.y));
-            RayMap rayMap = new RayMap(sizeInt);
+            rayMap = new RayMap(sizeInt);
             Vector2Int centerPosInt = new Vector2Int(sizeInt.x / 2, sizeInt.y / 2);
 
             TempFather = new GameObject("Father_TempObjects");
@@ -117,17 +129,20 @@ namespace TRayMapBuilder_myNamespace
                 for(int j=0;j<sizeInt.y;j++)
                 {
                     rayMap.buffer[i,j] = ReturnRayResult(new Vector2( ((i - centerPosInt.x) * tileSize.x)+ centerPos.x ,   ((j - centerPosInt.y) * tileSize.y) + centerPos.y ));
-                    //TCreateObject(new Vector2(((i - centerPosInt.x) * tileSize.x) + centerPos.x, ((j - centerPosInt.y) * tileSize.y) + centerPos.y), rayMap.buffer[i, j],TempFather);
+                    TCreateObject(new Vector2(((i - centerPosInt.x) * tileSize.x) + centerPos.x, ((j - centerPosInt.y) * tileSize.y) + centerPos.y), rayMap.buffer[i, j],TempFather);
                 }
             }
-            return rayMap;
+
+            rayMap.LogDump();
+            //EditorControl.EditorPause();
         }
 
         // Start is called before the first frame update
         void Start()
         {
-            rayMap = _Shot(tileSize,centerPos,pictureSize);
-            rayMap.LogDump();
+            cT = character.transform;
+            centerPos = cT.position;
+            chara.inPosEvent.AddListener(_Shot);
         }
 
         // Update is called once per frame

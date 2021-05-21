@@ -45,7 +45,17 @@ namespace testMovements_myNamespace
             cT = character.transform;
             preRestingPos = cT.position;
             tileSize = character.GetComponent<TRayMapBuilder>().tileSize;
-
+            EnqueueStatus(Status.movingRight);/**/
+            EnqueueStatus(Status.movingDown);/**/
+            EnqueueStatus(Status.movingLeft);/**/
+            EnqueueStatus(Status.movingUp);/**/
+            EnqueueStatus(Status.movingRight);/**/
+            EnqueueStatus(Status.movingRight);/**/
+            EnqueueStatus(Status.movingRight);/**/
+            EnqueueStatus(Status.movingDown);/**/
+            EnqueueStatus(Status.movingDown);/**/
+            EnqueueStatus(Status.movingLeft);/**/
+            EnqueueStatus(Status.movingUp);/**/
         }
 
         public void BlastStatusQueue() //danger motion

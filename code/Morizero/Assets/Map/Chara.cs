@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-
+using TRayMapBuilder_myNamespace;
+using UnityEngine.Events;
 // 角色控制器
 public class Chara : MonoBehaviour
 {
+    public Vector2 outmPos;
+    public UnityEvent<Vector2> inPosEvent = new UnityEvent<Vector2>();
+    
     // 朝向枚举
     public enum walkDir{
         Down,Left,Right,Up
@@ -66,6 +70,15 @@ public class Chara : MonoBehaviour
         // 设定帧
         image.sprite = Animation[(int)dir * 3 + walkBuff];
     }
+    private void Update()
+    {
+        if(Input.GetMouseButtonUp(0))
+        {
+            //shoot parameter via UnityEvent
+            inPosEvent.Invoke(outmPos);
+        }
+    }
+
     void FixedUpdate()
     {
         // 如果不是玩家
@@ -85,6 +98,8 @@ public class Chara : MonoBehaviour
             // 设置点击反馈
             MoveArrow.transform.localPosition = mpos;
             MoveArrow.SetActive(true);
+            //prepare for Event to TRayMapBuilder
+            outmPos = mpos;
         }
         Vector3 pos = transform.localPosition;
 
