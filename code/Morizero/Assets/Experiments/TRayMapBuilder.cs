@@ -6,7 +6,31 @@ using UnityEngine.EventSystems;
 using UnityEditor;
 
 
-namespace TRayMapBuilder
+#region
+namespace EditorControl_myNamespace
+{
+    public static class EditorControl
+    {
+        public static void EditorPlay()
+        {
+            EditorApplication.isPlaying = true;
+        }
+
+        public static void EditorPause()
+        {
+            EditorApplication.isPaused = true;
+        }
+
+        public static void EditorStop()
+        {
+            EditorApplication.isPlaying = false;
+        }
+    }
+}
+#endregion
+
+
+namespace TRayMapBuilder_myNamespace
 {
     public class RayMap
     {
@@ -45,22 +69,13 @@ namespace TRayMapBuilder
         public Vector2 tileSize;
         public Vector2 centerPos;
         public Vector2 pictureSize;
-        #region
-        public static void EditorPlay()
-        {
-            EditorApplication.isPlaying = true;
-        }
+        
 
-        public static void EditorPause()
+        private GameObject TempFather;
+        private void TDTempFather()
         {
-            EditorApplication.isPaused = true;
+            Destroy(TempFather);
         }
-
-        public static void EditorStop()
-        {
-            EditorApplication.isPlaying = false;
-        }
-        #endregion
 
         private bool ReturnRayResult(Vector2 position)
         {
@@ -80,9 +95,10 @@ namespace TRayMapBuilder
             return false;
         }
 
-        private void TCreateObject(Vector2 position,bool colorMe)
+        private void TCreateObject(Vector2 position, bool colorMe,GameObject father)
         {
             GameObject t = Instantiate(prefab);
+            t.transform.parent = father.transform;
             t.transform.position = position;
             if (colorMe) t.GetComponent<SpriteRenderer>().color = Color.red;
         }
@@ -92,13 +108,16 @@ namespace TRayMapBuilder
             Vector2Int sizeInt = new Vector2Int((int)(pictureSize.x / tileSize.x), (int)(pictureSize.y / tileSize.y));
             RayMap rayMap = new RayMap(sizeInt);
             Vector2Int centerPosInt = new Vector2Int(sizeInt.x / 2, sizeInt.y / 2);
+
+            TempFather = new GameObject("Father_TempObjects");
+            TempFather.transform.position = new Vector3(0, 0, 0);
             
             for(int i=0;i<sizeInt.x;i++)
             {
                 for(int j=0;j<sizeInt.y;j++)
                 {
                     rayMap.buffer[i,j] = ReturnRayResult(new Vector2( ((i - centerPosInt.x) * tileSize.x)+ centerPos.x ,   ((j - centerPosInt.y) * tileSize.y) + centerPos.y ));
-                    TCreateObject(new Vector2(((i - centerPosInt.x) * tileSize.x) + centerPos.x, ((j - centerPosInt.y) * tileSize.y) + centerPos.y), rayMap.buffer[i, j]);
+                    //TCreateObject(new Vector2(((i - centerPosInt.x) * tileSize.x) + centerPos.x, ((j - centerPosInt.y) * tileSize.y) + centerPos.y), rayMap.buffer[i, j],TempFather);
                 }
             }
             return rayMap;
@@ -109,7 +128,6 @@ namespace TRayMapBuilder
         {
             rayMap = _Shot(tileSize,centerPos,pictureSize);
             rayMap.LogDump();
-            EditorPause();
         }
 
         // Update is called once per frame
@@ -117,7 +135,12 @@ namespace TRayMapBuilder
         { 
             if (allowScanStatus)
             {
-
+                //if (Input.GetKeyDown(KeyCode.J))
+                //{
+                //    centerPos = gameObject.transform.position;
+                //    rayMap = _Shot(tileSize, centerPos, pictureSize);
+                //    rayMap.LogDump();
+                //}
             }
             else { }
         }
