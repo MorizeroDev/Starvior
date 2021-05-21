@@ -5,7 +5,7 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEditor;
 using EditorControl_myNamespace;
-
+using UnityEngine.UI;
 #region
 namespace EditorControl_myNamespace
 {
@@ -34,6 +34,7 @@ namespace TRayMapBuilder_myNamespace
 {
     public class RayMap
     {
+
         public RayMap(Vector2Int vector2Int)
         {
             buffer = new bool[vector2Int.x, vector2Int.y];
@@ -44,18 +45,19 @@ namespace TRayMapBuilder_myNamespace
         public Vector2Int endPoint;
         public Vector2Int size; //v2 tells how big is this Raymap is
 
-        public void LogDump()
+        public void LogDump(Text t)
         {
             string s = "";
-            for(int i = 0; i < size.x; i++)
+            for (int j=size.y-1;j>=0;j--)
             {
-                for (int j=0;j<size.y;j++)
+                for(int i = 0; i < size.x; i++)
                 {
-                    s += (buffer[i, j] ? 'X' : '0');
+                    s += (i == startPoint.x && j == startPoint.y) ? 'S' : ( (i == endPoint.x && j == endPoint.y) ? 'E' :(buffer[i, j] ? 'X' : '0') );
                 }
                 s += '\n';
             }
             Debug.Log(s);
+            t.text = s;
         }
     }
 
@@ -63,6 +65,7 @@ namespace TRayMapBuilder_myNamespace
     //----------------------------------------MONO----------------------------------------//
     public class TRayMapBuilder : MonoBehaviour
     {
+        public Text t;
         public GameObject character; // Main Player's character Object
         private Transform cT;
 
@@ -108,12 +111,23 @@ namespace TRayMapBuilder_myNamespace
             return false;
         }
 
-        private void TCreateObject(Vector2 position, bool colorMe,GameObject father)
+        private void TCreateObject(Vector2 position, bool colorMe,GameObject father,bool iAmEndPoint = false,bool iAmStartPoint = false)
         {
             GameObject t = Instantiate(prefab);
             t.transform.parent = father.transform;
             t.transform.position = position;
-            if (colorMe) t.GetComponent<SpriteRenderer>().color = Color.red;
+            if(iAmStartPoint)
+            {
+                t.GetComponent<SpriteRenderer>().color = Color.yellow;
+                return;
+            }
+            if (!colorMe & iAmEndPoint)
+            {
+                t.GetComponent<SpriteRenderer>().color = Color.blue;
+                return;
+            }
+            if (colorMe)
+                t.GetComponent<SpriteRenderer>().color = Color.red;
         }
 
         private void _Shot(Vector2 outArrowPosition)
@@ -131,7 +145,7 @@ namespace TRayMapBuilder_myNamespace
             if (outArrowPosition.x> (centerPos.x - tileSize.x / 2))
             {
                 int t_x = 0;
-                for(; outArrowPosition.x > (centerPos.x - tileSize.x/2) ; outArrowPosition -= new Vector2(tileSize.x, 0))
+                for(; outArrowPosition.x > (centerPos.x + tileSize.x/2) ; outArrowPosition -= new Vector2(tileSize.x, 0))
                 {
                     t_x++;
                 }
@@ -141,7 +155,7 @@ namespace TRayMapBuilder_myNamespace
             else
             {
                 int t_x = 0;
-                for (; outArrowPosition.x < (centerPos.x + tileSize.x / 2); outArrowPosition += new Vector2(tileSize.x, 0))
+                for (; outArrowPosition.x < (centerPos.x - tileSize.x / 2); outArrowPosition += new Vector2(tileSize.x, 0))
                 {
                     t_x--;
                 }
@@ -152,7 +166,7 @@ namespace TRayMapBuilder_myNamespace
             if (outArrowPosition.y > (centerPos.y - tileSize.y / 2))
             {
                 int t_y = 0;
-                for (; outArrowPosition.y > (centerPos.y - tileSize.y / 2); outArrowPosition -= new Vector2(0, tileSize.y))
+                for (; outArrowPosition.y > (centerPos.y + tileSize.y / 2); outArrowPosition -= new Vector2(0, tileSize.y))
                 {
                     t_y++;
                 }
@@ -170,10 +184,15 @@ namespace TRayMapBuilder_myNamespace
                 rayMap.endPoint += new Vector2Int(0, t_y + centerPosInt.y);
             }
 
-            Debug.Log("centerPoint: " + rayMap.startPoint.x + " " + rayMap.startPoint.y);
-            Debug.Log("endPoint: " + rayMap.endPoint.x + " " + rayMap.endPoint.y);
+            //Debug.Log("centerPoint: " + rayMap.startPoint.x + " " + rayMap.startPoint.y);
+            //Debug.Log("endPoint: " + rayMap.endPoint.x + " " + rayMap.endPoint.y);
+
             #endregion
 
+            if(TempFather)
+            {
+                TDTempFather();
+            }
             TempFather = new GameObject("Father_TempObjects");
             TempFather.transform.position = new Vector3(0, 0, 0);
             
@@ -182,11 +201,11 @@ namespace TRayMapBuilder_myNamespace
                 for(int j=0;j<sizeInt.y;j++)
                 {
                     rayMap.buffer[i,j] = ReturnRayResult(new Vector2( ((i - centerPosInt.x) * tileSize.x)+ centerPos.x ,   ((j - centerPosInt.y) * tileSize.y) + centerPos.y ));
-                    TCreateObject(new Vector2(((i - centerPosInt.x) * tileSize.x) + centerPos.x, ((j - centerPosInt.y) * tileSize.y) + centerPos.y), rayMap.buffer[i, j],TempFather);
+                    //TCreateObject(new Vector2(((i - centerPosInt.x) * tileSize.x) + centerPos.x, ((j - centerPosInt.y) * tileSize.y) + centerPos.y),rayMap.buffer[i, j],TempFather,(rayMap.endPoint.x == i && rayMap.endPoint.y ==j), (rayMap.startPoint.x == i && rayMap.startPoint.y == j));
                 }
             }
 
-            //rayMap.LogDump();
+            rayMap.LogDump(t);
             //EditorControl.EditorPause();
         }
 
