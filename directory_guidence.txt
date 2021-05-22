@@ -1,0 +1,33 @@
+目录结构
+code\Morizero：代码主目录
+   -Assets：
+      --AstarPathfindingProject：第三方寻路
+      --BGM：背景音乐目录，其实应该和Resources\BGM合并x
+      --Drama：剧本对话框控制器
+      --Experiments：放置一些测试新功能用的东西
+      --Fonts：游戏的字体
+      --HardLight2D：第三方2D光影组件
+      --Icon：游戏的图标
+      --Map：游戏地图
+      --Prefabs：其实应该和Resources\Prefabs合并x
+      --Resources：
+         ---BGM：背景音乐目录，地图控制器会从这里载入
+         ---Characters：角色立绘
+         ---Dramas：放置剧情预制体的继承，现在剧情是在unity的属性窗口里编辑的，但是wey建议开发一套脚本
+         ---Map：放置地图块
+            ----Prefabs：一些已经制作好的地图物件
+         ---Players：人物行走图
+         ---Prefabs：预制体
+      --Shuttle：前面消息提到的走廊音乐游戏，尚未开工
+      --Startup：启动页面
+      --UI：一些和全局UI相关的东西
+source：原稿主目录
+   -ai：已由AI上色完成的立绘
+   -map：地图原始美术文件
+   -map_final：一些特殊处理过的地图美术资源（比如手动P过）
+   -map2：地图原始美术文件2（因为文件太多找起来不方便，所以分成了两个文件夹）
+   -material：剧情和一些文字材料
+   -old_version：废稿集中营...
+   -scan：已使用扫描仪扫描的立绘原稿
+   -ui：游戏UI界面设计
+release：编译成品（已在.gitignore中设置忽略）
