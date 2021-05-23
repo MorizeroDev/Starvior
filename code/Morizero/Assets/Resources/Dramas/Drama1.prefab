@@ -29,7 +29,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3311677961071670908, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
       propertyPath: Drama.Array.data[0].motion
-      value: 1
+      value: Enter
       objectReference: {fileID: 0}
     - target: {fileID: 3311677961071670908, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
       propertyPath: Drama.Array.data[1].Effect
@@ -37,7 +37,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3311677961071670908, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
       propertyPath: Drama.Array.data[1].motion
-      value: 1
+      value: Enter
       objectReference: {fileID: 0}
     - target: {fileID: 3311677961071670908, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
       propertyPath: Drama.Array.data[2].Effect
@@ -45,7 +45,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3311677961071670908, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
       propertyPath: Drama.Array.data[2].motion
-      value: 0
+      value: Enter
       objectReference: {fileID: 0}
     - target: {fileID: 3311677961071670908, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
       propertyPath: Drama.Array.data[0].content
@@ -60,8 +60,16 @@ PrefabInstance:
       value: "\u4E0D\u4F1A\u5427\u4E0D\u4F1A\u771F\u7684\u6709\u4EBA\u4EE5\u4E3A\u738B\u94DC\u4E0D\u50BB\u5427\u3002"
       objectReference: {fileID: 0}
     - target: {fileID: 3311677961071670908, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
+      propertyPath: Drama.Array.data[0].Character
+      value: "\u6797\u6854"
+      objectReference: {fileID: 0}
+    - target: {fileID: 3311677961071670908, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
+      propertyPath: Drama.Array.data[1].Character
+      value: "\u6797\u6854"
+      objectReference: {fileID: 0}
+    - target: {fileID: 3311677961071670908, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
       propertyPath: Drama.Array.data[2].Character
-      value: 1
+      value: "\u6797\u6854"
       objectReference: {fileID: 0}
     - target: {fileID: 3311677961390988444, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
       propertyPath: m_Pivot.x

@@ -5,7 +5,6 @@ using UnityEngine;
 public class DramaDispose : MonoBehaviour
 {
     public void DramaDone(){
-        MapCamera.SuspensionDrama = false;
         Destroy(this.gameObject);
     }
 }

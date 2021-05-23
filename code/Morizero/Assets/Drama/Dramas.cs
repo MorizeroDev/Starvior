@@ -29,14 +29,12 @@ public class Dramas : MonoBehaviour
     // 对话集
     [System.Serializable]
     public struct DramaData{
-        public enum Characters{ 林桔,兮,奈美,世原,艾伦,雪兰,旁白 }
-        public enum Motion{ Enter,Leap,Focus }
-        public Characters Character;
+        public string Character;
         public string content;
         [Range(0.0f,1.0f)]
         public float Speed;
         public WordEffect.Effect Effect;
-        public Motion motion;
+        public string motion;
     }
     private int DramaIndex = 0,WordIndex = 0;
     private float delTime = 0;
@@ -44,14 +42,15 @@ public class Dramas : MonoBehaviour
 
     private float x = 0,y = 0,step = 0;
 
-    public static void Launch(string DramaName,DramaCallback Callback){
+    public static Dramas Launch(string DramaName,DramaCallback Callback){
         callback = Callback;
         GameObject fab = (GameObject)Resources.Load("Dramas\\" + DramaName);    // 载入母体
         GameObject box = Instantiate(fab,new Vector3(0,0,-1),Quaternion.identity);
         box.GetComponent<Canvas>().worldCamera = Camera.current;
         box.SetActive(true);
+        return box.GetComponent<Dramas>();
     }
-    public static void LaunchCheck(string content,DramaCallback Callback){
+    public static Dramas LaunchCheck(string content,DramaCallback Callback){
         callback = Callback;
         GameObject fab = (GameObject)Resources.Load("Dramas\\Check");    // 载入母体
         GameObject box = Instantiate(fab,new Vector3(0,0,-1),Quaternion.identity);
@@ -62,6 +61,7 @@ public class Dramas : MonoBehaviour
         drama.Drama[0] = data;
         drama.Awake();
         box.SetActive(true);
+        return box.GetComponent<Dramas>();
     }
     public void DisposeWords(){
         foreach(GameObject word in DisWords) Destroy(word);
@@ -70,8 +70,8 @@ public class Dramas : MonoBehaviour
         DisposeWords();
 
         DialogState = 0;
-        character = Enum.GetName(typeof(DramaData.Characters),Drama[DramaIndex].Character);
-        Motion.Play("Drama_" + Enum.GetName(typeof(DramaData.Motion),Drama[DramaIndex].motion),0);
+        character = Drama[DramaIndex].Character;
+        Motion.Play("Drama_" + Drama[DramaIndex].motion,0);
         Speed = Drama[DramaIndex].Speed;
         DisplayText = Drama[DramaIndex].content;
         Effect = Drama[DramaIndex].Effect;
@@ -92,7 +92,6 @@ public class Dramas : MonoBehaviour
     }
     void Update()
     {
-        MapCamera.SuspensionDrama = true;
         if(Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.X)){
             if(DialogState == 0) Speed = 0;
         }
