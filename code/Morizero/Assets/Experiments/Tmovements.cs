@@ -11,12 +11,13 @@ namespace testMovements_myNamespace
 {
     public enum Status
     {
-        movingUp,
-        movingRight,
-        movingDown,
-        movingLeft,
-        resting,
-        completed
+        MovingUp,
+        MovingRight,
+        MovingDown,
+        MovingLeft,
+        Resting,
+        Completed,
+        Start
     }
 
     public class Tmovements : MonoBehaviour
@@ -27,6 +28,8 @@ namespace testMovements_myNamespace
 
         private Vector2 tileSize;
         public Queue<Status> statusQueue = new Queue<Status>();
+
+        public UnityEvent<Status> inMovementsEvent;
         
         public float movementExtendCount;
         public Vector2 preRestingPos;
@@ -45,17 +48,6 @@ namespace testMovements_myNamespace
             cT = character.transform;
             preRestingPos = cT.position;
             tileSize = character.GetComponent<TRayMapBuilder>().tileSize;
-            //EnqueueStatus(Status.movingRight);/**/
-            //EnqueueStatus(Status.movingDown);/**/
-            //EnqueueStatus(Status.movingLeft);/**/
-            //EnqueueStatus(Status.movingUp);/**/
-            //EnqueueStatus(Status.movingRight);/**/
-            //EnqueueStatus(Status.movingRight);/**/
-            //EnqueueStatus(Status.movingRight);/**/
-            //EnqueueStatus(Status.movingDown);/**/
-            //EnqueueStatus(Status.movingDown);/**/
-            //EnqueueStatus(Status.movingLeft);/**/
-            //EnqueueStatus(Status.movingUp);/**/
         }
 
         public void BlastStatusQueue() //danger motion
@@ -66,22 +58,22 @@ namespace testMovements_myNamespace
         private void ExecMove()
         {
             movementExtendCount += speed * Time.deltaTime;
-            if ( (nowStatus == Status.movingLeft || nowStatus == Status.movingRight) ? 
+            if ( (nowStatus == Status.MovingLeft || nowStatus == Status.MovingRight) ? 
                         (movementExtendCount >= tileSize.x) :
                         (movementExtendCount >= tileSize.y)) //[Tip]wish vomit not vomit your yesterdaymeal when u see this. XD
             {
                 switch (nowStatus)
                 {
-                    case Status.movingUp:
+                    case Status.MovingUp:
                         cT.position = new Vector2(preRestingPos.x,              preRestingPos.y + tileSize.y);
                         break;
-                    case Status.movingRight:
+                    case Status.MovingRight:
                         cT.position = new Vector2(preRestingPos.x + tileSize.x, preRestingPos.y);
                         break;
-                    case Status.movingDown:
+                    case Status.MovingDown:
                         cT.position = new Vector2(preRestingPos.x             , preRestingPos.y - tileSize.y);
                         break;
-                    case Status.movingLeft:
+                    case Status.MovingLeft:
                         cT.position = new Vector2(preRestingPos.x - tileSize.x, preRestingPos.y);
                         break;
                     default:
@@ -93,23 +85,23 @@ namespace testMovements_myNamespace
 
                 preRestingPos = cT.position;
                 movementExtendCount = 0;
-                nowStatus = Status.resting;
+                nowStatus = Status.Resting;
                 //EditorControl.EditorPause();
             }
             else
             {
                 switch(nowStatus)
                 {
-                    case Status.movingUp:
+                    case Status.MovingUp:
                         cT.position += new Vector3(0, speed * Time.deltaTime, 0);
                         break;
-                    case Status.movingRight:
+                    case Status.MovingRight:
                         cT.position += new Vector3(speed * Time.deltaTime, 0, 0);
                         break;
-                    case Status.movingDown:
+                    case Status.MovingDown:
                         cT.position += new Vector3(0, -speed * Time.deltaTime, 0);
                         break;
-                    case Status.movingLeft: 
+                    case Status.MovingLeft: 
                         cT.position += new Vector3(-speed * Time.deltaTime, 0, 0);
                         break;
                     default:
@@ -119,28 +111,45 @@ namespace testMovements_myNamespace
             }
         }
 
+        // Start is called before the first frame update
         private void Start()
         {
-            nowStatus = Status.completed;
+            nowStatus = Status.Completed;
+            inMovementsEvent.AddListener(EnqueueStatus);
         }
 
+        private bool _IsInEnqueueableMode(Status s)
+        {
+            if (
+                s == Status.Completed ||
+                s == Status.Start ||
+                s == Status.Resting
+                )
+                return true;
+            return false;
+        }
+        
+        // Update is called once per frame
         private void Update()
         {
-            if(statusQueue.Count > 0 && (nowStatus == Status.completed || nowStatus == Status.resting) )
+            if(statusQueue.Count > 0 && _IsInEnqueueableMode(nowStatus) )
                 nowStatus = statusQueue.Dequeue();
             switch (nowStatus)
             {
-                case Status.movingUp:
-                case Status.movingRight:
-                case Status.movingDown:
-                case Status.movingLeft:
-                    ExecMove();
+                case Status.MovingUp:
+                case Status.MovingRight:
+                case Status.MovingDown:
+                case Status.MovingLeft:
+                    ExecMove();//contains "nowStatus = Status.Resting;" when it is compeletely done
                     break;
-                case Status.resting:
+                case Status.Resting:
                     //[Tip]This may cause warning, means the queue let skip up one frame
                     break;
-                case Status.completed:
+                case Status.Completed:
                     //[Tip]normally, this condition appears when the queue is empty ( so this status is the tail element)
+                    break;
+                case Status.Start:
+                    //[Tip]Normally start signal, head.
                     break;
                 default:
                     //?
