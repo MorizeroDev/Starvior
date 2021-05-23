@@ -3,18 +3,30 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-public class TSearcher : MonoBehaviour
+namespace searcher_myNamespace
 {
-    // Start is called before the first frame update
-    void Start()
+    public class TSearcher : MonoBehaviour
     {
-        
-    }
+        public Text t;
+        public UnityEvent<TRayMapBuilder_myNamespace.RayMap> inRayMapEvent;
+        // Start is called before the first frame update
+        void Start()
+        {
+            inRayMapEvent.AddListener(SearchStart);
+        }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public void SearchStart(TRayMapBuilder_myNamespace.RayMap rayMap)
+        {
+            Debug.Log("startSearching!");
+            rayMap.LogDump(t);
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+
+        }
     }
 }

@@ -76,6 +76,7 @@ public class Chara : MonoBehaviour
         {
             //shoot parameter via UnityEvent
             inPosEvent.Invoke(outmPos);
+            MoveArrow.GetComponent<SpriteRenderer>().color = Color.green;
         }
     }
 
@@ -88,6 +89,7 @@ public class Chara : MonoBehaviour
 
         // 如果屏幕被点击
         if(Input.GetMouseButton(0)){
+            MoveArrow.GetComponent<SpriteRenderer>().color = Color.white;
             // 从屏幕坐标换算到世界坐标
             Vector3 mpos = MapCamera.mcamera.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
             mpos.z = 0;

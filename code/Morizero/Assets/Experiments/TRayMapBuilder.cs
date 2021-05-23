@@ -6,6 +6,9 @@ using UnityEngine.EventSystems;
 using UnityEditor;
 using EditorControl_myNamespace;
 using UnityEngine.UI;
+
+using searcher_myNamespace;
+
 #region
 namespace EditorControl_myNamespace
 {
@@ -65,6 +68,7 @@ namespace TRayMapBuilder_myNamespace
     //----------------------------------------MONO----------------------------------------//
     public class TRayMapBuilder : MonoBehaviour
     {
+        public searcher_myNamespace.TSearcher receiverSearcher;
         public Text t;
         public GameObject character; // Main Player's character Object
         private Transform cT;
@@ -205,8 +209,9 @@ namespace TRayMapBuilder_myNamespace
                 }
             }
 
-            rayMap.LogDump(t);
+            //rayMap.LogDump(t);
             //EditorControl.EditorPause();
+            receiverSearcher.inRayMapEvent.Invoke(rayMap);
         }
 
         // Start is called before the first frame update
