@@ -17,7 +17,8 @@ namespace testMovements_myNamespace
         MovingLeft,
         Resting,
         Completed,
-        Start
+        Start,
+        Special_SkipFrame
     }
 
     public class Tmovements : MonoBehaviour
@@ -30,6 +31,7 @@ namespace testMovements_myNamespace
         public Queue<Status> statusQueue = new Queue<Status>();
 
         public UnityEvent<Status> inMovementsEvent;
+        public UnityEvent inContinueQueueUnitEvent;
         
         public float movementExtendCount;
         public Vector2 preRestingPos;
@@ -50,9 +52,15 @@ namespace testMovements_myNamespace
             tileSize = character.GetComponent<TRayMapBuilder>().tileSize;
         }
 
-        public void BlastStatusQueue() //danger motion
+        public void ContinueQueueUnit()
         {
-            statusQueue.Clear();
+            nowStatus = Status.Special_SkipFrame; //Stop the movements when a new movement order is clicked
+
+            //[Tip] you can add a bool parament to control this, don't Modifing the UnityEvents XD
+
+            while(statusQueue.Count>0)
+                if (statusQueue.Dequeue() == Status.Completed)
+                    break;
         }
 
         private void ExecMove()
@@ -82,7 +90,6 @@ namespace testMovements_myNamespace
                         EditorControl.EditorPause();
                         return;
                 }
-
                 preRestingPos = cT.position;
                 movementExtendCount = 0;
                 nowStatus = Status.Resting;
@@ -116,6 +123,7 @@ namespace testMovements_myNamespace
         {
             nowStatus = Status.Completed;
             inMovementsEvent.AddListener(EnqueueStatus);
+            inContinueQueueUnitEvent.AddListener(ContinueQueueUnit);
         }
 
         private bool _IsInEnqueueableMode(Status s)
@@ -146,15 +154,21 @@ namespace testMovements_myNamespace
                     //[Tip]This may cause warning, means the queue let skip up one frame
                     break;
                 case Status.Completed:
-                    //[Tip]normally, this condition appears when the queue is empty ( so this status is the tail element)
+                    //[Tip]normally, this condition appears when the queue is empty (so this status is the tail element)
                     break;
                 case Status.Start:
+                    preRestingPos = cT.position;
+                    movementExtendCount = 0;
                     //[Tip]Normally start signal, head.
+                    break;
+                case Status.Special_SkipFrame:
+                    nowStatus = Status.Start;
                     break;
                 default:
                     //?
                     break;
             }
+            
         }
     }
 }

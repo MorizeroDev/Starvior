@@ -7,6 +7,7 @@ using UnityEditor;
 using EditorControl_myNamespace;
 using UnityEngine.UI;
 
+using testMovements_myNamespace;
 using searcher_myNamespace;
 
 #region
@@ -68,7 +69,8 @@ namespace TRayMapBuilder_myNamespace
     //----------------------------------------MONO----------------------------------------//
     public class TRayMapBuilder : MonoBehaviour
     {
-        public searcher_myNamespace.TSearcher receiverSearcher;
+        public Tmovements tmovements;
+        public TSearcher receiverSearcher;
         public Text t;
         public GameObject character; // Main Player's character Object
         private Transform cT;
@@ -136,6 +138,7 @@ namespace TRayMapBuilder_myNamespace
 
         private void _Shot(Vector2 outArrowPosition)
         {
+            tmovements.inContinueQueueUnitEvent.Invoke();
             centerPos = cT.position;
 
             Vector2Int sizeInt = new Vector2Int((int)(pictureSize.x / tileSize.x), (int)(pictureSize.y / tileSize.y));

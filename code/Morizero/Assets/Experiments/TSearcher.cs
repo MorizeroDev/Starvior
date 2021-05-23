@@ -31,6 +31,16 @@ namespace searcher_myNamespace
         public void SearchStart(TRayMapBuilder_myNamespace.RayMap rayMap)
         {
             _PushOut(Status.Start);
+            _PushOut(Status.MovingRight);
+            _PushOut(Status.MovingLeft);
+            _PushOut(Status.MovingRight);
+            _PushOut(Status.MovingLeft);
+            _PushOut(Status.MovingRight);
+            _PushOut(Status.MovingLeft);
+            _PushOut(Status.MovingRight);
+            _PushOut(Status.MovingLeft);
+            _PushOut(Status.MovingRight);
+            _PushOut(Status.MovingLeft);
             //Debug.Log("startSearching!");
             //rayMap.LogDump(t);
             _PushOut(Status.Completed);
