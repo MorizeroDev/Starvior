@@ -1269,6 +1269,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3305f085e51b1b488e9a35e7846ef20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Script: {fileID: 0}
   AllowDirection: 03000000
   CheckType: 0
   Content: "\u6D77\u62A5\uFF1A\u516E\u7684\u6F14\u5531\u4F1A>>>\u516E\u7684\u75C5\u623F\uFF01\uFF01\uFF01"
@@ -2518,6 +2519,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3305f085e51b1b488e9a35e7846ef20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Script: {fileID: 0}
   AllowDirection: 03000000
   CheckType: 0
   Content: "\u73B0\u5728\u662F\u665A\u4E0A\u3002"
@@ -3013,6 +3015,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3305f085e51b1b488e9a35e7846ef20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Script: {fileID: 0}
   AllowDirection: 03000000
   CheckType: 0
   Content: "\u95E8\u53CD\u9501\u4E86\uFF0C\u5A49\u8F6C\u7684\u4E50\u58F0\u4ECE\u95E8\u7F1D\u91CC\u6E9C\u51FA\u6765\u3002"
@@ -4291,6 +4294,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3305f085e51b1b488e9a35e7846ef20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Script: {fileID: 0}
   AllowDirection: 03000000
   CheckType: 0
   Content: "\u4E00\u526F\u753B\uFF0C\u770B\u8D77\u6765\u6709\u4E9B\u5E74\u4EE3\u4E86\u3002"
