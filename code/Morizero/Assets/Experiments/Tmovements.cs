@@ -9,7 +9,7 @@ using EditorControl_myNamespace;
 
 namespace testMovements_myNamespace
 {
-    public enum Status
+    public enum MovementStatus
     {
         MovingUp,
         MovingRight,
@@ -21,6 +21,7 @@ namespace testMovements_myNamespace
         Special_SkipFrame
     }
 
+    //----------------------------------------MONO----------------------------------------//
     public class Tmovements : MonoBehaviour
     {
         //public GameObject OrderFrom;
@@ -28,9 +29,9 @@ namespace testMovements_myNamespace
         private Transform cT;
 
         private Vector2 tileSize;
-        public Queue<Status> statusQueue = new Queue<Status>();
+        public Queue<MovementStatus> statusQueue = new Queue<MovementStatus>();
 
-        public UnityEvent<Status> inMovementsEvent;
+        public UnityEvent<MovementStatus> inMovementsEvent;
         public UnityEvent inContinueQueueUnitEvent;
         
         public float movementExtendCount;
@@ -38,8 +39,8 @@ namespace testMovements_myNamespace
 
         public float speed;
 
-        public Status nowStatus;
-        public void EnqueueStatus(Status s)
+        public MovementStatus nowStatus;
+        public void EnqueueStatus(MovementStatus s)
         {
             statusQueue.Enqueue(s);
         }
@@ -54,34 +55,34 @@ namespace testMovements_myNamespace
 
         public void ContinueQueueUnit()
         {
-            nowStatus = Status.Special_SkipFrame; //Stop the movements when a new movement order is clicked
+            nowStatus = MovementStatus.Special_SkipFrame; //Stop the movements when a new movement order is clicked
 
             //[Tip] you can add a bool parament to control this, don't Modifing the UnityEvents XD
 
             while(statusQueue.Count>0)
-                if (statusQueue.Dequeue() == Status.Completed)
+                if (statusQueue.Dequeue() == MovementStatus.Completed)
                     break;
         }
 
         private void ExecMove()
         {
             movementExtendCount += speed * Time.deltaTime;
-            if ( (nowStatus == Status.MovingLeft || nowStatus == Status.MovingRight) ? 
+            if ( (nowStatus == MovementStatus.MovingLeft || nowStatus == MovementStatus.MovingRight) ? 
                         (movementExtendCount >= tileSize.x) :
                         (movementExtendCount >= tileSize.y)) //[Tip]wish vomit not vomit your yesterdaymeal when u see this. XD
             {
                 switch (nowStatus)
                 {
-                    case Status.MovingUp:
+                    case MovementStatus.MovingUp:
                         cT.position = new Vector2(preRestingPos.x,              preRestingPos.y + tileSize.y);
                         break;
-                    case Status.MovingRight:
+                    case MovementStatus.MovingRight:
                         cT.position = new Vector2(preRestingPos.x + tileSize.x, preRestingPos.y);
                         break;
-                    case Status.MovingDown:
+                    case MovementStatus.MovingDown:
                         cT.position = new Vector2(preRestingPos.x             , preRestingPos.y - tileSize.y);
                         break;
-                    case Status.MovingLeft:
+                    case MovementStatus.MovingLeft:
                         cT.position = new Vector2(preRestingPos.x - tileSize.x, preRestingPos.y);
                         break;
                     default:
@@ -92,23 +93,23 @@ namespace testMovements_myNamespace
                 }
                 preRestingPos = cT.position;
                 movementExtendCount = 0;
-                nowStatus = Status.Resting;
+                nowStatus = MovementStatus.Resting;
                 //EditorControl.EditorPause();
             }
             else
             {
                 switch(nowStatus)
                 {
-                    case Status.MovingUp:
+                    case MovementStatus.MovingUp:
                         cT.position += new Vector3(0, speed * Time.deltaTime, 0);
                         break;
-                    case Status.MovingRight:
+                    case MovementStatus.MovingRight:
                         cT.position += new Vector3(speed * Time.deltaTime, 0, 0);
                         break;
-                    case Status.MovingDown:
+                    case MovementStatus.MovingDown:
                         cT.position += new Vector3(0, -speed * Time.deltaTime, 0);
                         break;
-                    case Status.MovingLeft: 
+                    case MovementStatus.MovingLeft: 
                         cT.position += new Vector3(-speed * Time.deltaTime, 0, 0);
                         break;
                     default:
@@ -121,17 +122,17 @@ namespace testMovements_myNamespace
         // Start is called before the first frame update
         private void Start()
         {
-            nowStatus = Status.Completed;
+            nowStatus = MovementStatus.Completed;
             inMovementsEvent.AddListener(EnqueueStatus);
             inContinueQueueUnitEvent.AddListener(ContinueQueueUnit);
         }
 
-        private bool _IsInEnqueueableMode(Status s)
+        private bool _IsInEnqueueableMode(MovementStatus s)
         {
             if (
-                s == Status.Completed ||
-                s == Status.Start ||
-                s == Status.Resting
+                s == MovementStatus.Completed ||
+                s == MovementStatus.Start ||
+                s == MovementStatus.Resting
                 )
                 return true;
             return false;
@@ -144,25 +145,25 @@ namespace testMovements_myNamespace
                 nowStatus = statusQueue.Dequeue();
             switch (nowStatus)
             {
-                case Status.MovingUp:
-                case Status.MovingRight:
-                case Status.MovingDown:
-                case Status.MovingLeft:
+                case MovementStatus.MovingUp:
+                case MovementStatus.MovingRight:
+                case MovementStatus.MovingDown:
+                case MovementStatus.MovingLeft:
                     ExecMove();//contains "nowStatus = Status.Resting;" when it is compeletely done
                     break;
-                case Status.Resting:
+                case MovementStatus.Resting:
                     //[Tip]This may cause warning, means the queue let skip up one frame
                     break;
-                case Status.Completed:
+                case MovementStatus.Completed:
                     //[Tip]normally, this condition appears when the queue is empty (so this status is the tail element)
                     break;
-                case Status.Start:
+                case MovementStatus.Start:
                     preRestingPos = cT.position;
                     movementExtendCount = 0;
                     //[Tip]Normally start signal, head.
                     break;
-                case Status.Special_SkipFrame:
-                    nowStatus = Status.Start;
+                case MovementStatus.Special_SkipFrame:
+                    nowStatus = MovementStatus.Start;
                     break;
                 default:
                     //?

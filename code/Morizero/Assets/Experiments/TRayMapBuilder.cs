@@ -38,13 +38,21 @@ namespace TRayMapBuilder_myNamespace
 {
     public class RayMap
     {
+        public RayMap(RayMap inRaymap)
+        {
+            buffer = inRaymap.buffer;
+            startPoint = inRaymap.startPoint;
+            endPoint = inRaymap.endPoint;
+            size = inRaymap.size;
+        }
 
         public RayMap(Vector2Int vector2Int)
         {
             buffer = new bool[vector2Int.x, vector2Int.y];
             size = vector2Int;
         }
-        public bool[,] buffer;
+
+        public bool[,] buffer;//blocked == true && walkable == false
         public Vector2Int startPoint;
         public Vector2Int endPoint;
         public Vector2Int size; //v2 tells how big is this Raymap is
