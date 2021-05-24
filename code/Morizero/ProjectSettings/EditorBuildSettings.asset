@@ -12,7 +12,7 @@ EditorBuildSettings:
     path: Assets/Map/ROOM_XUELAN.unity
     guid: 8315ea68408bf854abff2652c7da8c3d
   - enabled: 1
-    path: Assets/Map/Corridor_3F.unity
+    path: Assets/Experiments/Corridor_3F.unity
     guid: b7584772b115578419b145dceaa15457
   - enabled: 1
     path: Assets/Drama/Drama.unity
