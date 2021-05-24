@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class MapCamera : MonoBehaviour
 {
+    public GameObject startDot;
+    public GameObject endDot;
     public static Chara Player;
     public static GameObject HitCheck;
     public static bool SuspensionDrama;
@@ -45,9 +47,9 @@ public class MapCamera : MonoBehaviour
         float w = (cornerPos.x - Camera.main.transform.position.x) * 2;
         float h = (cornerPos.y - Camera.main.transform.position.y) * 2;
         Vector3 size = new Vector3(w / 2,h / 2,0f);
-        Vector3 pos = GameObject.Find("startDot").transform.localPosition;
+        Vector3 pos = startDot.transform.localPosition;
         sx = pos.x + size.x; sy = pos.y - size.y + 1.8f; 
-        pos = GameObject.Find("endDot").transform.localPosition;
+        pos = endDot.transform.localPosition;
         ex = pos.x - size.x; ey = pos.y + size.y * 1f; 
     }
     private void FixedUpdate() {

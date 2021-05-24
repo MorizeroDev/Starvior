@@ -3,11 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using TRayMapBuilder_myNamespace;
+using UnityEngine.Events;
+using UnityEngine.UI;
 
 public delegate void WalkTaskCallback();
 // 角色控制器
 public class Chara : MonoBehaviour
 {
+    public Vector2 outmPos;
+    public UnityEvent<Vector2> inPosEvent = new UnityEvent<Vector2>();
+    
     // 朝向枚举
     public enum walkDir{
         Down,Left,Right,Up
@@ -19,6 +25,12 @@ public class Chara : MonoBehaviour
     }
     // 当列表长度为0时表示行走完毕
     public List<walkTask> walkTasks = new List<walkTask>();
+
+    /// <summary>
+    /// used for shut down the FixedUpdate
+    /// </summary>
+    public bool debugerLock;
+    public Text TipBox;
 
     private Sprite[] Animation;                 // 行走图图像集
     public string Character;                    // 对应的人物
@@ -35,6 +47,15 @@ public class Chara : MonoBehaviour
     public WalkTaskCallback walkTaskCallback;   // 行走人物回调
 
     private void Awake() {
+
+        //>>>>>
+        if (debugerLock && TipBox!=null)
+            TipBox.gameObject.SetActive(true);
+        else if(TipBox != null)
+            TipBox.gameObject.SetActive(false);
+
+        //<<<<<
+
         // 载入行走图图像集，并初始化相关设置
         Animation = Resources.LoadAll<Sprite>("Players\\" + Character);
         image = this.GetComponent<SpriteRenderer>();
@@ -75,8 +96,21 @@ public class Chara : MonoBehaviour
         // 设定帧
         image.sprite = Animation[(int)dir * 3 + walkBuff];
     }
+    private void Update()
+    {
+        if(Input.GetMouseButtonUp(0))
+        {
+            //shoot parameter via UnityEvent
+            inPosEvent.Invoke(outmPos);
+            MoveArrow.GetComponent<SpriteRenderer>().color = Color.green;
+        }
+    }
+
     void FixedUpdate()
     {
+        if (debugerLock) goto endTag;
+
+
         // 如果不是玩家
         if(!Controller) return;
         // 如果剧本正在进行则退出
@@ -111,7 +145,10 @@ public class Chara : MonoBehaviour
         }
 
         // 如果屏幕被点击
+
         if(Input.GetMouseButton(0) && !isWalkTask){
+            MoveArrow.GetComponent<SpriteRenderer>().color = Color.white;
+
             // 从屏幕坐标换算到世界坐标
             Vector3 mpos = MapCamera.mcamera.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
             mpos.z = 0;
@@ -122,6 +159,8 @@ public class Chara : MonoBehaviour
             // 设置点击反馈
             MoveArrow.transform.localPosition = mpos;
             MoveArrow.SetActive(true);
+            //prepare for Event to TRayMapBuilder
+            outmPos = mpos;
         }
 
         if(tMode){
@@ -154,5 +193,29 @@ public class Chara : MonoBehaviour
         transform.localPosition = pos;
         walking = true;
         UploadWalk();
+
+
+        endTag:
+        if (debugerLock)
+        {
+            if (Input.GetMouseButton(0) )
+            {
+                MoveArrow.GetComponent<SpriteRenderer>().color = Color.white;
+
+                // 从屏幕坐标换算到世界坐标
+                Vector3 mpos = MapCamera.mcamera.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
+                mpos.z = 0;
+                // 检查是否点击的是UI而不是地板
+                if (EventSystem.current.IsPointerOverGameObject()) return;
+                // 设置相关参数
+                tMode = true; tx = mpos.x; ty = mpos.y; lx = 0; ly = 0;
+                // 设置点击反馈
+                MoveArrow.transform.localPosition = mpos;
+                MoveArrow.SetActive(true);
+                //prepare for Event to TRayMapBuilder
+                outmPos = mpos;
+            }
+        }
+        else { }
     }
 }

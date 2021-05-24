@@ -2,14 +2,12 @@
 code\Morizero：代码主目录
    -Assets：
       --AstarPathfindingProject：第三方寻路
-      --BGM：背景音乐目录，其实应该和Resources\BGM合并x
       --Drama：剧本对话框控制器
       --Experiments：放置一些测试新功能用的东西
       --Fonts：游戏的字体
       --HardLight2D：第三方2D光影组件
       --Icon：游戏的图标
       --Map：游戏地图
-      --Prefabs：其实应该和Resources\Prefabs合并x
       --Resources：
          ---BGM：背景音乐目录，地图控制器会从这里载入
          ---Characters：角色立绘
