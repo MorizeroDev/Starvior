@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class CheckObj : MonoBehaviour
 {
+    public TextAsset Script;
+    private DramaScript scriptCarrier = new DramaScript();
     public static bool CheckBtnPressed;
     public List<Chara.walkDir> AllowDirection = new List<Chara.walkDir>(3);
     public int CheckType = 0;
@@ -32,16 +34,29 @@ public class CheckObj : MonoBehaviour
         return ret;
     }
 
+    private void Awake() {
+        scriptCarrier.callback = () => {
+            MapCamera.SuspensionDrama = false;
+        };
+        scriptCarrier.parent = this;
+    }
+
     public virtual void Update() {
         if(!IsActive()) return;
 
+        MapCamera.SuspensionDrama = true;
+        if(Script != null){
+            scriptCarrier.code = Script.text.Split(new char[]{'\n'},System.StringSplitOptions.RemoveEmptyEntries);
+            scriptCarrier.currentLine = 0;
+            scriptCarrier.carryTask();
+        }
         if(CheckType == 1){
             Dramas.Launch(Content,() => {
-                
+                MapCamera.SuspensionDrama = false;
             });
         }else{
             Dramas.LaunchCheck(Content,() => {
-                
+                MapCamera.SuspensionDrama = false;
             });
         }
     }

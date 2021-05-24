@@ -5,6 +5,8 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TRayMapBuilder_myNamespace;
 using UnityEngine.Events;
+
+public delegate void WalkTaskCallback();
 // 角色控制器
 public class Chara : MonoBehaviour
 {
@@ -15,7 +17,14 @@ public class Chara : MonoBehaviour
     public enum walkDir{
         Down,Left,Right,Up
     }
-    
+    // 行走任务
+    public struct walkTask{
+        public float xBuff,yBuff;               // 横纵坐标上的任务
+        public float x,y;                       // 实际的任务坐标
+    }
+    // 当列表长度为0时表示行走完毕
+    public List<walkTask> walkTasks = new List<walkTask>();
+
     private Sprite[] Animation;                 // 行走图图像集
     public string Character;                    // 对应的人物
     public bool Controller = false;             // 是否为玩家
@@ -27,7 +36,8 @@ public class Chara : MonoBehaviour
     private float sx,sy,ex,ey;                  // 地图边界x,y - x,y
     private float tx,ty,lx,ly;                  // 目标地点x,y；上一次的坐标x,y
     public GameObject MoveArrow;                // 点击移动反馈
-    private bool tMode = false;                 // 点击移动模式
+    private bool tMode = false;                 // 点击移动模式（TouchMode）
+    public WalkTaskCallback walkTaskCallback;   // 行走人物回调
 
     private void Awake() {
         // 载入行走图图像集，并初始化相关设置
@@ -85,11 +95,41 @@ public class Chara : MonoBehaviour
         // 如果不是玩家
         if(!Controller) return;
         // 如果剧本正在进行则退出
-        if(MapCamera.SuspensionDrama) return;
+        if(MapCamera.SuspensionDrama && walkTasks.Count == 0) return;
+        // 是否正在执行行走任务？
+        bool isWalkTask = (walkTasks.Count > 0);
+        Vector3 pos = transform.localPosition;
+
+        // 如果有行走任务
+        if(isWalkTask){
+            // 如果坐标尚未初始化
+            if(walkTasks[0].x == 0){
+                walkTask task = walkTasks[0];
+                task.x = pos.x + 0.5f * task.xBuff;
+                task.y = pos.y + 0.5f * task.yBuff;
+                walkTasks[0] = task;
+            }
+            if(Mathf.Abs(walkTasks[0].x - pos.x) <= 0.04f && Mathf.Abs(walkTasks[0].y - pos.y) <= 0.04f){
+                walkTasks.RemoveAt(0);
+                if(walkTasks.Count == 0) walkTaskCallback();
+                UploadWalk();
+                return;
+            }else if(walkTasks[0].x < pos.x){
+                dir = walkDir.Left;
+            }else if(walkTasks[0].x > pos.x){
+                dir = walkDir.Right;
+            }else if(walkTasks[0].y < pos.y){
+                dir = walkDir.Up;
+            }else if(walkTasks[0].y > pos.y){
+                dir = walkDir.Down;
+            }
+        }
 
         // 如果屏幕被点击
-        if(Input.GetMouseButton(0)){
+
+        if(Input.GetMouseButton(0) && !isWalkTask){
             MoveArrow.GetComponent<SpriteRenderer>().color = Color.white;
+
             // 从屏幕坐标换算到世界坐标
             Vector3 mpos = MapCamera.mcamera.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
             mpos.z = 0;
@@ -103,31 +143,14 @@ public class Chara : MonoBehaviour
             //prepare for Event to TRayMapBuilder
             outmPos = mpos;
         }
-        Vector3 pos = transform.localPosition;
 
-        if(tMode && false){
-            if(Mathf.Abs(lx - pos.x) <= 0.04f && Mathf.Abs(ly - pos.y) <= 0.04f){
-                tMode = false;
-                UploadWalk();
-                MoveArrow.SetActive(false);
-                return;
-            }
-            if(Mathf.Abs(pos.x - tx) <= 0.04f){
-                if(Mathf.Abs(pos.y - ty)  <= 0.04f){
-                    tMode = false;
-                    UploadWalk();
-                    MoveArrow.SetActive(false);
-                    return;
-                }
-                else{
-                    dir = (ty > pos.y ? walkDir.Up : walkDir.Down);
-                    lx = pos.x;ly = pos.y;
-                }
-            }else{
-                dir = (tx > pos.x ? walkDir.Right : walkDir.Left);
-                lx = pos.x;ly = pos.y;
-            }
-        }else{
+        if(tMode){
+            /**
+                TODO：当触摸模式启动时的移动处理
+            **/
+            tMode = false;
+        }else if(!isWalkTask){
+            // 非触摸模式时，检测键盘输入
             if(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)){
                 dir = walkDir.Left;
             }else if(Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)){
