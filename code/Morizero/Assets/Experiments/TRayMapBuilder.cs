@@ -216,7 +216,7 @@ namespace TRayMapBuilder_myNamespace
                 for(int j=0;j<sizeInt.y;j++)
                 {
                     rayMap.buffer[i,j] = ReturnRayResult(new Vector2( ((i - centerPosInt.x) * tileSize.x)+ centerPos.x ,   ((j - centerPosInt.y) * tileSize.y) + centerPos.y ));
-                    //TCreateObject(new Vector2(((i - centerPosInt.x) * tileSize.x) + centerPos.x, ((j - centerPosInt.y) * tileSize.y) + centerPos.y),rayMap.buffer[i, j],TempFather,(rayMap.endPoint.x == i && rayMap.endPoint.y ==j), (rayMap.startPoint.x == i && rayMap.startPoint.y == j));
+                    TCreateObject(new Vector2(((i - centerPosInt.x) * tileSize.x) + centerPos.x, ((j - centerPosInt.y) * tileSize.y) + centerPos.y),rayMap.buffer[i, j],TempFather,(rayMap.endPoint.x == i && rayMap.endPoint.y ==j), (rayMap.startPoint.x == i && rayMap.startPoint.y == j));
                 }
             }
 
