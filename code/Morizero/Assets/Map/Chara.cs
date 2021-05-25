@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TRayMapBuilder_myNamespace;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public delegate void WalkTaskCallback();
 // 角色控制器
@@ -25,6 +26,12 @@ public class Chara : MonoBehaviour
     // 当列表长度为0时表示行走完毕
     public List<walkTask> walkTasks = new List<walkTask>();
 
+    /// <summary>
+    /// used for shut down the FixedUpdate
+    /// </summary>
+    public bool debugerLock;
+    public Text TipBox;
+
     private Sprite[] Animation;                 // 行走图图像集
     public string Character;                    // 对应的人物
     public bool Controller = false;             // 是否为玩家
@@ -40,6 +47,15 @@ public class Chara : MonoBehaviour
     public WalkTaskCallback walkTaskCallback;   // 行走人物回调
 
     private void Awake() {
+
+        //>>>>>
+        if (debugerLock)
+            TipBox.gameObject.SetActive(true);
+        else
+            TipBox.gameObject.SetActive(false);
+
+        //<<<<<
+
         // 载入行走图图像集，并初始化相关设置
         Animation = Resources.LoadAll<Sprite>("Players\\" + Character);
         image = this.GetComponent<SpriteRenderer>();
@@ -92,6 +108,9 @@ public class Chara : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (debugerLock) goto endTag;
+
+
         // 如果不是玩家
         if(!Controller) return;
         // 如果剧本正在进行则退出
@@ -174,5 +193,29 @@ public class Chara : MonoBehaviour
         transform.localPosition = pos;
         walking = true;
         UploadWalk();
+
+
+        endTag:
+        if (debugerLock)
+        {
+            if (Input.GetMouseButton(0) )
+            {
+                MoveArrow.GetComponent<SpriteRenderer>().color = Color.white;
+
+                // 从屏幕坐标换算到世界坐标
+                Vector3 mpos = MapCamera.mcamera.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
+                mpos.z = 0;
+                // 检查是否点击的是UI而不是地板
+                if (EventSystem.current.IsPointerOverGameObject()) return;
+                // 设置相关参数
+                tMode = true; tx = mpos.x; ty = mpos.y; lx = 0; ly = 0;
+                // 设置点击反馈
+                MoveArrow.transform.localPosition = mpos;
+                MoveArrow.SetActive(true);
+                //prepare for Event to TRayMapBuilder
+                outmPos = mpos;
+            }
+        }
+        else { }
     }
 }
