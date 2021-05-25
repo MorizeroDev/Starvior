@@ -12,8 +12,8 @@ namespace searcher_myNamespace
 {
     public class MyV2IPair
     {
-        public Vector2Int first;
-        public Vector2Int second;
+        public Vector2Int current;
+        public Vector2Int previous;
 
         public MyV2IPair()
         {
@@ -21,11 +21,14 @@ namespace searcher_myNamespace
 
         public MyV2IPair(Vector2Int x, Vector2Int y)
         {
-            this.first = x;
-            this.second = y;
+            this.current = x;
+            this.previous = y;
         }
     }
-    
+    public class StorageTree
+    {
+
+    }
 
     //----------------------------------------MONO----------------------------------------//
     public class TSearcher : MonoBehaviour
@@ -52,13 +55,17 @@ namespace searcher_myNamespace
         
         public bool Search(ref RayMap inRayMap, ref Queue<MyV2IPair> supplyQueue,ref List<Vector2Int> avoidList,ref Stack<MovementStatus> revMovementStack)
         {
+            System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+            System.TimeSpan timespan = stopwatch.Elapsed;
+
+            stopwatch.Start();
             Queue<MyV2IPair> myV2IPairQueue_Saved = new Queue<MyV2IPair>();
 
             while(supplyQueue.Count>0)
             {
                 MyV2IPair myV2IPair = supplyQueue.Dequeue();
                 
-                Vector2Int currentPos = myV2IPair.first;
+                Vector2Int currentPos = myV2IPair.current;
 
                 if (avoidList.Contains(currentPos))
                     continue;
@@ -67,22 +74,22 @@ namespace searcher_myNamespace
 
                 else if (currentPos == inRayMap.endPoint) // founded
                 {
-                    if (currentPos.x == myV2IPair.second.x) 
+                    if (currentPos.x == myV2IPair.previous.x) 
                     {
-                        if (currentPos.y == myV2IPair.second.y + 1)
+                        if (currentPos.y == myV2IPair.previous.y + 1)
                             revMovementStack.Push(MovementStatus.MovingUp);
-                        else if (currentPos.y == myV2IPair.second.y - 1)
+                        else if (currentPos.y == myV2IPair.previous.y - 1)
                             revMovementStack.Push(MovementStatus.MovingDown);
                         else
                         {
                             //error
                         }
                     }
-                    else if (currentPos.y == myV2IPair.second.y)
+                    else if (currentPos.y == myV2IPair.previous.y)
                     {
-                        if (currentPos.x == myV2IPair.second.x + 1)
+                        if (currentPos.x == myV2IPair.previous.x + 1)
                             revMovementStack.Push(MovementStatus.MovingRight);
-                        else if (currentPos.x == myV2IPair.second.x - 1)
+                        else if (currentPos.x == myV2IPair.previous.x - 1)
                             revMovementStack.Push(MovementStatus.MovingLeft);
                         else
                         {
@@ -93,33 +100,33 @@ namespace searcher_myNamespace
                     {
                         //error
                     }
-                    Debug.Log(Time.time);
+                    
 
                     #region rubbish
                     //seeking Rev Path
                     int safeCount = 0;
                     for (MyV2IPair tSeekKey = myV2IPairQueue_Saved.Dequeue(); safeCount <= 10000000 && myV2IPairQueue_Saved.Count>0;  tSeekKey = myV2IPairQueue_Saved.Dequeue(),safeCount++)
                     {
-                        if (tSeekKey.first != myV2IPair.second)
+                        if (tSeekKey.current != myV2IPair.previous)
                             myV2IPairQueue_Saved.Enqueue(tSeekKey);//recycle this element
                         else //tSeekKey.first == myV2IPair.second
                         {
-                            if (tSeekKey.first.x == tSeekKey.second.x)
+                            if (tSeekKey.current.x == tSeekKey.previous.x)
                             {
-                                if (tSeekKey.first.y == tSeekKey.second.y+1)
+                                if (tSeekKey.current.y == tSeekKey.previous.y+1)
                                     revMovementStack.Push(MovementStatus.MovingUp);
-                                else if (tSeekKey.first.y == tSeekKey.second.y - 1)
+                                else if (tSeekKey.current.y == tSeekKey.previous.y - 1)
                                     revMovementStack.Push(MovementStatus.MovingDown);
                                 else
                                 {
                                     //error
                                 }
                             }
-                            else if (tSeekKey.first.y == tSeekKey.second.y)
+                            else if (tSeekKey.current.y == tSeekKey.previous.y)
                             {
-                                if (tSeekKey.first.x == tSeekKey.second.x + 1)
+                                if (tSeekKey.current.x == tSeekKey.previous.x + 1)
                                     revMovementStack.Push(MovementStatus.MovingRight);
-                                else if (tSeekKey.first.x == tSeekKey.second.x - 1)
+                                else if (tSeekKey.current.x == tSeekKey.previous.x - 1)
                                     revMovementStack.Push(MovementStatus.MovingLeft);
                                 else
                                 {
@@ -128,7 +135,7 @@ namespace searcher_myNamespace
                             }
                             else
                             {
-                                if (tSeekKey.second.x == -233 && tSeekKey.second.y == -666)
+                                if (tSeekKey.previous.x == -233 && tSeekKey.previous.y == -666)
                                 {
                                     break;
                                 }
@@ -141,9 +148,12 @@ namespace searcher_myNamespace
                     }
                     //debugOption
                     if (safeCount > 500) Debug.Log(safeCount);
-                    Debug.Log(Time.time);
+
+                    timespan = stopwatch.Elapsed - timespan;
+                    Debug.Log(timespan);
                     #endregion //rubbishRegion
 
+                    stopwatch.Stop();
                     return true;
                 }
                 else //normal Node
@@ -163,6 +173,8 @@ namespace searcher_myNamespace
                         supplyQueue.Enqueue(new MyV2IPair(currentPos + new Vector2Int(-1, 0), currentPos));
                 }
             }
+
+            stopwatch.Stop();
             return false;
         }
 

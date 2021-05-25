@@ -13,6 +13,7 @@ using searcher_myNamespace;
 #region
 namespace EditorControl_myNamespace
 {
+#if UNITY_EDITOR
     public static class EditorControl
     {
         public static void EditorPlay()
@@ -30,6 +31,25 @@ namespace EditorControl_myNamespace
             EditorApplication.isPlaying = false;
         }
     }
+#else
+    public static class EditorControl
+    {
+        public static void EditorPlay()
+        {
+            //EditorApplication.isPlaying = true;
+        }
+
+        public static void EditorPause()
+        {
+            //EditorApplication.isPaused = true;
+        }
+
+        public static void EditorStop()
+        {
+            //EditorApplication.isPlaying = false;
+        }
+    }
+#endif
 }
 #endregion
 
