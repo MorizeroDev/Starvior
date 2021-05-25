@@ -49,9 +49,9 @@ public class Chara : MonoBehaviour
     private void Awake() {
 
         //>>>>>
-        if (debugerLock)
+        if (debugerLock && TipBox!=null)
             TipBox.gameObject.SetActive(true);
-        else
+        else if(TipBox != null)
             TipBox.gameObject.SetActive(false);
 
         //<<<<<
