@@ -62,4 +62,12 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+# Release binaries
 /release/
+# Different developing environments
+/code/Morizero/Packages/packages-lock.json
+/code/Morizero/Packages/manifest.json
+
+# Different EditorBuildSettings
+/code/Morizero/ProjectSettings/EditorBuildSettings.asset
+
