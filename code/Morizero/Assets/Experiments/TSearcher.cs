@@ -14,6 +14,7 @@ namespace searcher_myNamespace
     {
         public Vector2Int current;
         public Vector2Int previous;
+        public int index;
 
         public MyV2IPair()
         {
@@ -34,7 +35,7 @@ namespace searcher_myNamespace
             currentPos = 0;
         }
 
-        public void Add(MyV2IPair myV2IPair)
+        public int Add(MyV2IPair myV2IPair)
         {
             if (_IsPosEnd())
                 _Expand();
@@ -55,6 +56,7 @@ namespace searcher_myNamespace
                 }
             }
             currentPos++;
+            return currentPos-1;
         }
 
         private void _Expand()
@@ -99,6 +101,7 @@ namespace searcher_myNamespace
     //----------------------------------------MONO----------------------------------------//
     public class TSearcher : MonoBehaviour
     {
+        public GameObject MoveArrow;
         public Text t; // outPrint, tmep
         public Tmovements outTmovements;
 
@@ -121,10 +124,10 @@ namespace searcher_myNamespace
         
         public bool Search(ref RayMap inRayMap, ref Queue<MyV2IPair> supplyQueue,ref List<Vector2Int> avoidList,ref Stack<MovementStatus> revMovementStack,ref StorageTree storageTree)
         {
-            System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
-            System.TimeSpan timespan = stopwatch.Elapsed;
+            //System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+            //System.TimeSpan timespan = stopwatch.Elapsed;
+            //stopwatch.Start();
 
-            stopwatch.Start();
             Queue<MyV2IPair> myV2IPairQueue_Saved = new Queue<MyV2IPair>();
 
             while(supplyQueue.Count>0)
@@ -140,86 +143,41 @@ namespace searcher_myNamespace
 
                 else if (currentPos == inRayMap.endPoint) // founded
                 {
-                    if (currentPos.x == myV2IPair.previous.x) 
+                    StorageTreeNode iterator = storageTree.data[storageTree.Add(myV2IPair)];// this point is not registered in the tree yet
+                    while (iterator.father!=null)
                     {
-                        if (currentPos.y == myV2IPair.previous.y + 1)
-                            revMovementStack.Push(MovementStatus.MovingUp);
-                        else if (currentPos.y == myV2IPair.previous.y - 1)
-                            revMovementStack.Push(MovementStatus.MovingDown);
-                        else
+                        if (iterator.data.x == iterator.father.data.x)
                         {
-                            //error
-                        }
-                    }
-                    else if (currentPos.y == myV2IPair.previous.y)
-                    {
-                        if (currentPos.x == myV2IPair.previous.x + 1)
-                            revMovementStack.Push(MovementStatus.MovingRight);
-                        else if (currentPos.x == myV2IPair.previous.x - 1)
-                            revMovementStack.Push(MovementStatus.MovingLeft);
-                        else
-                        {
-                            //error
-                        }
-                    }
-                    else
-                    {
-                        //error
-                    }
-                    
-
-                    #region rubbish
-                    //seeking Rev Path
-                    int safeCount = 0;
-                    for (MyV2IPair tSeekKey = myV2IPairQueue_Saved.Dequeue(); safeCount <= 10000000 && myV2IPairQueue_Saved.Count>0;  tSeekKey = myV2IPairQueue_Saved.Dequeue(),safeCount++)
-                    {
-                        if (tSeekKey.current != myV2IPair.previous)
-                            myV2IPairQueue_Saved.Enqueue(tSeekKey);//recycle this element
-                        else //tSeekKey.first == myV2IPair.second
-                        {
-                            if (tSeekKey.current.x == tSeekKey.previous.x)
-                            {
-                                if (tSeekKey.current.y == tSeekKey.previous.y+1)
-                                    revMovementStack.Push(MovementStatus.MovingUp);
-                                else if (tSeekKey.current.y == tSeekKey.previous.y - 1)
-                                    revMovementStack.Push(MovementStatus.MovingDown);
-                                else
-                                {
-                                    //error
-                                }
-                            }
-                            else if (tSeekKey.current.y == tSeekKey.previous.y)
-                            {
-                                if (tSeekKey.current.x == tSeekKey.previous.x + 1)
-                                    revMovementStack.Push(MovementStatus.MovingRight);
-                                else if (tSeekKey.current.x == tSeekKey.previous.x - 1)
-                                    revMovementStack.Push(MovementStatus.MovingLeft);
-                                else
-                                {
-                                    //error
-                                }
-                            }
+                            if (iterator.data.y == iterator.father.data.y + 1)
+                                revMovementStack.Push(MovementStatus.MovingUp);
+                            else if (iterator.data.y == iterator.father.data.y - 1)
+                                revMovementStack.Push(MovementStatus.MovingDown);
                             else
                             {
-                                if (tSeekKey.previous.x == -233 && tSeekKey.previous.y == -666)
-                                {
-                                    break;
-                                }
                                 //error
                             }
-
-                            //update myV2IPair
-                            myV2IPair = tSeekKey;
                         }
+                        else if (iterator.data.y == iterator.father.data.y)
+                        {
+                            if (iterator.data.x == iterator.father.data.x + 1)
+                                revMovementStack.Push(MovementStatus.MovingRight);
+                            else if (iterator.data.x == iterator.father.data.x - 1)
+                                revMovementStack.Push(MovementStatus.MovingLeft);
+                            else
+                            {
+                                //error
+                            }
+                        }
+                        else
+                        {
+                            //error
+                        }
+                        iterator = iterator.father;
                     }
-                    //debugOption
-                    if (safeCount > 500) Debug.Log(safeCount);
 
-                    timespan = stopwatch.Elapsed - timespan;
-                    Debug.Log(timespan);
-                    #endregion //rubbishRegion
-
-                    stopwatch.Stop();
+                    //timespan = stopwatch.Elapsed - timespan;
+                    //Debug.Log(timespan);
+                    //stopwatch.Stop();
                     return true;
                 }
                 else //normal Node
@@ -237,23 +195,20 @@ namespace searcher_myNamespace
                     }
                     if (currentPos.x < inRayMap.size.x-1 && !avoidList.Contains(currentPos + new Vector2Int( 1, 0)) )
                     {
-
                         supplyQueue.Enqueue(new MyV2IPair(currentPos + new Vector2Int( 1, 0), currentPos));
                     }
                     if (currentPos.y > 0 && !avoidList.Contains(currentPos + new Vector2Int( 0,-1)))
                     {
-
                         supplyQueue.Enqueue(new MyV2IPair(currentPos + new Vector2Int( 0,-1), currentPos));
                     }
                     if (currentPos.x > 0 && !avoidList.Contains(currentPos + new Vector2Int(-1, 0)))
                     {
-
                         supplyQueue.Enqueue(new MyV2IPair(currentPos + new Vector2Int(-1, 0), currentPos));
                     }
                 }
             }
 
-            stopwatch.Stop();
+            //stopwatch.Stop();
             return false;
         }
 
@@ -280,12 +235,14 @@ namespace searcher_myNamespace
 
             if (Search(ref rayMap, ref supplyQueue, ref avoidList, ref tMovementStack, ref storageTree))
             {
+                MoveArrow.GetComponent<SpriteRenderer>().color = Color.green;
                 while (tMovementStack.Count > 0)
                 {
                     _PushOut(tMovementStack.Pop());
                 }
             }
-            else { }
+            else
+            { }
 
             _PushOut(MovementStatus.Completed);
         }

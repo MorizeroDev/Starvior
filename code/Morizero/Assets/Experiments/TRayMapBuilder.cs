@@ -111,7 +111,7 @@ namespace TRayMapBuilder_myNamespace
 
         public RayMap rayMap;
         public UnityEvent unityEvent;
-        public bool allowScanStatus = true;
+        public bool allowVisualStatus = false;
 
         public Vector2 tileSize;
         private Vector2 centerPos;
@@ -176,7 +176,7 @@ namespace TRayMapBuilder_myNamespace
                 for (int j = 0; j < sizeInt.y; j++)
                 {
                     rayMap.buffer[i, j] = ReturnRayResult(new Vector2(((i - centerPosInt.x) * tileSize.x) + centerPos.x, ((j - centerPosInt.y) * tileSize.y) + centerPos.y));
-                    TCreateObject(new Vector2(((i - centerPosInt.x) * tileSize.x) + centerPos.x, ((j - centerPosInt.y) * tileSize.y) + centerPos.y), rayMap.buffer[i, j], TempFather, (rayMap.endPoint.x == i && rayMap.endPoint.y == j), (rayMap.startPoint.x == i && rayMap.startPoint.y == j));
+                    if(allowVisualStatus) TCreateObject(new Vector2(((i - centerPosInt.x) * tileSize.x) + centerPos.x, ((j - centerPosInt.y) * tileSize.y) + centerPos.y), rayMap.buffer[i, j], TempFather, (rayMap.endPoint.x == i && rayMap.endPoint.y == j), (rayMap.startPoint.x == i && rayMap.startPoint.y == j));
                 }
                 if (stopwatch.ElapsedMilliseconds - counterTime >= 1000*Time.fixedDeltaTime)
                 {
@@ -189,6 +189,10 @@ namespace TRayMapBuilder_myNamespace
             if(!rayMap.buffer[rayMap.endPoint.x, rayMap.endPoint.y])
             {
                 receiverSearcher.inRayMapEvent.Invoke(rayMap);
+            }
+            else
+            {
+                receiverSearcher.MoveArrow.GetComponent<SpriteRenderer>().color = Color.red;
             }
             yield return 0;
         }
@@ -289,18 +293,8 @@ namespace TRayMapBuilder_myNamespace
 
         // Update is called once per frame
         void Update()
-        { 
-            if (allowScanStatus)
-            {
-                if (Input.GetKeyDown(KeyCode.C))
-                {
-                    TDTempFather();
-                    //centerPos = gameObject.transform.position;
-                    //rayMap = _Shot(tileSize, centerPos, pictureSize);
-                    //rayMap.LogDump();
-                }
-            }
-            else { }
+        {
+
         }
     }
 }

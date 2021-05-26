@@ -102,7 +102,6 @@ public class Chara : MonoBehaviour
         {
             //shoot parameter via UnityEvent
             inPosEvent.Invoke(outmPos);
-            MoveArrow.GetComponent<SpriteRenderer>().color = Color.green;
         }
     }
 
