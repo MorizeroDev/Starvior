@@ -71,3 +71,4 @@ crashlytics-build.properties
 # Different EditorBuildSettings
 /code/Morizero/ProjectSettings/EditorBuildSettings.asset
 
+code/Morizero/.vsconfig
