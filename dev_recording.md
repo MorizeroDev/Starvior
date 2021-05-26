@@ -17,7 +17,7 @@ Core code:
 
 >(20210526 -> ...)
 
-it was from [...]() to [...]()
+it was from [e0c97d](https://github.com/buger404/Morizero/pull/3/commits/e0c97dbeaeef86137b3a9a12b3b7d2bdcf851c3d) to [...]()
 
 Modifies on branch **[dev](https://github.com/buger404/Morizero/tree/dev)** (stable branch), merged to master at [...]()
 
