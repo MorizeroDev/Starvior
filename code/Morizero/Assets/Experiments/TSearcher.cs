@@ -27,7 +27,73 @@ namespace searcher_myNamespace
     }
     public class StorageTree
     {
+        public StorageTree()
+        {
+            size = 64;
+            data = new StorageTreeNode[size];
+            currentPos = 0;
+        }
 
+        public void Add(MyV2IPair myV2IPair)
+        {
+            if (_IsPosEnd())
+                _Expand();
+            data[currentPos] = new StorageTreeNode(myV2IPair.current);
+            for(int i=0;i<currentPos;i++)
+            {
+                if (data[i].data == myV2IPair.previous)
+                {
+                    data[currentPos].father = data[i];
+
+                    StorageTreeNode[] tLeavesArray = new StorageTreeNode[data[i].leavesCount+1];
+                    for (int j = 0; i < data[i].leavesCount; j++)
+                        tLeavesArray[j] = data[i].leaves[j];
+                    tLeavesArray[data[i].leavesCount] = data[currentPos];
+                    data[i].leaves = tLeavesArray;
+
+                    break;
+                }
+            }
+            currentPos++;
+        }
+
+        private void _Expand()
+        {
+            size *= 2;
+            StorageTreeNode[] tdata = new StorageTreeNode[size];
+            for (int i = 0; i < currentPos; i++)
+                tdata[i] = data[i];
+            data = tdata;
+        }
+
+        private bool _IsPosEnd()
+        {
+            return (currentPos == size-1);
+        }
+
+        private int size;
+        private int currentPos;
+        public StorageTreeNode[] data;
+    }
+
+    public class StorageTreeNode
+    {
+        StorageTreeNode()
+        {
+
+        }
+
+        public StorageTreeNode(Vector2Int vector2Int,bool isRoot = false)
+        {
+            data = vector2Int;
+            if(isRoot)
+                father = null;
+        }
+
+        public StorageTreeNode father = null;
+        public Vector2Int data;
+        public StorageTreeNode[] leaves = new StorageTreeNode[0];
+        public int leavesCount = 0;
     }
 
     //----------------------------------------MONO----------------------------------------//
@@ -53,7 +119,7 @@ namespace searcher_myNamespace
 
 
         
-        public bool Search(ref RayMap inRayMap, ref Queue<MyV2IPair> supplyQueue,ref List<Vector2Int> avoidList,ref Stack<MovementStatus> revMovementStack)
+        public bool Search(ref RayMap inRayMap, ref Queue<MyV2IPair> supplyQueue,ref List<Vector2Int> avoidList,ref Stack<MovementStatus> revMovementStack,ref StorageTree storageTree)
         {
             System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
             System.TimeSpan timespan = stopwatch.Elapsed;
@@ -159,18 +225,31 @@ namespace searcher_myNamespace
                 else //normal Node
                 {
                     avoidList.Add(currentPos);
-
+                    //>>>>>
+                    storageTree.Add(myV2IPair);
+                    //<<<<<
                     myV2IPairQueue_Saved.Enqueue(myV2IPair);
 
                     //enqueue
                     if( currentPos.y < inRayMap.size.y-1 && !avoidList.Contains(currentPos + new Vector2Int( 0, 1)) )
+                    {
                         supplyQueue.Enqueue(new MyV2IPair(currentPos + new Vector2Int( 0, 1), currentPos));
+                    }
                     if (currentPos.x < inRayMap.size.x-1 && !avoidList.Contains(currentPos + new Vector2Int( 1, 0)) )
+                    {
+
                         supplyQueue.Enqueue(new MyV2IPair(currentPos + new Vector2Int( 1, 0), currentPos));
+                    }
                     if (currentPos.y > 0 && !avoidList.Contains(currentPos + new Vector2Int( 0,-1)))
+                    {
+
                         supplyQueue.Enqueue(new MyV2IPair(currentPos + new Vector2Int( 0,-1), currentPos));
+                    }
                     if (currentPos.x > 0 && !avoidList.Contains(currentPos + new Vector2Int(-1, 0)))
+                    {
+
                         supplyQueue.Enqueue(new MyV2IPair(currentPos + new Vector2Int(-1, 0), currentPos));
+                    }
                 }
             }
 
@@ -190,6 +269,7 @@ namespace searcher_myNamespace
             Queue<MyV2IPair> supplyQueue = new Queue<MyV2IPair>();
             List<Vector2Int> avoidList = new List<Vector2Int>();
             Stack<MovementStatus> tMovementStack = new Stack<MovementStatus>();
+            StorageTree storageTree = new StorageTree();
 
             for (int i = 0; i < rayMap.size.x; i++)
                 for (int j = 0; j < rayMap.size.y; j++)
@@ -198,7 +278,7 @@ namespace searcher_myNamespace
             supplyQueue.Enqueue(new MyV2IPair(rayMap.startPoint,new Vector2Int(-233,-666)) );
             // (-233,-666) is a hooked start point XD
 
-            if (Search(ref rayMap, ref supplyQueue, ref avoidList, ref tMovementStack))
+            if (Search(ref rayMap, ref supplyQueue, ref avoidList, ref tMovementStack, ref storageTree))
             {
                 while (tMovementStack.Count > 0)
                 {
