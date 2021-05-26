@@ -97,6 +97,9 @@ namespace TRayMapBuilder_myNamespace
     //----------------------------------------MONO----------------------------------------//
     public class TRayMapBuilder : MonoBehaviour
     {
+        public GameObject movementEndObject_Prefab;
+        private GameObject _movementEndObject;
+
         public Tmovements tmovements;
         public TSearcher receiverSearcher;
         public Text t;
@@ -184,9 +187,10 @@ namespace TRayMapBuilder_myNamespace
                     yield return 0;
                 }
             }
-            
             stopwatch.Stop();
-            if(!rayMap.buffer[rayMap.endPoint.x, rayMap.endPoint.y])
+            if(rayMap.endPoint.x<rayMap.size.x && rayMap.endPoint.x >= 0 &&
+               rayMap.endPoint.y < rayMap.size.y && rayMap.endPoint.x >= 0 &&
+               !rayMap.buffer[rayMap.endPoint.x, rayMap.endPoint.y])
             {
                 receiverSearcher.inRayMapEvent.Invoke(rayMap);
             }
@@ -197,9 +201,17 @@ namespace TRayMapBuilder_myNamespace
             yield return 0;
         }
 
+        //----------InvokeEntrance----------//
         private void _Shot(Vector2 outArrowPosition)
         {
-            if(coroutineWorkhandle!=null)
+            if (!_movementEndObject)
+                _movementEndObject = Instantiate(movementEndObject_Prefab);
+            _movementEndObject.transform.position = outArrowPosition;
+            _movementEndObject.name = "movementEndObject";
+            
+            //EditorControl.EditorPause();
+
+            if (coroutineWorkhandle!=null)
                 StopCoroutine(coroutineWorkhandle);
             tmovements.inContinueQueueUnitEvent.Invoke();//interrupt
             centerPos = cT.position;

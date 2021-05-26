@@ -143,42 +143,53 @@ namespace searcher_myNamespace
 
                 else if (currentPos == inRayMap.endPoint) // founded
                 {
-                    StorageTreeNode iterator = storageTree.data[storageTree.Add(myV2IPair)];// this point is not registered in the tree yet
-                    while (iterator.father!=null)
+                    int tempIndexn = storageTree.Add(myV2IPair);
+                    StorageTreeNode iterator = storageTree.data[tempIndexn];// this point is not registered in the tree yet
+                    
+                    try
                     {
-                        if (iterator.data.x == iterator.father.data.x)
+                        while (iterator.father!=null)
                         {
-                            if (iterator.data.y == iterator.father.data.y + 1)
-                                revMovementStack.Push(MovementStatus.MovingUp);
-                            else if (iterator.data.y == iterator.father.data.y - 1)
-                                revMovementStack.Push(MovementStatus.MovingDown);
+                            if (iterator.data.x == iterator.father.data.x)
+                            {
+                                if (iterator.data.y == iterator.father.data.y + 1)
+                                    revMovementStack.Push(MovementStatus.MovingUp);
+                                else if (iterator.data.y == iterator.father.data.y - 1)
+                                    revMovementStack.Push(MovementStatus.MovingDown);
+                                else
+                                {
+                                    //error
+                                }
+                            }
+                            else if (iterator.data.y == iterator.father.data.y)
+                            {
+                                if (iterator.data.x == iterator.father.data.x + 1)
+                                    revMovementStack.Push(MovementStatus.MovingRight);
+                                else if (iterator.data.x == iterator.father.data.x - 1)
+                                    revMovementStack.Push(MovementStatus.MovingLeft);
+                                else
+                                {
+                                    //error
+                                }
+                            }
                             else
                             {
                                 //error
                             }
+                            iterator = iterator.father;
                         }
-                        else if (iterator.data.y == iterator.father.data.y)
-                        {
-                            if (iterator.data.x == iterator.father.data.x + 1)
-                                revMovementStack.Push(MovementStatus.MovingRight);
-                            else if (iterator.data.x == iterator.father.data.x - 1)
-                                revMovementStack.Push(MovementStatus.MovingLeft);
-                            else
-                            {
-                                //error
-                            }
-                        }
-                        else
-                        {
-                            //error
-                        }
-                        iterator = iterator.father;
-                    }
 
-                    //timespan = stopwatch.Elapsed - timespan;
-                    //Debug.Log(timespan);
-                    //stopwatch.Stop();
-                    return true;
+                        //timespan = stopwatch.Elapsed - timespan;
+                        //Debug.Log(timespan);
+                        //stopwatch.Stop();
+                        return true;
+                    }
+                    catch(System.Exception e)
+                    {
+                        EditorControl_myNamespace.EditorControl.EditorPause();
+                        Debug.Log(e);
+                        return false;
+                    }
                 }
                 else //normal Node
                 {
@@ -229,6 +240,7 @@ namespace searcher_myNamespace
             for (int i = 0; i < rayMap.size.x; i++)
                 for (int j = 0; j < rayMap.size.y; j++)
                     if (rayMap.buffer[i, j]) avoidList.Add(new Vector2Int(i, j));
+            avoidList.Remove(rayMap.startPoint);//you don't want to bury yourself
 
             supplyQueue.Enqueue(new MyV2IPair(rayMap.startPoint,new Vector2Int(-233,-666)) );
             // (-233,-666) is a hooked start point XD

@@ -33,6 +33,7 @@ namespace testMovements_myNamespace
 
         public UnityEvent<MovementStatus> inMovementsEvent;
         public UnityEvent inContinueQueueUnitEvent;
+        public UnityEvent inClearQueueEvent;
         
         public float movementExtendCount;
         public Vector2 preRestingPos;
@@ -40,6 +41,7 @@ namespace testMovements_myNamespace
         public float speed;
 
         public MovementStatus nowStatus;
+        public MovementStatus nextStatus;
         public void EnqueueStatus(MovementStatus s)
         {
             statusQueue.Enqueue(s);
@@ -51,6 +53,12 @@ namespace testMovements_myNamespace
             cT = character.transform;
             preRestingPos = cT.position;
             tileSize = character.GetComponent<TRayMapBuilder>().tileSize;
+        }
+
+        public void ClearQueue()
+        {
+            nowStatus = MovementStatus.Special_SkipFrame;
+            statusQueue.Clear();
         }
 
         public void ContinueQueueUnit()
@@ -67,9 +75,9 @@ namespace testMovements_myNamespace
         private void ExecMove()
         {
             movementExtendCount += speed * Time.deltaTime;
-            if ( (nowStatus == MovementStatus.MovingLeft || nowStatus == MovementStatus.MovingRight) ? 
+            if ( nowStatus!=nextStatus && ((nowStatus == MovementStatus.MovingLeft || nowStatus == MovementStatus.MovingRight) ? 
                         (movementExtendCount >= tileSize.x) :
-                        (movementExtendCount >= tileSize.y)) //[Tip]wish vomit not vomit your yesterdaymeal when u see this. XD
+                        (movementExtendCount >= tileSize.y))) //[Tip]wish vomit not vomit your yesterdaymeal when u see this. XD
             {
                 switch (nowStatus)
                 {
@@ -116,6 +124,14 @@ namespace testMovements_myNamespace
                         //Error
                         break;
                 }
+                if(nowStatus == nextStatus && ((nowStatus == MovementStatus.MovingLeft || nowStatus == MovementStatus.MovingRight) ?
+                        (movementExtendCount >= tileSize.x) :
+                        (movementExtendCount >= tileSize.y)))
+                {
+                    preRestingPos = cT.position;
+                    movementExtendCount = 0;
+                    nowStatus = MovementStatus.Resting;
+                }
             }
         }
 
@@ -125,6 +141,7 @@ namespace testMovements_myNamespace
             nowStatus = MovementStatus.Completed;
             inMovementsEvent.AddListener(EnqueueStatus);
             inContinueQueueUnitEvent.AddListener(ContinueQueueUnit);
+            inClearQueueEvent.AddListener(ClearQueue);
         }
 
         private bool _IsInEnqueueableMode(MovementStatus s)
@@ -142,7 +159,14 @@ namespace testMovements_myNamespace
         private void Update()
         {
             if(statusQueue.Count > 0 && _IsInEnqueueableMode(nowStatus) )
+            {
                 nowStatus = statusQueue.Dequeue();
+                if (nowStatus != MovementStatus.Completed)
+                    nextStatus = statusQueue.Peek();
+                else
+                    nextStatus = MovementStatus.Start;
+            }
+
             switch (nowStatus)
             {
                 case MovementStatus.MovingUp:
