@@ -156,7 +156,7 @@ namespace testMovements_myNamespace
         }
         
         // Update is called once per frame
-        private void Update()
+        private void FixedUpdate()
         {
             if(statusQueue.Count > 0 && _IsInEnqueueableMode(nowStatus) )
             {
