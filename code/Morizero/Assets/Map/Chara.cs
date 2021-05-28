@@ -105,6 +105,10 @@ public class Chara : MonoBehaviour
         }
     }
 
+    //<<<<<
+
+    //>>>>>
+
     void FixedUpdate()
     {
         if (debugerLock) goto endTag;

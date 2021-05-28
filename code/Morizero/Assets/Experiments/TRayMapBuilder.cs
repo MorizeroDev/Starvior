@@ -9,6 +9,7 @@ using UnityEngine.UI;
 
 using testMovements_myNamespace;
 using searcher_myNamespace;
+using TCharaExperiment_myNamespace;
 
 #region
 namespace EditorControl_myNamespace
@@ -106,7 +107,8 @@ namespace TRayMapBuilder_myNamespace
         public GameObject character; // Main Player's character Object
         private Transform cT;
 
-        public Chara chara;
+        //public Chara chara;
+        public TChara tchara;
         public UnityEvent<Vector2> inPosEvent = new UnityEvent<Vector2>();
 
         public Vector2 anchorPosition;
@@ -132,7 +134,9 @@ namespace TRayMapBuilder_myNamespace
 
         private bool ReturnRayResult(Vector2 position)
         {
-            RaycastHit2D[] hit2D = Physics2D.RaycastAll(position, Vector2.zero);
+            LayerMask layerMask = new LayerMask();
+            layerMask.value = ((1 << 3) /*| (1 << 0)*/);//Only Furniture
+            RaycastHit2D[] hit2D = Physics2D.RaycastAll(position, Vector2.zero,Mathf.Infinity,layerMask);
             
             foreach (RaycastHit2D t_hit in hit2D)
             {
@@ -300,7 +304,7 @@ namespace TRayMapBuilder_myNamespace
         {
             cT = character.transform;
             centerPos = cT.position;
-            chara.inPosEvent.AddListener(_Shot);
+            tchara.inPosEvent.AddListener(_Shot);
         }
 
         // Update is called once per frame
