@@ -34,7 +34,12 @@ namespace TCharaExperiment_myNamespace
         // Walk task
         public class WalkTask
         {
-            WalkTask(float inDistance, WalkDirection inWalkDirection)
+            public WalkTask()
+            {
+
+            }
+
+            public WalkTask(float inDistance, WalkDirection inWalkDirection)
             {
                 distance = inDistance;
                 direction = inWalkDirection;
@@ -173,28 +178,20 @@ namespace TCharaExperiment_myNamespace
         //public WalkTaskCallback walkTaskCallback;   // 行走人物回调
 
         private void Awake() {
-
-            _MyQueueWithIndex<char> test = new _MyQueueWithIndex<char>();
-            test.Add('H');
-            test.Add('e');
+            _MyQueueWithIndex<WalkTask> test = new _MyQueueWithIndex<WalkTask>();
+            test.Add(new WalkTask());
+            test.Add(new WalkTask());
+            test.Add(new WalkTask());
+            test.Add(new WalkTask());
             test.Pop();
-            test.Add('l');
-            test.Add('l');
-            test.Add('o');
-            test.Add(' ');
-            test.Add('W');
-            test.Add('o');
-            test.Add('r');
-            test.Add('l');
-            test.Add('d');
-            test.Add('!');
-            test.referencePeek = 'c';
-            string s = "";
-            while (test.Count>0)
-            {
-                s += test.Pop();
-            }
-            EditorControl_myNamespace.EditorControl.EditorStop();return;
+            test.Add(new WalkTask());
+            test.Pop();
+            test.Add(new WalkTask());
+            test.Pop();
+            test.Add(new WalkTask());
+            test.Pop();
+            test.Add(new WalkTask());
+
             //>>>>>
             if (debugerLock && TipBox!=null)
                 TipBox.gameObject.SetActive(true);
