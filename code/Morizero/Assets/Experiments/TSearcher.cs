@@ -5,10 +5,12 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-using testMovements_myNamespace;
-using TRayMapBuilder_myNamespace;
+using MyNamespace.tMovement;
+using MyNamespace.tRayMapBuilder;
+using MyNamespace.editorControl;
+using MyNamespace.tMovementTranslator;
 
-namespace searcher_myNamespace
+namespace MyNamespace.tSearcher
 {
     public class MyV2IPair
     {
@@ -103,7 +105,8 @@ namespace searcher_myNamespace
     {
         public GameObject MoveArrow;
         public Text t; // outPrint, tmep
-        public Tmovements outTmovements;
+        //public Tmovements outTmovements;
+        public TMovementTranslator outTranslator;
 
         public UnityEvent<RayMap> inRayMapEvent;
         
@@ -117,7 +120,8 @@ namespace searcher_myNamespace
 
         private void _PushOut(MovementStatus s)
         {
-            outTmovements.inMovementsEvent.Invoke(s);
+            outTranslator.inMovementsEvent.Invoke(s);
+            //outTmovements.inMovementsEvent.Invoke(s);
         }
 
 
@@ -186,7 +190,7 @@ namespace searcher_myNamespace
                     }
                     catch(System.Exception e)
                     {
-                        EditorControl_myNamespace.EditorControl.EditorPause();
+                        EditorControl.EditorPause();
                         Debug.Log(e);
                         return false;
                     }

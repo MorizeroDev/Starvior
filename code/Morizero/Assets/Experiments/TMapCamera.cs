@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-using TCharaExperiment_myNamespace;
+using MyNamespace.tCharaExperiment;
 
-namespace TMapCamera_myNamespace
+namespace MyNamespace.tMapCamera
 {
     public class TMapCamera : MonoBehaviour
     {

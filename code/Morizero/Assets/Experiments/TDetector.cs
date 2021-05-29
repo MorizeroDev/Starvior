@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MyNamespace.tMovement;
 
 public class TDetector : MonoBehaviour
 {
-    public testMovements_myNamespace.Tmovements tmovements;
+    public Tmovements tmovements;
     // Start is called before the first frame update
     void Start()
     {

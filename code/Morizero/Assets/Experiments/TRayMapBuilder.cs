@@ -4,15 +4,16 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEditor;
-using EditorControl_myNamespace;
+using MyNamespace.editorControl;
 using UnityEngine.UI;
 
-using testMovements_myNamespace;
-using searcher_myNamespace;
-using TCharaExperiment_myNamespace;
+using MyNamespace.tRayMapBuilder;
+using MyNamespace.tMovement;
+using MyNamespace.tSearcher;
+using MyNamespace.tCharaExperiment;
 
 #region
-namespace EditorControl_myNamespace
+namespace MyNamespace.editorControl
 {
 #if UNITY_EDITOR
     public static class EditorControl
@@ -55,7 +56,7 @@ namespace EditorControl_myNamespace
 #endregion
 
 
-namespace TRayMapBuilder_myNamespace
+namespace MyNamespace.tRayMapBuilder
 {
     public class RayMap
     {
@@ -101,7 +102,7 @@ namespace TRayMapBuilder_myNamespace
         public GameObject movementEndObject_Prefab;
         private GameObject _movementEndObject;
 
-        public Tmovements tmovements;
+        //public Tmovements tmovements;
         public TSearcher receiverSearcher;
         public Text t;
         public GameObject character; // Main Player's character Object
@@ -217,7 +218,7 @@ namespace TRayMapBuilder_myNamespace
 
             if (coroutineWorkhandle!=null)
                 StopCoroutine(coroutineWorkhandle);
-            tmovements.inContinueQueueUnitEvent.Invoke();//interrupt
+            //tmovements.inContinueQueueUnitEvent.Invoke();//interrupt
             centerPos = cT.position;
 
             Vector2Int sizeInt = new Vector2Int((int)(pictureSize.x / tileSize.x), (int)(pictureSize.y / tileSize.y));

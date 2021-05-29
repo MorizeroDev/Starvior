@@ -3,22 +3,149 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using TRayMapBuilder_myNamespace;
 using UnityEngine.Events;
-using UnityEngine.UI;
-using TMapCamera_myNamespace;
 
-namespace TCharaExperiment_myNamespace
+using MyNamespace.tMapCamera;
+using MyNamespace.tRayMapBuilder;
+using MyNamespace.myQueueWithIndex;
+
+namespace MyNamespace.myQueueWithIndex
+{
+    public class MyQueueWithIndex<T> //warning! this is a circle Queue!
+    {
+        public MyQueueWithIndex(int inSize = 0)
+        {
+            inerSize = inSize;
+            buffer = new T[inerSize];
+            pAdd = 0;
+            pPeek = (inSize == 0) ? pAdd : pAdd + 1;
+            isEmpty = !(inSize == 0);
+        }
+
+        public T Peek()
+        {
+            return buffer[pPeek];
+        }
+
+        public ref T realPeek // equals to referencePeek
+        {
+            get
+            {
+                return ref buffer[pPeek];
+            }
+        }
+
+        public ref T referencePeek // equals to realPeek
+        {
+            get
+            {
+                return ref buffer[pPeek];
+            }
+        }
+
+        public T Dequeue()
+        {
+            if (Count == 0) return default;
+            T rev = buffer[pPeek];
+            if (pPeek + 1 == pAdd)
+                isEmpty = true;
+            if (pPeek + 1 == inerSize)
+                pPeek = 0;
+            else
+                pPeek++;
+            return rev;
+        }
+
+        public int Count
+        {
+            get
+            {
+                if (pAdd > pPeek)
+                    return pAdd - pPeek;
+                else if (pAdd < pPeek)
+                {
+                    return inerSize - pPeek + pAdd;
+                }
+                else if (pAdd == pPeek)
+                    if (isEmpty) return 0;
+                    else return inerSize;
+                else
+                {
+                    return -1; //error
+                }
+            }
+        }
+
+        public void Enqueue(T unit)
+        {
+            if (pAdd == pPeek && !isEmpty) // queue full, need expand
+            {
+                if (inerSize == 0)
+                {
+                    buffer = new T[minmalAppendValue];
+                    inerSize = minmalAppendValue;
+                }
+                else
+                {
+                    T[] container = new T[inerSize * 2];
+                    for (int i = pPeek, count = 0; count < inerSize; count++)
+                    {
+                        container[count] = buffer[i];
+                        i = (i + 1 == inerSize) ? 0 : (i + 1);
+                    }
+                    buffer = container;
+                    pPeek = 0;
+                    pAdd = inerSize;
+                    inerSize *= 2;
+                }
+            }
+
+
+            buffer[pAdd] = unit;
+
+            if (pAdd + 1 == inerSize)  //circle
+                pAdd = 0;
+            else
+                pAdd++;
+
+
+            isEmpty = false;
+        }
+
+        /// <summary>
+        /// Danger Motion!
+        /// </summary>
+        public void Clear()
+        {
+            buffer = new T[inerSize];
+            isEmpty = true;
+            pAdd = 0;
+            pPeek = 0;
+        }
+
+        private bool isEmpty = true;
+        private readonly int minmalAppendValue = 2;
+        private int pAdd;               //pointer to the Tail
+        private int inerSize;
+        private int pPeek;
+        public T[] buffer;
+    }
+}
+
+namespace MyNamespace.tCharaExperiment
 {
     //public delegate void WalkTaskCallback();
 
     // 角色控制器
     public enum WalkDirection{
-        Down,Left,Right,Up
+        Down,Left,Right,Up,Default
     }
 
+
+    //--------------------MONO--------------------//
     public class TChara : MonoBehaviour
     {
+        public UnityEvent<WalkTask> inEnqueueEvent = new UnityEvent<WalkTask>();
         //outPuts for the MoveArrow's actual position to Pathfinding System
         public Vector2 outmPos;
         public UnityEvent<Vector2> inPosEvent = new UnityEvent<Vector2>();
@@ -31,12 +158,21 @@ namespace TCharaExperiment_myNamespace
         //    public float x, y;                       // 实际的任务坐标
         //}
 
-        // Walk task
+        // Walk task form
         public class WalkTask
         {
             public WalkTask()
             {
+                distance = 0f;
+                direction = WalkDirection.Default;
+            }
 
+            public bool IsUseless
+            {
+                get
+                {
+                    return direction == default;
+                }
             }
 
             public WalkTask(float inDistance, WalkDirection inWalkDirection)
@@ -52,108 +188,7 @@ namespace TCharaExperiment_myNamespace
         //public List<WalkTask> walkTasks = new List<WalkTask>();
 
         // Queue for Walk task
-        private class _MyQueueWithIndex<T> //warning! this is a circle Queue!
-        {
-            public _MyQueueWithIndex(int inSize = 0)
-            {
-                inerSize = inSize;
-                buffer = new T[inerSize];
-                pAdd = 0;
-                pPeek = (inSize == 0) ? pAdd : pAdd + 1;
-                isEmpty = !(inSize == 0);
-            }
-
-            public T Peek()
-            {
-                return buffer[pPeek];
-            }
-
-            public ref T referencePeek
-            {
-                get
-                {
-                    return ref buffer[pPeek];
-                }
-            }
-
-            public T Pop()
-            {
-                if (Count == 0) return default;
-                T rev = buffer[pPeek];
-                if (pPeek +1 == pAdd)
-                    isEmpty = true;
-                if (pPeek + 1 == inerSize)
-                    pPeek = 0;
-                else
-                    pPeek++;
-                return rev;
-            }
-            
-            public int Count
-            {
-                get
-                {
-                    if (pAdd > pPeek)
-                        return pAdd - pPeek;
-                    else if (pAdd < pPeek)
-                    {
-                        return inerSize - pPeek + pAdd;
-                    }
-                    else if (pAdd == pPeek)
-                        if (isEmpty) return 0;
-                        else return inerSize;
-                    else
-                    {
-                        return -1; //error
-                    }
-                }
-            }
-
-            public void Add(T unit)
-            {
-                if(pAdd==pPeek && !isEmpty) // queue full, need expand
-                {
-                    if (inerSize == 0)
-                    {
-                        buffer = new T[minmalAppendValue];
-                        inerSize = minmalAppendValue;
-                    }
-                    else
-                    {
-                        T[] container= new T[inerSize * 2];
-                        for(int i = pPeek,count = 0; count<inerSize;  count++)
-                        {
-                            container[count] = buffer[i];
-                            i = (i + 1 == inerSize) ? 0 : (i+1);
-                        }
-                        buffer = container;
-                        pPeek = 0;
-                        pAdd = inerSize;
-                        inerSize *= 2;
-                    }
-                }
-
-
-                buffer[pAdd] = unit;
-
-                if (pAdd + 1 == inerSize)  //circle
-                    pAdd = 0;
-                else
-                    pAdd++;
-                    
-
-                isEmpty = false;
-            }
-
-            private bool isEmpty = true;
-            private readonly int minmalAppendValue = 2;
-            private int pAdd;               //pointer to the Tail
-            private int inerSize;
-            private int pPeek;
-            public T[] buffer;
-        }
-
-        private _MyQueueWithIndex<WalkTask> walkTaskQueue = new _MyQueueWithIndex<WalkTask>();
+        private MyQueueWithIndex<WalkTask> walkTaskQueue = new MyQueueWithIndex<WalkTask>();
 
         /// <summary>
         /// used for shut down the FixedUpdate
@@ -163,6 +198,7 @@ namespace TCharaExperiment_myNamespace
 
         public bool isWalkTask;
 
+        public float sneekPerFrame;
         private Sprite[] Animation;                 // 行走图图像集
         public string Character;                    // 对应的人物
         public bool Controller = false;             // 是否为玩家
@@ -178,19 +214,6 @@ namespace TCharaExperiment_myNamespace
         //public WalkTaskCallback walkTaskCallback;   // 行走人物回调
 
         private void Awake() {
-            _MyQueueWithIndex<WalkTask> test = new _MyQueueWithIndex<WalkTask>();
-            test.Add(new WalkTask());
-            test.Add(new WalkTask());
-            test.Add(new WalkTask());
-            test.Add(new WalkTask());
-            test.Pop();
-            test.Add(new WalkTask());
-            test.Pop();
-            test.Add(new WalkTask());
-            test.Pop();
-            test.Add(new WalkTask());
-            test.Pop();
-            test.Add(new WalkTask());
 
             //>>>>>
             if (debugerLock && TipBox!=null)
@@ -219,7 +242,10 @@ namespace TCharaExperiment_myNamespace
                 // 取得传送位置坐标
                 this.transform.localPosition = GameObject.Find("tp" + MapCamera.initTp).transform.localPosition;
             }
+
+            inEnqueueEvent.AddListener(Enqueueme);
         }
+        
         // 更新行走图图形
         void UploadWalk(){
             if(walking){
@@ -244,19 +270,27 @@ namespace TCharaExperiment_myNamespace
             if(Input.GetMouseButtonUp(0))
             {
                 //shoot parameter via UnityEvent
+                //tchara.inPosEvent.AddListener(_Shot);
+                walkTaskQueue.Clear();
                 inPosEvent.Invoke(outmPos);
             }
         }
+        
+        public void Enqueueme(WalkTask task)
+        {
+            walkTaskQueue.Enqueue(task);
+        }
 
-        //<<<<<
-
-        //>>>>>
+        private void Start()
+        {
+            walkTaskQueue.Enqueue(new WalkTask(1f, WalkDirection.Right));
+            editorControl.EditorControl.EditorPause();
+        }
 
         void FixedUpdate()
         {
             if (debugerLock) goto endTag;
-
-
+            
             // 如果不是玩家
             if(!Controller) return;
             // 如果剧本正在进行则退出
@@ -265,9 +299,28 @@ namespace TCharaExperiment_myNamespace
             isWalkTask = (walkTaskQueue.Count > 0);
             Vector3 pos = transform.localPosition;
 
+            bool _isAdjustWalkTask = false;
+            float _adjustedSneekPerFrame = 0f;
             // 如果有行走任务
             if(isWalkTask){
-                WalkTask iterator = walkTaskQueue.Peek();
+                WalkTask _walkTask_iterator = walkTaskQueue.referencePeek;
+                if(_walkTask_iterator.IsUseless)
+                {
+                    UploadWalk();
+                    return;
+                }
+
+                if (_walkTask_iterator.distance - sneekPerFrame < 0)
+                {
+                    _isAdjustWalkTask = true;
+                    _adjustedSneekPerFrame = sneekPerFrame - _walkTask_iterator.distance;
+                    walkTaskQueue.Dequeue();
+                }
+                else
+                {
+                    dir = _walkTask_iterator.direction;
+                    _walkTask_iterator.distance -= sneekPerFrame;
+                }
 
                 #region old
                 //// 如果坐标尚未初始化
@@ -338,12 +391,19 @@ namespace TCharaExperiment_myNamespace
                 }
             }
 
-            pos.x += 0.05f * (dir == WalkDirection.Left ? -1 : (dir == WalkDirection.Right ? 1 : 0)) * (Input.GetKey(KeyCode.X) ? 2 : 1);
-            pos.y += 0.05f * (dir == WalkDirection.Up ? 1 : (dir == WalkDirection.Down ? -1 : 0)) * (Input.GetKey(KeyCode.X) ? 2 : 1);
-            if(pos.x < sx) pos.x = sx;
-            if(pos.x > ex) pos.x = ex;
-            if(pos.y > sy) pos.y = sy;
-            if(pos.y < ey) pos.y = ey;
+            if(_isAdjustWalkTask)
+            {
+                pos.x += _adjustedSneekPerFrame * (dir == WalkDirection.Left ? -1 : (dir == WalkDirection.Right ? 1 : 0)) * (Input.GetKey(KeyCode.X) ? 2 : 1);
+                pos.y += _adjustedSneekPerFrame * (dir == WalkDirection.Up ? 1 : (dir == WalkDirection.Down ? -1 : 0)) * (Input.GetKey(KeyCode.X) ? 2 : 1);
+            }
+            pos.x += sneekPerFrame * (dir == WalkDirection.Left ? -1 : (dir == WalkDirection.Right ? 1 : 0)) * (Input.GetKey(KeyCode.X) ? 2 : 1);
+            pos.y += sneekPerFrame * (dir == WalkDirection.Up ? 1 : (dir == WalkDirection.Down ? -1 : 0)) * (Input.GetKey(KeyCode.X) ? 2 : 1);
+            
+            if (pos.x < sx) pos.x = sx;
+            if (pos.x > ex) pos.x = ex;
+            if (pos.y > sy) pos.y = sy;
+            if (pos.y < ey) pos.y = ey;
+
             transform.localPosition = pos;
             walking = true;
             UploadWalk();

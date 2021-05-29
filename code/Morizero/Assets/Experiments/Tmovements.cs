@@ -4,10 +4,10 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-using TRayMapBuilder_myNamespace;
-using EditorControl_myNamespace;
+using MyNamespace.tRayMapBuilder;
+using MyNamespace.editorControl;
 
-namespace testMovements_myNamespace
+namespace MyNamespace.tMovement
 {
     public enum MovementStatus
     {
@@ -42,6 +42,7 @@ namespace testMovements_myNamespace
 
         public MovementStatus nowStatus;
         public MovementStatus nextStatus;
+
         public void EnqueueStatus(MovementStatus s)
         {
             statusQueue.Enqueue(s);

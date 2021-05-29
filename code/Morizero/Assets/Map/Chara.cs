@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using TRayMapBuilder_myNamespace;
+using MyNamespace.tRayMapBuilder;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
