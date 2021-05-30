@@ -25,8 +25,8 @@ public class DramaScript
                 float xB = 0,yB = 0;
                 if(p[i].StartsWith("left")) xB = -float.Parse(p[i].Substring(4));
                 if(p[i].StartsWith("right")) xB = float.Parse(p[i].Substring(5));
-                if(p[i].StartsWith("up")) yB = -float.Parse(p[i].Substring(2));
-                if(p[i].StartsWith("down")) yB = float.Parse(p[i].Substring(4));
+                if(p[i].StartsWith("up")) yB = float.Parse(p[i].Substring(2));
+                if(p[i].StartsWith("down")) yB = -float.Parse(p[i].Substring(4));
                 chara.walkTasks.Add(new Chara.walkTask{
                     xBuff = xB, yBuff = yB, x = 0, y = 0
                 });
