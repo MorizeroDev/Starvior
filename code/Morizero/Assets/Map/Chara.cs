@@ -149,7 +149,7 @@ public class Chara : MonoBehaviour
             // 检查是否点击的是UI而不是地板
             if (EventSystem.current.IsPointerOverGameObject()) return;
             // 设置相关参数
-            tMode = true;tx = mpos.x;ty = mpos.y;lx = 0;ly = 0;
+            tx = mpos.x;ty = mpos.y;lx = 0;ly = 0;
             // 设置点击反馈
             MoveArrow.transform.localPosition = mpos;
             MoveArrow.SetActive(true);
