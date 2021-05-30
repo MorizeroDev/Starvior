@@ -11,7 +11,7 @@ public delegate void WalkTaskCallback();
 // 角色控制器
 public class Chara : MonoBehaviour
 {
-    public Vector2 outmPos;
+    //public Vector2 outmPos;
     public UnityEvent<Vector2> inPosEvent = new UnityEvent<Vector2>();
     
     // 朝向枚举
@@ -26,10 +26,6 @@ public class Chara : MonoBehaviour
     // 当列表长度为0时表示行走完毕
     public List<walkTask> walkTasks = new List<walkTask>();
 
-    /// <summary>
-    /// used for shut down the FixedUpdate
-    /// </summary>
-    public bool debugerLock;
     public Text TipBox;
 
     private Sprite[] Animation;                 // 行走图图像集
@@ -49,7 +45,7 @@ public class Chara : MonoBehaviour
     private void Awake() {
 
         //>>>>>
-        if (debugerLock && TipBox!=null)
+        if (TipBox!=null)
             TipBox.gameObject.SetActive(true);
         else if(TipBox != null)
             TipBox.gameObject.SetActive(false);
@@ -96,13 +92,20 @@ public class Chara : MonoBehaviour
         // 设定帧
         image.sprite = Animation[(int)dir * 3 + walkBuff];
     }
-    private void Update()
-    {
-        if(Input.GetMouseButtonUp(0))
-        {
-            //shoot parameter via UnityEvent
-            inPosEvent.Invoke(outmPos);
-        }
+
+
+    // ⚠警告：x和y的取值只能为-1，0，1
+    void MoveFrame(int x,int y){
+        Vector3 pos = transform.localPosition;
+        pos.x += 0.05f * x * (Input.GetKey(KeyCode.X) ? 2 : 1);
+        pos.y += 0.05f * y * (Input.GetKey(KeyCode.X) ? 2 : 1);
+        if(pos.x < sx) pos.x = sx;
+        if(pos.x > ex) pos.x = ex;
+        if(pos.y > sy) pos.y = sy;
+        if(pos.y < ey) pos.y = ey;
+        transform.localPosition = pos;
+        walking = true;
+
     }
 
     //<<<<<
@@ -111,9 +114,6 @@ public class Chara : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (debugerLock) goto endTag;
-
-
         // 如果不是玩家
         if(!Controller) return;
         // 如果剧本正在进行则退出
@@ -133,25 +133,22 @@ public class Chara : MonoBehaviour
             }
             if(Mathf.Abs(walkTasks[0].x - pos.x) <= 0.04f && Mathf.Abs(walkTasks[0].y - pos.y) <= 0.04f){
                 walkTasks.RemoveAt(0);
-                if(walkTasks.Count == 0) walkTaskCallback();
-                UploadWalk();
-                return;
+                if(walkTasks.Count == 0 && !tMode) walkTaskCallback();
+                if(tMode) tMode = false;
             }else if(walkTasks[0].x < pos.x){
-                dir = walkDir.Left;
+                MoveFrame(-1,0);
             }else if(walkTasks[0].x > pos.x){
-                dir = walkDir.Right;
+                MoveFrame(1,0);
             }else if(walkTasks[0].y < pos.y){
-                dir = walkDir.Up;
+                MoveFrame(0,-1);
             }else if(walkTasks[0].y > pos.y){
-                dir = walkDir.Down;
+                MoveFrame(0,1);
             }
         }
 
         // 如果屏幕被点击
-
         if(Input.GetMouseButton(0) && !isWalkTask){
             MoveArrow.GetComponent<SpriteRenderer>().color = Color.white;
-
             // 从屏幕坐标换算到世界坐标
             Vector3 mpos = MapCamera.mcamera.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
             mpos.z = 0;
@@ -162,63 +159,39 @@ public class Chara : MonoBehaviour
             // 设置点击反馈
             MoveArrow.transform.localPosition = mpos;
             MoveArrow.SetActive(true);
+            // 必要：开启tMode，将寻路WalkTask与DramaScript的WalkTask区别开来
+            tMode = true;
             //prepare for Event to TRayMapBuilder
-            outmPos = mpos;
+            inPosEvent.Invoke(mpos);
+            MoveArrow.GetComponent<SpriteRenderer>().color = Color.green;
         }
 
-        if(tMode){
-            /**
-                TODO：当触摸模式启动时的移动处理
-            **/
-            tMode = false;
-        }else if(!isWalkTask){
-            // 非触摸模式时，检测键盘输入
-            if(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)){
-                dir = walkDir.Left;
-            }else if(Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)){
-                dir = walkDir.Right;
-            }else if(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)){
-                dir = walkDir.Up;
-            }else if(Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)){
-                dir = walkDir.Down;
-            }else{
-                UploadWalk();
-                return;
-            }
+        
+        // 检测键盘输入
+        bool isKeyboard = false;
+        if(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)){
+            MoveFrame(-1,0); isKeyboard = true;
+        }else if(Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)){
+            MoveFrame(1,0); isKeyboard = true;
+        }else if(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)){
+            MoveFrame(0,1); isKeyboard = true;
+        }else if(Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)){
+            MoveFrame(0,-1); isKeyboard = true;
+        }
+        // 仅打断寻路task（tMode），不打断DramaScript的task
+        if(isKeyboard && isWalkTask && tMode){
+            walkTasks.RemoveAt(0); tMode = false;
         }
 
-        pos.x += 0.05f * (dir == walkDir.Left ? -1 : (dir == walkDir.Right ? 1 : 0)) * (Input.GetKey(KeyCode.X) ? 2 : 1);
-        pos.y += 0.05f * (dir == walkDir.Up ? 1 : (dir == walkDir.Down ? -1 : 0)) * (Input.GetKey(KeyCode.X) ? 2 : 1);
-        if(pos.x < sx) pos.x = sx;
-        if(pos.x > ex) pos.x = ex;
-        if(pos.y > sy) pos.y = sy;
-        if(pos.y < ey) pos.y = ey;
-        transform.localPosition = pos;
-        walking = true;
+        // 检测方向
+        if(pos.x < lx) dir = walkDir.Left;
+        else if(pos.x > lx) dir = walkDir.Right;
+        else if(pos.y < ly) dir = walkDir.Down;
+        else if(pos.y > ly) dir = walkDir.Up;
+        lx = pos.x; ly = pos.y;
+
+        // 更新图片
         UploadWalk();
 
-
-        endTag:
-        if (debugerLock)
-        {
-            if (Input.GetMouseButton(0) )
-            {
-                MoveArrow.GetComponent<SpriteRenderer>().color = Color.white;
-
-                // 从屏幕坐标换算到世界坐标
-                Vector3 mpos = MapCamera.mcamera.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
-                mpos.z = 0;
-                // 检查是否点击的是UI而不是地板
-                if (EventSystem.current.IsPointerOverGameObject()) return;
-                // 设置相关参数
-                tMode = true; tx = mpos.x; ty = mpos.y; lx = 0; ly = 0;
-                // 设置点击反馈
-                MoveArrow.transform.localPosition = mpos;
-                MoveArrow.SetActive(true);
-                //prepare for Event to TRayMapBuilder
-                outmPos = mpos;
-            }
-        }
-        else { }
     }
 }
