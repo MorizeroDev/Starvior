@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using TRayMapBuilder_myNamespace;
+using MyNamespace.tRayMapBuilder;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
@@ -93,6 +93,7 @@ public class Chara : MonoBehaviour
         image.sprite = Animation[(int)dir * 3 + walkBuff];
     }
 
+
     // ⚠警告：x和y的取值只能为-1，0，1
     void MoveFrame(int x,int y){
         Vector3 pos = transform.localPosition;
@@ -104,7 +105,12 @@ public class Chara : MonoBehaviour
         if(pos.y < ey) pos.y = ey;
         transform.localPosition = pos;
         walking = true;
+
     }
+
+    //<<<<<
+
+    //>>>>>
 
     void FixedUpdate()
     {

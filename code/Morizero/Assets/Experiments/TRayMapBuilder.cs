@@ -4,14 +4,16 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEditor;
-using EditorControl_myNamespace;
+using MyNamespace.editorControl;
 using UnityEngine.UI;
 
-using testMovements_myNamespace;
-using searcher_myNamespace;
+using MyNamespace.tRayMapBuilder;
+using MyNamespace.tMovement;
+using MyNamespace.tSearcher;
+using MyNamespace.tCharaExperiment;
 
 #region
-namespace EditorControl_myNamespace
+namespace MyNamespace.editorControl
 {
 #if UNITY_EDITOR
     public static class EditorControl
@@ -54,7 +56,7 @@ namespace EditorControl_myNamespace
 #endregion
 
 
-namespace TRayMapBuilder_myNamespace
+namespace MyNamespace.tRayMapBuilder
 {
     public class RayMap
     {
@@ -97,13 +99,17 @@ namespace TRayMapBuilder_myNamespace
     //----------------------------------------MONO----------------------------------------//
     public class TRayMapBuilder : MonoBehaviour
     {
-        public Tmovements tmovements;
+        public GameObject movementEndObject_Prefab;
+        private GameObject _movementEndObject;
+
+        //public Tmovements tmovements;
         public TSearcher receiverSearcher;
         public Text t;
         public GameObject character; // Main Player's character Object
         private Transform cT;
 
-        public Chara chara;
+        //public Chara chara;
+        public TChara tchara;
         public UnityEvent<Vector2> inPosEvent = new UnityEvent<Vector2>();
 
         public Vector2 anchorPosition;
@@ -111,7 +117,7 @@ namespace TRayMapBuilder_myNamespace
 
         public RayMap rayMap;
         public UnityEvent unityEvent;
-        public bool allowScanStatus = true;
+        public bool allowVisualStatus = false;
 
         public Vector2 tileSize;
         private Vector2 centerPos;
@@ -129,7 +135,9 @@ namespace TRayMapBuilder_myNamespace
 
         private bool ReturnRayResult(Vector2 position)
         {
-            RaycastHit2D[] hit2D = Physics2D.RaycastAll(position, Vector2.zero);
+            LayerMask layerMask = new LayerMask();
+            layerMask.value = ((1 << 3) /*| (1 << 0)*/);//Only Furniture
+            RaycastHit2D[] hit2D = Physics2D.RaycastAll(position, Vector2.zero,Mathf.Infinity,layerMask);
             
             foreach (RaycastHit2D t_hit in hit2D)
             {
@@ -176,7 +184,7 @@ namespace TRayMapBuilder_myNamespace
                 for (int j = 0; j < sizeInt.y; j++)
                 {
                     rayMap.buffer[i, j] = ReturnRayResult(new Vector2(((i - centerPosInt.x) * tileSize.x) + centerPos.x, ((j - centerPosInt.y) * tileSize.y) + centerPos.y));
-                    TCreateObject(new Vector2(((i - centerPosInt.x) * tileSize.x) + centerPos.x, ((j - centerPosInt.y) * tileSize.y) + centerPos.y), rayMap.buffer[i, j], TempFather, (rayMap.endPoint.x == i && rayMap.endPoint.y == j), (rayMap.startPoint.x == i && rayMap.startPoint.y == j));
+                    if(allowVisualStatus) TCreateObject(new Vector2(((i - centerPosInt.x) * tileSize.x) + centerPos.x, ((j - centerPosInt.y) * tileSize.y) + centerPos.y), rayMap.buffer[i, j], TempFather, (rayMap.endPoint.x == i && rayMap.endPoint.y == j), (rayMap.startPoint.x == i && rayMap.startPoint.y == j));
                 }
                 if (stopwatch.ElapsedMilliseconds - counterTime >= 1000*Time.fixedDeltaTime)
                 {
@@ -184,20 +192,33 @@ namespace TRayMapBuilder_myNamespace
                     yield return 0;
                 }
             }
-            
             stopwatch.Stop();
-            if(!rayMap.buffer[rayMap.endPoint.x, rayMap.endPoint.y])
+            if(rayMap.endPoint.x<rayMap.size.x && rayMap.endPoint.x >= 0 &&
+               rayMap.endPoint.y < rayMap.size.y && rayMap.endPoint.x >= 0 &&
+               !rayMap.buffer[rayMap.endPoint.x, rayMap.endPoint.y])
             {
                 receiverSearcher.inRayMapEvent.Invoke(rayMap);
+            }
+            else
+            {
+                receiverSearcher.MoveArrow.GetComponent<SpriteRenderer>().color = Color.red;
             }
             yield return 0;
         }
 
+        //----------InvokeEntrance----------//
         private void _Shot(Vector2 outArrowPosition)
         {
-            if(coroutineWorkhandle!=null)
+            if (!_movementEndObject)
+                _movementEndObject = Instantiate(movementEndObject_Prefab);
+            _movementEndObject.transform.position = outArrowPosition;
+            _movementEndObject.name = "movementEndObject";
+            
+            //EditorControl.EditorPause();
+
+            if (coroutineWorkhandle!=null)
                 StopCoroutine(coroutineWorkhandle);
-            tmovements.inContinueQueueUnitEvent.Invoke();//interrupt
+            //tmovements.inContinueQueueUnitEvent.Invoke();//interrupt
             centerPos = cT.position;
 
             Vector2Int sizeInt = new Vector2Int((int)(pictureSize.x / tileSize.x), (int)(pictureSize.y / tileSize.y));
@@ -284,23 +305,13 @@ namespace TRayMapBuilder_myNamespace
         {
             cT = character.transform;
             centerPos = cT.position;
-            chara.inPosEvent.AddListener(_Shot);
+            tchara.inPosEvent.AddListener(_Shot);
         }
 
         // Update is called once per frame
         void Update()
-        { 
-            if (allowScanStatus)
-            {
-                if (Input.GetKeyDown(KeyCode.C))
-                {
-                    TDTempFather();
-                    //centerPos = gameObject.transform.position;
-                    //rayMap = _Shot(tileSize, centerPos, pictureSize);
-                    //rayMap.LogDump();
-                }
-            }
-            else { }
+        {
+
         }
     }
 }
