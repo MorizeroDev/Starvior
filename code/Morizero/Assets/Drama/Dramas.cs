@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 using System.Threading;
 using System.Threading.Tasks;
 using System;
+using System.Text;
 
 public delegate void DramaCallback();
 public class Dramas : MonoBehaviour
@@ -42,13 +43,26 @@ public class Dramas : MonoBehaviour
 
     private float x = 0,y = 0,step = 0;
 
+    public static Dramas LaunchScript(DramaCallback Callback){
+        callback = Callback;
+        Debug.Log("Dramas: launched at " + "Dramas\\DialogFrameSrc");
+        GameObject fab = (GameObject)Resources.Load("Dramas\\DialogFrameSrc");    // 载入母体
+        GameObject box = Instantiate(fab,new Vector3(0,0,-1),Quaternion.identity);
+        Dramas drama = box.transform.Find("Dialog").GetComponent<Dramas>();
+        drama.Drama = new List<DramaData>();
+        box.GetComponent<Canvas>().worldCamera = Camera.current;
+        return drama;
+    }
     public static Dramas Launch(string DramaName,DramaCallback Callback){
         callback = Callback;
+        Debug.Log("Dramas: launched at " + "Dramas\\" + DramaName);
         GameObject fab = (GameObject)Resources.Load("Dramas\\" + DramaName);    // 载入母体
         GameObject box = Instantiate(fab,new Vector3(0,0,-1),Quaternion.identity);
+        Dramas drama = box.transform.Find("Dialog").GetComponent<Dramas>();
         box.GetComponent<Canvas>().worldCamera = Camera.current;
+        drama.ReadDrama();
         box.SetActive(true);
-        return box.GetComponent<Dramas>();
+        return drama;
     }
     public static Dramas LaunchCheck(string content,DramaCallback Callback){
         callback = Callback;
@@ -59,9 +73,9 @@ public class Dramas : MonoBehaviour
         DramaData data = drama.Drama[0];
         data.content = content;
         drama.Drama[0] = data;
-        drama.Awake();
+        drama.ReadDrama();
         box.SetActive(true);
-        return box.GetComponent<Dramas>();
+        return drama;
     }
     public void DisposeWords(){
         foreach(GameObject word in DisWords) Destroy(word);
@@ -78,9 +92,10 @@ public class Dramas : MonoBehaviour
 
         Title.text = character; 
         if(character != "旁白"){
-            Character.sprite = Resources.Load<Sprite>("Characters\\" + character);
+            Character.sprite = Resources.Load<Sprite>($"Characters\\{character}");
             Character.SetNativeSize();
         }
+        Character.gameObject.SetActive(character != "旁白");
 
         x = sWord.localPosition.x;
         y = sWord.localPosition.y;
@@ -134,7 +149,5 @@ public class Dramas : MonoBehaviour
             WordIndex++;
         }
     }
-    private void Awake() {
-        ReadDrama();
-    }
+
 }

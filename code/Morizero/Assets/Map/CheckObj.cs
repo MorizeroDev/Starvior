@@ -46,9 +46,10 @@ public class CheckObj : MonoBehaviour
 
         MapCamera.SuspensionDrama = true;
         if(Script != null){
-            scriptCarrier.code = Script.text.Split(new char[]{'\n'},System.StringSplitOptions.RemoveEmptyEntries);
+            scriptCarrier.code = Script.text.Split(new string[]{"\r\n"},System.StringSplitOptions.RemoveEmptyEntries);
             scriptCarrier.currentLine = 0;
             scriptCarrier.carryTask();
+            return; 
         }
         if(CheckType == 1){
             Dramas.Launch(Content,() => {

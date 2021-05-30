@@ -2,13 +2,13 @@ path:奥伦,down2,left2,up2,right2
 say:雪兰
 (Leap)你为什么要绕圈？
 path:奥伦,down2,up2
-say:世原
+say:雪兰
 在测试剧本脚本功能。
 似乎没问题了。
 (shake)试试发抖的文字。
 (rainbow)彩虹文字。
 (Focus)试试用奇怪的视角看我。
-say:旁白
+say:世原
 即将测试地图传送。
 tp:Corridor_3F,1
 say:旁白

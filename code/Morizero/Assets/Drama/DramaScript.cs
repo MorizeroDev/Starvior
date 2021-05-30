@@ -13,10 +13,12 @@ public class DramaScript
         if(currentLine >= code.Length) {callback(); return;} 
         string[] t = code[currentLine].Split(':');
         string cmd = t[0];
+        if(t.Length <= 1) {currentLine++; carryTask(); return;}
         string[] p = t[1].Split(',');
         bool handler = false;
         currentLine++;
 
+        Debug.Log("Drama script: (Command) '" + cmd + "' (Param) " + t[1]);
         // 人物路径任务
         // path:人物,task1,task2,...
         if(cmd == "path"){
@@ -39,13 +41,14 @@ public class DramaScript
         // [(shake)/(rainbow)/...]对话内容
         if(cmd == "say"){
             // 创建剧本框架
-            Dramas drama = Dramas.Launch("DialogFrameSrc",carryTask);
+            Dramas drama = Dramas.LaunchScript(carryTask);
             drama.Drama.Clear();
-            string role = p[1];
+            string role = p[0];
             // 读取直至对话结束
             while(currentLine + 1 < code.Length){
-                currentLine++;
+                sayTag:
                 t = code[currentLine].Split(':');
+                Debug.Log("Drama script: (Dialog) " + code[currentLine]);
                 // 初始化对话参数
                 string motion = "Enter";
                 WordEffect.Effect effect = WordEffect.Effect.None;
@@ -80,16 +83,24 @@ public class DramaScript
                 }else{
                     // 对话读取结束，跳出
                     cmd = t[0];
+                    if(cmd == "say"){
+                        role = t[1];
+                        currentLine++;
+                        goto sayTag;
+                    }
                     break;
                 }
+                currentLine++;
             }
             // 刷新剧本
             drama.ReadDrama();
+            drama.gameObject.SetActive(true);
             handler = true;
         }
         // 未处理的脚本
         if(!handler){
             Debug.LogWarning("'" + cmd + $"'（行 {currentLine - 1}）未被处理。");
+            carryTask(); return;
         }
         if(currentLine >= code.Length) callback();
     }
