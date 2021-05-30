@@ -16,20 +16,20 @@ namespace MyNamespace.tMovementTranslator
     public class TMovementTranslator : MonoBehaviour
     {
         public UnityEvent<MovementStatus> inMovementsEvent;
+        public UnityEvent inContinueQueueUnitEvent;
+        public UnityEvent inClearQueueEvent;
 
-        private TChara.WalkTask _preparing_walkTask;
-        private Vector2 tileSize;
         public Queue<MovementStatus> statusQueue = new Queue<MovementStatus>();
 
         public TRayMapBuilder rayMapBuilder;
         public TChara tchara;
-        public UnityEvent inContinueQueueUnitEvent;
-        public UnityEvent inClearQueueEvent;
 
-        public MovementStatus nowStatus;
-        public MovementStatus nextStatus;
+        private TChara.WalkTask _preparing_walkTask;
+        private Vector2 _tileSize;
 
-        private WalkDirection _Convert(MovementStatus inMovementStatus)
+        
+        private MovementStatus _keepStatus;
+        private WalkDirection _Convert(MovementStatus inMovementStatus) // MovementStatus -> WalkDirection
         {
             switch (inMovementStatus)
             {
@@ -53,7 +53,7 @@ namespace MyNamespace.tMovementTranslator
 
         private void Awake()
         {
-            tileSize = rayMapBuilder.tileSize;
+            _tileSize = rayMapBuilder.tileSize;
         }
 
         public void EnqueueStatus(MovementStatus s)
@@ -64,6 +64,11 @@ namespace MyNamespace.tMovementTranslator
         public void ClearQueue()
         {
             statusQueue.Clear();
+        }
+
+        private bool _IsXMode(MovementStatus inMovementStatus)
+        {
+            return inMovementStatus == MovementStatus.MovingLeft || inMovementStatus == MovementStatus.MovingRight;
         }
 
         // Start is called before the first frame update
@@ -77,28 +82,51 @@ namespace MyNamespace.tMovementTranslator
         // Update is called once per frame
         private void Update()
         {
-            if (statusQueue.Count > 0 && statusQueue.Peek() == MovementStatus.Start)//init
+            if (statusQueue.Count == 0) return;
+            else if (statusQueue.Count > 0 && statusQueue.Peek() != MovementStatus.Start)
             {
-                nowStatus = statusQueue.Dequeue();
-                if(statusQueue.Peek() == MovementStatus.Completed)
+                Debug.LogError("Yc Error: Non-Correct type of queue Unit -- Queue Broken!");
+                editorControl.EditorControl.EditorPause();
+                return;
+            }
+            else if (statusQueue.Count > 0 && statusQueue.Peek() == MovementStatus.Start)//init if there's a delicious and juicy Queue ready for my consume
+            {
+                statusQueue.Dequeue();
+
+                if (statusQueue.Peek() == MovementStatus.Completed) 
                 {
                     statusQueue.Dequeue();
-                    return;
+                    return;// this is that said, I even don't want to push out an empty Queue to the following procedure :P
                 }
                 else
                 {
-                    _preparing_walkTask.direction = _Convert(nowStatus);
+                    _keepStatus = statusQueue.Dequeue();
+                    if (_IsXMode(_keepStatus))
+                        _preparing_walkTask = new TChara.WalkTask(_tileSize.x, _Convert(_keepStatus));
+                    else
+                        _preparing_walkTask = new TChara.WalkTask(_tileSize.y, _Convert(_keepStatus));
                 }
-            }
-            else//
-            {
-                Debug.LogError("Yc Error: Non-Correct type of queue Unit!");
-                return;
             }
 
             while (statusQueue.Count > 0)
             {
-                //todo
+                while(statusQueue.Peek()==_keepStatus)
+                {
+                    _preparing_walkTask.distance += _IsXMode(_keepStatus) ? _tileSize.x : _tileSize.y;
+                    statusQueue.Dequeue();
+                }
+                _PushOutPrepare();
+
+                if (statusQueue.Peek() == MovementStatus.Completed)
+                {
+                    statusQueue.Dequeue();
+                    break;
+                }
+                else
+                {
+                    _keepStatus = statusQueue.Dequeue();
+                    _preparing_walkTask = new TChara.WalkTask(_IsXMode(_keepStatus) ? _tileSize.x : _tileSize.y, _Convert(_keepStatus));
+                }
             }
         }
     }

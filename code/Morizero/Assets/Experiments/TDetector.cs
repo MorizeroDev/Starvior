@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using MyNamespace.tMovement;
 
+using MyNamespace.tCharaExperiment;
+
 public class TDetector : MonoBehaviour
 {
-    public Tmovements tmovements;
+    public TChara tchara;
     // Start is called before the first frame update
     void Start()
     {
@@ -23,7 +25,7 @@ public class TDetector : MonoBehaviour
         if (collision2D.gameObject.name == "movementEndObject")
         {
             Destroy(collision2D.gameObject);
-            tmovements.inClearQueueEvent.Invoke();
+            tchara.inClearQueueEvent.Invoke();
         }
     }
 }
