@@ -35,7 +35,7 @@ public class Chara : MonoBehaviour
         } 
     }
     // 当列表长度为0时表示行走完毕
-    public MyQueueWithIndex<walkTask> walkTasks = new MyQueueWithIndex<walkTask>(10);
+    public MyQueueWithIndex<walkTask> walkTasks = new MyQueueWithIndex<walkTask>();
 
     public Text TipBox;
 

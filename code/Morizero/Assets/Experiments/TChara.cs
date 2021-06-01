@@ -18,9 +18,18 @@ namespace MyNamespace.myQueueWithIndex
             inerSize = inSize;
             buffer = new T[inerSize];
             pAdd = 0;
-            pPeek = (inSize == 0) ? pAdd : pAdd + 1;
-            isEmpty = !(inSize == 0);
+            pPeek = 0;
+            isEmpty = inSize!=0;
         }
+
+        //public MyQueueWithIndex()
+        //{
+        //    inerSize = 0;
+        //    buffer = new T[0];
+        //    pAdd = pPeek;
+        //    pPeek = 0;
+        //    isEmpty = false;
+        //}
 
         public T Peek()
         {
@@ -50,7 +59,10 @@ namespace MyNamespace.myQueueWithIndex
             if (pPeek + 1 == pAdd)
                 isEmpty = true;
             if (pPeek + 1 == inerSize)
+            {
                 pPeek = 0;
+                if (pAdd == 0) isEmpty = true;
+            }
             else
                 pPeek++;
             return rev;
@@ -85,7 +97,7 @@ namespace MyNamespace.myQueueWithIndex
                     buffer = new T[minmalAppendValue];
                     inerSize = minmalAppendValue;
                 }
-                if (pAdd == pPeek && !isEmpty) // queue full, need expand
+                else if (pAdd == pPeek && !isEmpty) // queue full, need expand
                 {
                     T[] container = new T[inerSize * 2];
                     for (int i = pPeek, count = 0; count < inerSize; count++)
@@ -227,7 +239,7 @@ namespace MyNamespace.tCharaExperiment
         //public WalkTaskCallback walkTaskCallback;   // 行走人物回调
 
         private void Awake() {
-            
+
             // 载入行走图图像集，并初始化相关设置
             Animation = Resources.LoadAll<Sprite>("Players\\" + Character);
             image = GetComponent<SpriteRenderer>();
