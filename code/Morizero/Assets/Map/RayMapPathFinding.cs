@@ -12,9 +12,52 @@ using MyNamespace.rayMapPathFinding.myQueueWithIndex;
 using MyNamespace.rayMapPathFinding.myV2IPair;
 using MyNamespace.rayMapPathFinding.storageTree_Node;
 using MyNamespace.rayMapPathFinding.movementStatus;
+using MyNamespace.rayMapPathFinding.editorControl;
+using EditorControl = MyNamespace.rayMapPathFinding.editorControl.EditorControl;
 
 namespace MyNamespace.rayMapPathFinding
 {
+    
+    namespace editorControl
+    {
+#if UNITY_EDITOR
+        public static class EditorControl
+        {
+            public static void EditorPlay()
+            {
+                EditorApplication.isPlaying = true;
+            }
+
+            public static void EditorPause()
+            {
+                EditorApplication.isPaused = true;
+            }
+
+            public static void EditorStop()
+            {
+                EditorApplication.isPlaying = false;
+            }
+        }
+#else
+    public static class EditorControl
+    {
+        public static void EditorPlay()
+        {
+            //EditorApplication.isPlaying = true;
+        }
+
+        public static void EditorPause()
+        {
+            //EditorApplication.isPaused = true;
+        }
+
+        public static void EditorStop()
+        {
+            //EditorApplication.isPlaying = false;
+        }
+    }
+#endif
+    }
     namespace myQueueWithIndex
     {
         public class MyQueueWithIndex<T> //warning! this is a circle Queue!
@@ -24,9 +67,18 @@ namespace MyNamespace.rayMapPathFinding
                 inerSize = inSize;
                 buffer = new T[inerSize];
                 pAdd = 0;
-                pPeek = (inSize == 0) ? pAdd : pAdd + 1;
-                isEmpty = !(inSize == 0);
+                pPeek = 0;
+                isEmpty = inSize != 0;
             }
+
+            //public MyQueueWithIndex()
+            //{
+            //    inerSize = 0;
+            //    buffer = new T[0];
+            //    pAdd = pPeek;
+            //    pPeek = 0;
+            //    isEmpty = false;
+            //}
 
             public T Peek()
             {
@@ -56,7 +108,10 @@ namespace MyNamespace.rayMapPathFinding
                 if (pPeek + 1 == pAdd)
                     isEmpty = true;
                 if (pPeek + 1 == inerSize)
+                {
                     pPeek = 0;
+                    if (pAdd == 0) isEmpty = true;
+                }
                 else
                     pPeek++;
                 return rev;
@@ -91,7 +146,7 @@ namespace MyNamespace.rayMapPathFinding
                         buffer = new T[minmalAppendValue];
                         inerSize = minmalAppendValue;
                     }
-                    if (pAdd == pPeek && !isEmpty) // queue full, need expand
+                    else if (pAdd == pPeek && !isEmpty) // queue full, need expand
                     {
                         T[] container = new T[inerSize * 2];
                         for (int i = pPeek, count = 0; count < inerSize; count++)
@@ -119,7 +174,7 @@ namespace MyNamespace.rayMapPathFinding
                 catch (System.Exception e)
                 {
                     Debug.LogError("Yc Error! at MyQueueWithIndex<T>.Enqueue");
-                    editorControl.EditorControl.EditorPause();
+                    EditorControl.EditorPause();
                 }
             }
 
@@ -150,7 +205,6 @@ namespace MyNamespace.rayMapPathFinding
             public T[] buffer;
         }
     }
-
     namespace rayMap
     {
         public class RayMap
@@ -190,7 +244,6 @@ namespace MyNamespace.rayMapPathFinding
             }
         }
     }
-
     namespace myV2IPair
     {
         public class MyV2IPair
@@ -298,6 +351,7 @@ namespace MyNamespace.rayMapPathFinding
             //Special_SkipFrame,
         }
     }
+
     //--------------------MONOBEHAVIOUR--------------------//
     public class RayMapPathFinding : MonoBehaviour
     {
@@ -331,8 +385,12 @@ namespace MyNamespace.rayMapPathFinding
         //Searcher's Entrance (activated by RayMapBuilder)
         public UnityEvent<RayMap> inRayMapEvent;
 
-        //Translator's 
+        //Translator's Updating
         public UnityEvent<MovementStatus> inMovementsEvent;
+        private Chara.walkTask walkTaskUnitOut;
+
+        private Queue<MovementStatus> _queueOfMovementStatus = new Queue<MovementStatus>();
+
         #endregion  //EditorFeed
 
         #region RayMapBuilder
@@ -480,14 +538,39 @@ namespace MyNamespace.rayMapPathFinding
         #endregion
 
         #region Searcher
-        private void _PushOut(MovementStatus s)
+        private void _BuildQueueWork(RayMap rayMap)
         {
-            inMovementsEvent.Invoke(s);
-            //outTmovements.inMovementsEvent.Invoke(s);
+            if (rayMap.startPoint == rayMap.endPoint) return;
+            _PushOut(MovementStatus.Start);
+            Queue<MyV2IPair> supplyQueue = new Queue<MyV2IPair>();
+            List<Vector2Int> avoidList = new List<Vector2Int>();
+            Stack<MovementStatus> tMovementStack = new Stack<MovementStatus>();
+            StorageTree storageTree = new StorageTree();
+
+            for (int i = 0; i < rayMap.size.x; i++)
+                for (int j = 0; j < rayMap.size.y; j++)
+                    if (rayMap.buffer[i, j]) avoidList.Add(new Vector2Int(i, j));
+            avoidList.Remove(rayMap.startPoint);//you don't want to bury yourself
+
+            supplyQueue.Enqueue(new MyV2IPair(rayMap.startPoint, new Vector2Int(-233, -666)));
+            // (-233,-666) is a hooked start point XD
+
+            if (_Search(ref rayMap, ref supplyQueue, ref avoidList, ref tMovementStack, ref storageTree))
+            {
+                moveArrowSpriteRenderer.color = Color.green;
+                while (tMovementStack.Count > 0)
+                {
+                    _PushOut(tMovementStack.Pop());
+                }
+            }
+            else
+            { }
+
+            _PushOut(MovementStatus.Completed);
         }
         private bool _Search(ref RayMap inRayMap, ref Queue<MyV2IPair> supplyQueue, ref List<Vector2Int> avoidList, ref Stack<MovementStatus> revMovementStack, ref StorageTree storageTree)
         {
-            Queue<MyV2IPair> myV2IPairQueue_Saved = new Queue<MyV2IPair>();
+            //Queue<MyV2IPair> myV2IPairQueue_Saved = new Queue<MyV2IPair>();
 
             while (supplyQueue.Count > 0)
             {
@@ -550,58 +633,179 @@ namespace MyNamespace.rayMapPathFinding
                 {
                     avoidList.Add(currentPos);
                     storageTree.Add(myV2IPair);
-                    myV2IPairQueue_Saved.Enqueue(myV2IPair);
+                    //myV2IPairQueue_Saved.Enqueue(myV2IPair);
 
                     //enqueue
-                    if (currentPos.y < inRayMap.size.y - 1 && !avoidList.Contains(currentPos + new Vector2Int(0, 1)))
+                    switch(_IdentifyDirection(myV2IPair.current,myV2IPair.previous)) //trend to walk a straight line
                     {
-                        supplyQueue.Enqueue(new MyV2IPair(currentPos + new Vector2Int(0, 1), currentPos));
-                    }
-                    if (currentPos.x < inRayMap.size.x - 1 && !avoidList.Contains(currentPos + new Vector2Int(1, 0)))
-                    {
-                        supplyQueue.Enqueue(new MyV2IPair(currentPos + new Vector2Int(1, 0), currentPos));
-                    }
-                    if (currentPos.y > 0 && !avoidList.Contains(currentPos + new Vector2Int(0, -1)))
-                    {
-                        supplyQueue.Enqueue(new MyV2IPair(currentPos + new Vector2Int(0, -1), currentPos));
-                    }
-                    if (currentPos.x > 0 && !avoidList.Contains(currentPos + new Vector2Int(-1, 0)))
-                    {
-                        supplyQueue.Enqueue(new MyV2IPair(currentPos + new Vector2Int(-1, 0), currentPos));
+                        case MovementStatus.MovingUp:
+                            if (currentPos.y < inRayMap.size.y - 1 && !avoidList.Contains(currentPos + new Vector2Int(0, 1)))
+                            {
+                                supplyQueue.Enqueue(new MyV2IPair(currentPos + new Vector2Int(0, 1), currentPos));
+                            }
+                            if (currentPos.x < inRayMap.size.x - 1 && !avoidList.Contains(currentPos + new Vector2Int(1, 0)))
+                            {
+                                supplyQueue.Enqueue(new MyV2IPair(currentPos + new Vector2Int(1, 0), currentPos));
+                            }
+                            if (currentPos.x > 0 && !avoidList.Contains(currentPos + new Vector2Int(-1, 0)))
+                            {
+                                supplyQueue.Enqueue(new MyV2IPair(currentPos + new Vector2Int(-1, 0), currentPos));
+                            }
+                            if (currentPos.y > 0 && !avoidList.Contains(currentPos + new Vector2Int(0, -1)))
+                            {
+                                supplyQueue.Enqueue(new MyV2IPair(currentPos + new Vector2Int(0, -1), currentPos));
+                            }
+                            break;
+                        case MovementStatus.MovingRight:
+                            if (currentPos.x < inRayMap.size.x - 1 && !avoidList.Contains(currentPos + new Vector2Int(1, 0)))
+                            {
+                                supplyQueue.Enqueue(new MyV2IPair(currentPos + new Vector2Int(1, 0), currentPos));
+                            }
+                            if (currentPos.y < inRayMap.size.y - 1 && !avoidList.Contains(currentPos + new Vector2Int(0, 1)))
+                            {
+                                supplyQueue.Enqueue(new MyV2IPair(currentPos + new Vector2Int(0, 1), currentPos));
+                            }
+                            if (currentPos.y > 0 && !avoidList.Contains(currentPos + new Vector2Int(0, -1)))
+                            {
+                                supplyQueue.Enqueue(new MyV2IPair(currentPos + new Vector2Int(0, -1), currentPos));
+                            }
+                            if (currentPos.x > 0 && !avoidList.Contains(currentPos + new Vector2Int(-1, 0)))
+                            {
+                                supplyQueue.Enqueue(new MyV2IPair(currentPos + new Vector2Int(-1, 0), currentPos));
+                            }
+                            break;
+                        case MovementStatus.MovingDown:
+                            if (currentPos.y > 0 && !avoidList.Contains(currentPos + new Vector2Int(0, -1)))
+                            {
+                                supplyQueue.Enqueue(new MyV2IPair(currentPos + new Vector2Int(0, -1), currentPos));
+                            }
+                            if (currentPos.x < inRayMap.size.x - 1 && !avoidList.Contains(currentPos + new Vector2Int(1, 0)))
+                            {
+                                supplyQueue.Enqueue(new MyV2IPair(currentPos + new Vector2Int(1, 0), currentPos));
+                            }
+                            if (currentPos.x > 0 && !avoidList.Contains(currentPos + new Vector2Int(-1, 0)))
+                            {
+                                supplyQueue.Enqueue(new MyV2IPair(currentPos + new Vector2Int(-1, 0), currentPos));
+                            }
+                            if (currentPos.y < inRayMap.size.y - 1 && !avoidList.Contains(currentPos + new Vector2Int(0, 1)))
+                            {
+                                supplyQueue.Enqueue(new MyV2IPair(currentPos + new Vector2Int(0, 1), currentPos));
+                            }
+                            break;
+                        case MovementStatus.MovingLeft:
+                            if (currentPos.x > 0 && !avoidList.Contains(currentPos + new Vector2Int(-1, 0)))
+                            {
+                                supplyQueue.Enqueue(new MyV2IPair(currentPos + new Vector2Int(-1, 0), currentPos));
+                            }
+                            if (currentPos.y < inRayMap.size.y - 1 && !avoidList.Contains(currentPos + new Vector2Int(0, 1)))
+                            {
+                                supplyQueue.Enqueue(new MyV2IPair(currentPos + new Vector2Int(0, 1), currentPos));
+                            }
+                            if (currentPos.y > 0 && !avoidList.Contains(currentPos + new Vector2Int(0, -1)))
+                            {
+                                supplyQueue.Enqueue(new MyV2IPair(currentPos + new Vector2Int(0, -1), currentPos));
+                            }
+                            if (currentPos.x < inRayMap.size.x - 1 && !avoidList.Contains(currentPos + new Vector2Int(1, 0)))
+                            {
+                                supplyQueue.Enqueue(new MyV2IPair(currentPos + new Vector2Int(1, 0), currentPos));
+                            }
+                            break;
+                        default:
+                            if (currentPos.y < inRayMap.size.y - 1 && !avoidList.Contains(currentPos + new Vector2Int(0, 1)))
+                            {
+                                supplyQueue.Enqueue(new MyV2IPair(currentPos + new Vector2Int(0, 1), currentPos));
+                            }
+                            if (currentPos.x < inRayMap.size.x - 1 && !avoidList.Contains(currentPos + new Vector2Int(1, 0)))
+                            {
+                                supplyQueue.Enqueue(new MyV2IPair(currentPos + new Vector2Int(1, 0), currentPos));
+                            }
+                            if (currentPos.y > 0 && !avoidList.Contains(currentPos + new Vector2Int(0, -1)))
+                            {
+                                supplyQueue.Enqueue(new MyV2IPair(currentPos + new Vector2Int(0, -1), currentPos));
+                            }
+                            if (currentPos.x > 0 && !avoidList.Contains(currentPos + new Vector2Int(-1, 0)))
+                            {
+                                supplyQueue.Enqueue(new MyV2IPair(currentPos + new Vector2Int(-1, 0), currentPos));
+                            }
+                            break;
                     }
                 }
             }
             return false;
         }
-        private void _BuildQueueWork(RayMap rayMap)
+        private MovementStatus _IdentifyDirection(Vector2Int current, Vector2Int previous)
         {
-            if (rayMap.startPoint == rayMap.endPoint) return;
-            _PushOut(MovementStatus.Start);
-            Queue<MyV2IPair> supplyQueue = new Queue<MyV2IPair>();
-            List<Vector2Int> avoidList = new List<Vector2Int>();
-            Stack<MovementStatus> tMovementStack = new Stack<MovementStatus>();
-            StorageTree storageTree = new StorageTree();
-
-            for (int i = 0; i < rayMap.size.x; i++)
-                for (int j = 0; j < rayMap.size.y; j++)
-                    if (rayMap.buffer[i, j]) avoidList.Add(new Vector2Int(i, j));
-            avoidList.Remove(rayMap.startPoint);//you don't want to bury yourself
-
-            supplyQueue.Enqueue(new MyV2IPair(rayMap.startPoint, new Vector2Int(-233, -666)));
-            // (-233,-666) is a hooked start point XD
-
-            if (_Search(ref rayMap, ref supplyQueue, ref avoidList, ref tMovementStack, ref storageTree))
+            if (current.x == previous.x)
             {
-                moveArrowSpriteRenderer.color = Color.green;
-                while (tMovementStack.Count > 0)
+                if (current.y == previous.y + 1)
+                    return MovementStatus.MovingUp;
+                else if (current.y == previous.y - 1)
+                    return MovementStatus.MovingDown;
+                else
                 {
-                    _PushOut(tMovementStack.Pop());
+                    return default;
+                }
+            }
+            else if (current.y == previous.y)
+            {
+                if (current.x == previous.x + 1)
+                    return MovementStatus.MovingRight;
+                else if (current.x == previous.x - 1)
+                    return MovementStatus.MovingLeft;
+                else
+                {
+                    return default;
                 }
             }
             else
-            { }
+            {
+                return default;
+            }
+        }
 
-            _PushOut(MovementStatus.Completed);
+        private void _PushOut(MovementStatus s)
+        {
+            inMovementsEvent.Invoke(s);
+            //outTmovements.inMovementsEvent.Invoke(s);
+        }
+        #endregion
+
+        #region Translator
+        private void _TranslatorEntrance(MovementStatus movementStatus)
+        {
+            _queueOfMovementStatus.Enqueue(movementStatus);
+            if(movementStatus == MovementStatus.Completed)
+            {
+                _Translate();
+            }
+        }
+        private void _Translate()
+        {
+            if (_queueOfMovementStatus.Dequeue() != MovementStatus.Start)
+            {
+                return;
+            }
+            
+            MovementStatus m_nowStatus;
+            MyQueueWithIndex<Chara.walkTask> m_myQueueWithIndex_rev = new MyQueueWithIndex<Chara.walkTask>();
+            Chara.walkTask m_walkTask = new Chara.walkTask { xBuff = 0, yBuff = 0, x=0 , y=0};
+            
+            while(_queueOfMovementStatus.Peek()!= MovementStatus.Completed)
+            {
+                m_nowStatus = _queueOfMovementStatus.Dequeue();
+                m_walkTask = new Chara.walkTask {xBuff =0, yBuff =0,
+                    x = (m_nowStatus == MovementStatus.MovingRight) ? tileSize.x : ((m_nowStatus == MovementStatus.MovingLeft) ? -tileSize.x : 0),
+                    y = (m_nowStatus == MovementStatus.MovingUp) ? tileSize.y : ((m_nowStatus == MovementStatus.MovingDown) ? -tileSize.y : 0)
+                };
+                while (_queueOfMovementStatus.Peek() == m_nowStatus)
+                {
+                    m_walkTask.x = (m_nowStatus == MovementStatus.MovingRight) ? m_walkTask.x+tileSize.x : ((m_nowStatus == MovementStatus.MovingLeft) ? m_walkTask.x - tileSize.x : m_walkTask.x);
+                    m_walkTask.y = (m_nowStatus == MovementStatus.MovingUp) ? m_walkTask.y+tileSize.y : ((m_nowStatus == MovementStatus.MovingDown) ? m_walkTask.y - tileSize.y : m_walkTask.y);
+                    _queueOfMovementStatus.Dequeue();
+                }
+                m_myQueueWithIndex_rev.Enqueue(m_walkTask);
+            }
+            return;
         }
         #endregion
 
@@ -610,11 +814,12 @@ namespace MyNamespace.rayMapPathFinding
         {
             chara.inPosEvent.AddListener(_Shoot);
             inRayMapEvent.AddListener(_BuildQueueWork);
+            inMovementsEvent.AddListener(_TranslatorEntrance);
         }
         // Start is called before the first frame update
         private void Start()
         {
-
+            cT = character.transform;
         }
 
         // Update is called once per frame
