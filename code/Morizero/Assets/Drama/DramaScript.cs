@@ -29,9 +29,8 @@ public class DramaScript
                 if(p[i].StartsWith("right")) xB = float.Parse(p[i].Substring(5));
                 if(p[i].StartsWith("up")) yB = float.Parse(p[i].Substring(2));
                 if(p[i].StartsWith("down")) yB = -float.Parse(p[i].Substring(4));
-                chara.walkTasks.Add(new Chara.walkTask{
-                    xBuff = xB, yBuff = yB, x = 0, y = 0
-                });
+                Debug.Log("Drama script: walk task enqueue:" + xB + "," + yB);
+                chara.walkTasks.Enqueue(new Chara.walkTask(xB, yB, true));
             }
             chara.walkTaskCallback = carryTask;
             handler = true;

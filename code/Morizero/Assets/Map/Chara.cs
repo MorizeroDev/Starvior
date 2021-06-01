@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using MyNamespace.tRayMapBuilder;
 using UnityEngine.Events;
-using UnityEngine.UI;
 
+using MyNamespace.tRayMapBuilder;
+using MyNamespace.myQueueWithIndex;
+
+// 用于Drama Script的回调函数
 public delegate void WalkTaskCallback();
 // 角色控制器
 public class Chara : MonoBehaviour
@@ -19,12 +21,21 @@ public class Chara : MonoBehaviour
         Down,Left,Right,Up
     }
     // 行走任务
-    public struct walkTask{
-        public float xBuff,yBuff;               // 横纵坐标上的任务
+    public class walkTask{
         public float x,y;                       // 实际的任务坐标
+        public float xBuff,yBuff;               // 步数坐标（Drama Script）
+        public walkTask(float x,float y,bool isBuff = false){
+            if(!isBuff){
+                this.x = x; this.y = y;
+                xBuff = 0; yBuff = 0;
+            }else{
+                this.xBuff = x; this.yBuff = y;
+                x = 0;y = 0;
+            }
+        } 
     }
     // 当列表长度为0时表示行走完毕
-    public List<walkTask> walkTasks = new List<walkTask>();
+    public MyQueueWithIndex<walkTask> walkTasks = new MyQueueWithIndex<walkTask>(10);
 
     public Text TipBox;
 
@@ -37,20 +48,16 @@ public class Chara : MonoBehaviour
     private int walkBuff = 1;                   // 行走图系列帧序数
     private float walkspan;                     // 行走图动画间隔控制缓冲
     private float sx,sy,ex,ey;                  // 地图边界x,y - x,y
-    private float tx,ty,lx,ly;                  // 目标地点x,y；上一次的坐标x,y
     public GameObject MoveArrow;                // 点击移动反馈
     private bool tMode = false;                 // 点击移动模式（TouchMode）
     public WalkTaskCallback walkTaskCallback;   // 行走人物回调
 
     private void Awake() {
 
-        //>>>>>
         if (TipBox!=null)
             TipBox.gameObject.SetActive(true);
         else if(TipBox != null)
             TipBox.gameObject.SetActive(false);
-
-        //<<<<<
 
         // 载入行走图图像集，并初始化相关设置
         Animation = Resources.LoadAll<Sprite>("Players\\" + Character);
@@ -93,24 +100,21 @@ public class Chara : MonoBehaviour
         image.sprite = Animation[(int)dir * 3 + walkBuff];
     }
 
-
     // ⚠警告：x和y的取值只能为-1，0，1
-    void MoveFrame(int x,int y){
+    void Move(int x,int y){
         Vector3 pos = transform.localPosition;
-        pos.x += 0.05f * x * (Input.GetKey(KeyCode.X) ? 2 : 1);
-        pos.y += 0.05f * y * (Input.GetKey(KeyCode.X) ? 2 : 1);
+        float buff = 0.05f * Time.deltaTime * 60f * (Input.GetKey(KeyCode.X) ? 2 : 1);
+        pos.x += buff * x ;
+        pos.y += buff * y ;
         if(pos.x < sx) pos.x = sx;
         if(pos.x > ex) pos.x = ex;
         if(pos.y > sy) pos.y = sy;
         if(pos.y < ey) pos.y = ey;
         transform.localPosition = pos;
         walking = true;
-
+        if(x != 0) dir = x < 0 ? walkDir.Left : walkDir.Right;
+        if(y != 0) dir = y < 0 ? walkDir.Down : walkDir.Up;
     }
-
-    //<<<<<
-
-    //>>>>>
 
     void FixedUpdate()
     {
@@ -121,28 +125,47 @@ public class Chara : MonoBehaviour
         // 是否正在执行行走任务？
         bool isWalkTask = (walkTasks.Count > 0);
         Vector3 pos = transform.localPosition;
-
+        
         // 如果有行走任务
         if(isWalkTask){
+            walkTask wt = walkTasks.referencePeek;
             // 如果坐标尚未初始化
-            if(walkTasks[0].x == 0){
-                walkTask task = walkTasks[0];
-                task.x = pos.x + 0.5f * task.xBuff;
-                task.y = pos.y + 0.5f * task.yBuff;
-                walkTasks[0] = task;
+            if(wt.xBuff != 0 || wt.yBuff != 0){
+                wt.x = pos.x + 0.5f * wt.xBuff;
+                wt.y = pos.y + 0.5f * wt.yBuff;
+                wt.xBuff = 0; wt.yBuff = 0;
+                Debug.Log("Walktask: relative position cale: " + wt.x + "," + wt.y);
             }
-            if(Mathf.Abs(walkTasks[0].x - pos.x) <= 0.04f && Mathf.Abs(walkTasks[0].y - pos.y) <= 0.04f){
-                walkTasks.RemoveAt(0);
-                if(walkTasks.Count == 0 && !tMode) walkTaskCallback();
-                if(tMode) tMode = false;
-            }else if(walkTasks[0].x < pos.x){
-                MoveFrame(-1,0);
-            }else if(walkTasks[0].x > pos.x){
-                MoveFrame(1,0);
-            }else if(walkTasks[0].y < pos.y){
-                MoveFrame(0,-1);
-            }else if(walkTasks[0].y > pos.y){
-                MoveFrame(0,1);
+            // 决定是否修正行走坐标（完成行走）
+            bool isFix = false;
+            if(wt.x < pos.x){
+                Move(-1,0);
+                if(wt.x >= transform.localPosition.x) isFix = true;
+            }else if(wt.x > pos.x){
+                Move(1,0);
+                if(wt.x <= transform.localPosition.x) isFix = true;
+            }else if(wt.y < pos.y){
+                Move(0,-1);
+                if(wt.y >= transform.localPosition.y) isFix = true;
+            }else if(wt.y > pos.y){
+                Move(0,1);
+                if(wt.y <= transform.localPosition.y) isFix = true;
+            }
+            // 修正坐标
+            if(isFix){
+                Debug.Log("Walktask: " + (walkTasks.Count - 1) + " remaining...");
+                transform.localPosition = new Vector3(wt.x,wt.y,pos.z);
+                walkTasks.Dequeue();
+                if(walkTasks.Count == 0){
+                    if(tMode){
+                        Debug.Log("Walktask: tasks for Pathfinding is done.");
+                        tMode = false;
+                        MoveArrow.SetActive(false);
+                    }else{
+                        Debug.Log("Walktask: tasks for Drama Script is done.");
+                        walkTaskCallback();
+                    } 
+                }
             }
         }
 
@@ -154,8 +177,6 @@ public class Chara : MonoBehaviour
             mpos.z = 0;
             // 检查是否点击的是UI而不是地板
             if (EventSystem.current.IsPointerOverGameObject()) return;
-            // 设置相关参数
-            tx = mpos.x;ty = mpos.y;lx = 0;ly = 0;
             // 设置点击反馈
             MoveArrow.transform.localPosition = mpos;
             MoveArrow.SetActive(true);
@@ -170,25 +191,19 @@ public class Chara : MonoBehaviour
         // 检测键盘输入
         bool isKeyboard = false;
         if(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)){
-            MoveFrame(-1,0); isKeyboard = true;
+            Move(-1,0); isKeyboard = true;
         }else if(Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)){
-            MoveFrame(1,0); isKeyboard = true;
+            Move(1,0); isKeyboard = true;
         }else if(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)){
-            MoveFrame(0,1); isKeyboard = true;
+            Move(0,1); isKeyboard = true;
         }else if(Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)){
-            MoveFrame(0,-1); isKeyboard = true;
+            Move(0,-1); isKeyboard = true;
         }
         // 仅打断寻路task（tMode），不打断DramaScript的task
         if(isKeyboard && isWalkTask && tMode){
-            walkTasks.RemoveAt(0); tMode = false;
+            Debug.Log("Walktask: tasks for Pathfinding is broke.");
+            walkTasks.Clear(); tMode = false; MoveArrow.SetActive(false);
         }
-
-        // 检测方向
-        if(pos.x < lx) dir = walkDir.Left;
-        else if(pos.x > lx) dir = walkDir.Right;
-        else if(pos.y < ly) dir = walkDir.Down;
-        else if(pos.y > ly) dir = walkDir.Up;
-        lx = pos.x; ly = pos.y;
 
         // 更新图片
         UploadWalk();
