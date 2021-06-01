@@ -79,7 +79,6 @@ namespace MyNamespace.tSearcher
         private int currentPos;
         public StorageTreeNode[] data;
     }
-
     public class StorageTreeNode
     {
         StorageTreeNode()
@@ -103,19 +102,14 @@ namespace MyNamespace.tSearcher
     //----------------------------------------MONO----------------------------------------//
     public class TSearcher : MonoBehaviour
     {
-        public GameObject MoveArrow;
-        public Text t; // outPrint, tmep
+        public SpriteRenderer moveArrowSpriteRenderer;
         //public Tmovements outTmovements;
         public TMovementTranslator outTranslator;
-
         public UnityEvent<RayMap> inRayMapEvent;
-        
-
         // Start is called before the first frame update
         void Start()
         {
-            inRayMapEvent.AddListener(BuildQueueWork);
-            //StartCoroutine(Search_Advanced()); //STILL CONSTRUCTING! an safe Search method that do not delay so much
+            inRayMapEvent.AddListener(_BuildQueueWork);
         }
 
         private void _PushOut(MovementStatus s)
@@ -123,15 +117,8 @@ namespace MyNamespace.tSearcher
             outTranslator.inMovementsEvent.Invoke(s);
             //outTmovements.inMovementsEvent.Invoke(s);
         }
-
-
-        
-        public bool Search(ref RayMap inRayMap, ref Queue<MyV2IPair> supplyQueue,ref List<Vector2Int> avoidList,ref Stack<MovementStatus> revMovementStack,ref StorageTree storageTree)
+        private bool _Search(ref RayMap inRayMap, ref Queue<MyV2IPair> supplyQueue,ref List<Vector2Int> avoidList,ref Stack<MovementStatus> revMovementStack,ref StorageTree storageTree)
         {
-            //System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
-            //System.TimeSpan timespan = stopwatch.Elapsed;
-            //stopwatch.Start();
-
             Queue<MyV2IPair> myV2IPairQueue_Saved = new Queue<MyV2IPair>();
 
             while(supplyQueue.Count>0)
@@ -182,10 +169,6 @@ namespace MyNamespace.tSearcher
                             }
                             iterator = iterator.father;
                         }
-
-                        //timespan = stopwatch.Elapsed - timespan;
-                        //Debug.Log(timespan);
-                        //stopwatch.Stop();
                         return true;
                     }
                     catch(System.Exception e)
@@ -198,9 +181,7 @@ namespace MyNamespace.tSearcher
                 else //normal Node
                 {
                     avoidList.Add(currentPos);
-                    //>>>>>
                     storageTree.Add(myV2IPair);
-                    //<<<<<
                     myV2IPairQueue_Saved.Enqueue(myV2IPair);
 
                     //enqueue
@@ -222,20 +203,12 @@ namespace MyNamespace.tSearcher
                     }
                 }
             }
-
-            //stopwatch.Stop();
             return false;
         }
-
-        
-
-        public void BuildQueueWork(RayMap rayMap)
+        private void _BuildQueueWork(RayMap rayMap)
         {
-            //rayMap.LogDump(t);
             if (rayMap.startPoint == rayMap.endPoint) return;
-
             _PushOut(MovementStatus.Start);
-
             Queue<MyV2IPair> supplyQueue = new Queue<MyV2IPair>();
             List<Vector2Int> avoidList = new List<Vector2Int>();
             Stack<MovementStatus> tMovementStack = new Stack<MovementStatus>();
@@ -249,9 +222,9 @@ namespace MyNamespace.tSearcher
             supplyQueue.Enqueue(new MyV2IPair(rayMap.startPoint,new Vector2Int(-233,-666)) );
             // (-233,-666) is a hooked start point XD
 
-            if (Search(ref rayMap, ref supplyQueue, ref avoidList, ref tMovementStack, ref storageTree))
+            if (_Search(ref rayMap, ref supplyQueue, ref avoidList, ref tMovementStack, ref storageTree))
             {
-                MoveArrow.GetComponent<SpriteRenderer>().color = Color.green;
+                moveArrowSpriteRenderer.color = Color.green;
                 while (tMovementStack.Count > 0)
                 {
                     _PushOut(tMovementStack.Pop());
@@ -262,27 +235,9 @@ namespace MyNamespace.tSearcher
 
             _PushOut(MovementStatus.Completed);
         }
-
-        // Update is called once per frame
         void Update()
         {
 
-        }
-
-        //Experimental zone
-        public IEnumerator Search_Advanced()//STILL CONSTRUCTING! an safe Search method that do not delay so much
-        {
-            int i = 0;
-            while(true)
-            {
-                for(float currentTime = 0;currentTime<Time.fixedTime ;currentTime++)
-                {
-                    i++;
-                }
-                Debug.Log(i);
-            
-                yield return 0; // ³¬Ê±±ê¼Ç
-            }
         }
     }
 }
