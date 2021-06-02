@@ -391,6 +391,7 @@ namespace MyNamespace.rayMapPathFinding
 
         private Queue<MovementStatus> _queueOfMovementStatus = new Queue<MovementStatus>();
 
+        public UnityEvent inClearQueueEvent = new UnityEvent();
         #endregion  //EditorFeed
 
         #region RayMapBuilder
@@ -809,9 +810,17 @@ namespace MyNamespace.rayMapPathFinding
         }
         #endregion
 
+        #region disrupter
+        public void disrupter()
+        {
+
+        }
+        #endregion
+
         #region UnityCalls
         private void Awake()
         {
+            inClearQueueEvent.AddListener(disrupter);
             chara.inPosEvent.AddListener(_Shoot);
             inRayMapEvent.AddListener(_BuildQueueWork);
             inMovementsEvent.AddListener(_TranslatorEntrance);

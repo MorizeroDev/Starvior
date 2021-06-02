@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using MyNamespace.tMovement;
 
-using MyNamespace.tCharaExperiment;
+using MyNamespace.rayMapPathFinding;
 
 public class TDetector : MonoBehaviour
 {
-    public TChara tchara;
+    RayMapPathFinding rayMapPathFinding;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,7 +25,7 @@ public class TDetector : MonoBehaviour
         if (collision2D.gameObject.name == "movementEndObject")
         {
             Destroy(collision2D.gameObject);
-            tchara.inClearQueueEvent.Invoke();
+            rayMapPathFinding.inClearQueueEvent.Invoke();
         }
     }
 }
