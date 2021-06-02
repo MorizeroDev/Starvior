@@ -7,7 +7,7 @@ using MyNamespace.rayMapPathFinding;
 
 public class TDetector : MonoBehaviour
 {
-    RayMapPathFinding rayMapPathFinding;
+    //RayMapPathFinding rayMapPathFinding;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,8 +24,8 @@ public class TDetector : MonoBehaviour
     {
         if (collision2D.gameObject.name == "movementEndObject")
         {
-            Destroy(collision2D.gameObject);
-            rayMapPathFinding.inClearQueueEvent.Invoke();
+            //Destroy(collision2D.gameObject);
+            //rayMapPathFinding.inClearQueueEvent.Invoke();
         }
     }
 }

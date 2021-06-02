@@ -131,8 +131,8 @@ public class Chara : MonoBehaviour
             walkTask wt = walkTasks.referencePeek;
             // 如果坐标尚未初始化
             if(wt.xBuff != 0 || wt.yBuff != 0){
-                wt.x = pos.x + 0.5f * wt.xBuff;
-                wt.y = pos.y + 0.5f * wt.yBuff;
+                wt.x = pos.x + /*0.5f **/ wt.xBuff;
+                wt.y = pos.y + /*0.5f **/ wt.yBuff;
                 wt.xBuff = 0; wt.yBuff = 0;
                 Debug.Log("Walktask: relative position cale: " + wt.x + "," + wt.y);
             }
@@ -170,7 +170,12 @@ public class Chara : MonoBehaviour
         }
 
         // 如果屏幕被点击
-        if(Input.GetMouseButton(0) && !isWalkTask){
+        if(Input.GetMouseButton(0) && !isWalkTask)
+        {
+            // 必要：开启tMode，将寻路WalkTask与DramaScript的WalkTask区别开来
+            tMode = true;
+            walkTasks.Clear();
+
             MoveArrow.GetComponent<SpriteRenderer>().color = Color.white;
             // 从屏幕坐标换算到世界坐标
             Vector3 mpos = MapCamera.mcamera.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
@@ -180,14 +185,20 @@ public class Chara : MonoBehaviour
             // 设置点击反馈
             MoveArrow.transform.localPosition = mpos;
             MoveArrow.SetActive(true);
-            // 必要：开启tMode，将寻路WalkTask与DramaScript的WalkTask区别开来
-            tMode = true;
-            //prepare for Event to TRayMapBuilder
-            inPosEvent.Invoke(mpos);
-            MoveArrow.GetComponent<SpriteRenderer>().color = Color.green;
         }
 
-        
+        //--------------------------------------------------------------------------------------------------------------Warning !!!
+        else if(Input.GetMouseButtonUp(0) && !isWalkTask)
+        {
+            // 必要：开启tMode，将寻路WalkTask与DramaScript的WalkTask区别开来
+            tMode = true;
+            Vector3 mpos = MapCamera.mcamera.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
+            MoveArrow.transform.localPosition = new Vector3(mpos.x,mpos.y,0);
+            //prepare for Event to TRayMapBuilder
+            inPosEvent.Invoke(mpos);
+        }
+        //--------------------------------------------------------------------------------------------------------------
+
         // 检测键盘输入
         bool isKeyboard = false;
         if(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)){

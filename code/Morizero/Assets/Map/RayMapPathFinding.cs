@@ -785,7 +785,6 @@ namespace MyNamespace.rayMapPathFinding
             {
                 return;
             }
-            
             MovementStatus m_nowStatus;
             //MyQueueWithIndex<Chara.walkTask> m_myQueueWithIndex_rev = new MyQueueWithIndex<Chara.walkTask>();
             Chara.walkTask m_walkTask = new Chara.walkTask(0, 0);
@@ -800,12 +799,13 @@ namespace MyNamespace.rayMapPathFinding
                 );
                 while (_queueOfMovementStatus.Peek() == m_nowStatus)
                 {
-                    m_walkTask.xBuff = (m_nowStatus == MovementStatus.MovingRight) ? m_walkTask.x+tileSize.x : ((m_nowStatus == MovementStatus.MovingLeft) ? m_walkTask.x - tileSize.x : m_walkTask.x);
-                    m_walkTask.yBuff = (m_nowStatus == MovementStatus.MovingUp) ? m_walkTask.y+tileSize.y : ((m_nowStatus == MovementStatus.MovingDown) ? m_walkTask.y - tileSize.y : m_walkTask.y);
+                    m_walkTask.xBuff += (m_nowStatus == MovementStatus.MovingRight) ? tileSize.x : ((m_nowStatus == MovementStatus.MovingLeft) ? - tileSize.x : 0);
+                    m_walkTask.yBuff += (m_nowStatus == MovementStatus.MovingUp) ? tileSize.y : ((m_nowStatus == MovementStatus.MovingDown) ? - tileSize.y : 0);
                     _queueOfMovementStatus.Dequeue();
                 }
                 chara.walkTasks.Enqueue(m_walkTask);
             }
+            _queueOfMovementStatus.Dequeue();
             return;
         }
         #endregion
