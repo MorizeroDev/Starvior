@@ -94,46 +94,34 @@ namespace MyNamespace.tRayMapBuilder
             t.text = s;
         }
     }
-
-
     //----------------------------------------MONO----------------------------------------//
     public class TRayMapBuilder : MonoBehaviour
     {
         public GameObject movementEndObject_Prefab;
-        private GameObject _movementEndObject;
+        public GameObject character; // Main Player's character Object
 
-        //public Tmovements tmovements;
         public TSearcher receiverSearcher;
         public Text t;
-        public GameObject character; // Main Player's character Object
-        private Transform cT;
-
-        //public Chara chara;
         public TChara tchara;
         public UnityEvent<Vector2> inPosEvent = new UnityEvent<Vector2>();
-
-        public Vector2 anchorPosition;
-        public GameObject prefab;
-
+        public GameObject prefab;//used for build visual tips
         public RayMap rayMap;
         public UnityEvent unityEvent;
         public bool allowVisualStatus = false;
-
         public Vector2 tileSize;
-        private Vector2 centerPos;
-        /// <summary>
-        /// floatVector2, for how big this area u want to search (RayCast effect area)
-        /// </summary>
-        public Vector2 pictureSize;
-        
+        public Vector2 pictureSize;// floatVector2, for how big this area u want to search (RayCast effect area)
 
+        private Transform cT;//character Transform
+        private Vector2 centerPos;
+        private IEnumerator coroutineWorkhandle;
         private GameObject TempFather;
-        private void TDTempFather()
+        private GameObject _movementEndObject;
+        
+        private void _TDTempFather()
         {
             Destroy(TempFather);
         }
-
-        private bool ReturnRayResult(Vector2 position)
+        private bool _ReturnRayResult(Vector2 position)
         {
             LayerMask layerMask = new LayerMask();
             layerMask.value = ((1 << 3) /*| (1 << 0)*/);//Only Furniture
@@ -152,8 +140,7 @@ namespace MyNamespace.tRayMapBuilder
             }
             return false;
         }
-
-        private void TCreateObject(Vector2 position, bool colorMe,GameObject father,bool iAmEndPoint = false,bool iAmStartPoint = false)
+        private void _TCreateObject(Vector2 position, bool colorMe,GameObject father,bool iAmEndPoint = false,bool iAmStartPoint = false)
         {
             GameObject t = Instantiate(prefab);
             t.transform.parent = father.transform;
@@ -171,10 +158,7 @@ namespace MyNamespace.tRayMapBuilder
             if (colorMe)
                 t.GetComponent<SpriteRenderer>().color = Color.red;
         }
-
-
-        private IEnumerator coroutineWorkhandle;
-        private IEnumerator CoroutineWork(RayMap rayMap,Vector2Int sizeInt,Vector2Int centerPosInt) //no-frameBlock operation
+        private IEnumerator _CoroutineWork(RayMap rayMap,Vector2Int sizeInt,Vector2Int centerPosInt) //generate raymap, no-frameBlock operation
         {
             System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
@@ -183,8 +167,8 @@ namespace MyNamespace.tRayMapBuilder
             {
                 for (int j = 0; j < sizeInt.y; j++)
                 {
-                    rayMap.buffer[i, j] = ReturnRayResult(new Vector2(((i - centerPosInt.x) * tileSize.x) + centerPos.x, ((j - centerPosInt.y) * tileSize.y) + centerPos.y));
-                    if(allowVisualStatus) TCreateObject(new Vector2(((i - centerPosInt.x) * tileSize.x) + centerPos.x, ((j - centerPosInt.y) * tileSize.y) + centerPos.y), rayMap.buffer[i, j], TempFather, (rayMap.endPoint.x == i && rayMap.endPoint.y == j), (rayMap.startPoint.x == i && rayMap.startPoint.y == j));
+                    rayMap.buffer[i, j] = _ReturnRayResult(new Vector2(((i - centerPosInt.x) * tileSize.x) + centerPos.x, ((j - centerPosInt.y) * tileSize.y) + centerPos.y));
+                    if(allowVisualStatus) _TCreateObject(new Vector2(((i - centerPosInt.x) * tileSize.x) + centerPos.x, ((j - centerPosInt.y) * tileSize.y) + centerPos.y), rayMap.buffer[i, j], TempFather, (rayMap.endPoint.x == i && rayMap.endPoint.y == j), (rayMap.startPoint.x == i && rayMap.startPoint.y == j));
                 }
                 if (stopwatch.ElapsedMilliseconds - counterTime >= 1000*Time.fixedDeltaTime)
                 {
@@ -201,32 +185,24 @@ namespace MyNamespace.tRayMapBuilder
             }
             else
             {
-                receiverSearcher.MoveArrow.GetComponent<SpriteRenderer>().color = Color.red;
+                receiverSearcher.moveArrowSpriteRenderer.GetComponent<SpriteRenderer>().color = Color.red;
             }
             yield return 0;
         }
-
         //----------InvokeEntrance----------//
-        private void _Shot(Vector2 outArrowPosition)
+        private void _Shoot(Vector2 outArrowPosition)
         {
             if (!_movementEndObject)
                 _movementEndObject = Instantiate(movementEndObject_Prefab);
             _movementEndObject.transform.position = outArrowPosition;
             _movementEndObject.name = "movementEndObject";
-            
-            //EditorControl.EditorPause();
-
             if (coroutineWorkhandle!=null)
                 StopCoroutine(coroutineWorkhandle);
-            //tmovements.inContinueQueueUnitEvent.Invoke();//interrupt
             centerPos = cT.position;
-
             Vector2Int sizeInt = new Vector2Int((int)(pictureSize.x / tileSize.x), (int)(pictureSize.y / tileSize.y));
             rayMap = new RayMap(sizeInt);
-
             Vector2Int centerPosInt = new Vector2Int(sizeInt.x / 2, sizeInt.y / 2);
             rayMap.startPoint = centerPosInt;
-
             //Vector2ToVector2IntInRayMap
             #region 
             if (outArrowPosition.x> (centerPos.x - tileSize.x / 2))
@@ -275,41 +251,22 @@ namespace MyNamespace.tRayMapBuilder
             //Debug.Log("endPoint: " + rayMap.endPoint.x + " " + rayMap.endPoint.y);
 
             #endregion
-
             if(TempFather)
             {
-                TDTempFather();
+                _TDTempFather();
             }
             TempFather = new GameObject("Father_TempObjects");
             TempFather.transform.position = new Vector3(0, 0, 0);
-
-            coroutineWorkhandle = CoroutineWork(rayMap, sizeInt, centerPosInt);
+            coroutineWorkhandle = _CoroutineWork(rayMap, sizeInt, centerPosInt);
             StartCoroutine(coroutineWorkhandle);
-            //for(int i=0;i<sizeInt.x;i++)
-            //{
-            //    for(int j=0;j<sizeInt.y;j++)
-            //    {
-            //        rayMap.buffer[i,j] = ReturnRayResult(new Vector2( ((i - centerPosInt.x) * tileSize.x)+ centerPos.x ,   ((j - centerPosInt.y) * tileSize.y) + centerPos.y ));
-            //        TCreateObject(new Vector2(((i - centerPosInt.x) * tileSize.x) + centerPos.x, ((j - centerPosInt.y) * tileSize.y) + centerPos.y),rayMap.buffer[i, j],TempFather,(rayMap.endPoint.x == i && rayMap.endPoint.y ==j), (rayMap.startPoint.x == i && rayMap.startPoint.y == j));
-            //    }
-            //}
-
-            //rayMap.LogDump(t);
-            //EditorControl.EditorPause();
-
-            //receiverSearcher.inRayMapEvent.Invoke(rayMap);
         }
-
-        // Start is called before the first frame update
-        void Start()
+        private void Start()
         {
             cT = character.transform;
             centerPos = cT.position;
-            tchara.inPosEvent.AddListener(_Shot);
+            tchara.inPosEvent.AddListener(_Shoot);
         }
-
-        // Update is called once per frame
-        void Update()
+        private void Update()
         {
 
         }
