@@ -131,8 +131,8 @@ public class Chara : MonoBehaviour
             walkTask wt = walkTasks.referencePeek;
             // 如果坐标尚未初始化
             if(wt.xBuff != 0 || wt.yBuff != 0){
-                wt.x = pos.x + /*0.5f **/ wt.xBuff;
-                wt.y = pos.y + /*0.5f **/ wt.yBuff;
+                wt.x = pos.x + 0.5f * wt.xBuff;
+                wt.y = pos.y + 0.5f * wt.yBuff;
                 wt.xBuff = 0; wt.yBuff = 0;
                 Debug.Log("Walktask: relative position cale: " + wt.x + "," + wt.y);
             }
