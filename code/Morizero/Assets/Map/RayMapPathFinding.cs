@@ -17,7 +17,6 @@ using EditorControl = MyNamespace.rayMapPathFinding.editorControl.EditorControl;
 
 namespace MyNamespace.rayMapPathFinding
 {
-    
     namespace editorControl
     {
 #if UNITY_EDITOR
@@ -71,14 +70,14 @@ namespace MyNamespace.rayMapPathFinding
                 isEmpty = inSize != 0;
             }
 
-            //public MyQueueWithIndex()
-            //{
-            //    inerSize = 0;
-            //    buffer = new T[0];
-            //    pAdd = pPeek;
-            //    pPeek = 0;
-            //    isEmpty = false;
-            //}
+            public MyQueueWithIndex()
+            {
+                inerSize = 0;
+                buffer = new T[0];
+                pAdd = pPeek;
+                pPeek = 0;
+                isEmpty = false;
+            }
 
             public T Peek()
             {
@@ -174,7 +173,7 @@ namespace MyNamespace.rayMapPathFinding
                 catch (System.Exception e)
                 {
                     Debug.LogError("Yc Error! at MyQueueWithIndex<T>.Enqueue");
-                    EditorControl.EditorPause();
+                    editorControl.EditorControl.EditorPause();
                 }
             }
 
@@ -788,23 +787,24 @@ namespace MyNamespace.rayMapPathFinding
             }
             
             MovementStatus m_nowStatus;
-            MyQueueWithIndex<Chara.walkTask> m_myQueueWithIndex_rev = new MyQueueWithIndex<Chara.walkTask>();
-            Chara.walkTask m_walkTask = new Chara.walkTask { xBuff = 0, yBuff = 0, x=0 , y=0};
+            //MyQueueWithIndex<Chara.walkTask> m_myQueueWithIndex_rev = new MyQueueWithIndex<Chara.walkTask>();
+            Chara.walkTask m_walkTask = new Chara.walkTask(0, 0);
             
             while(_queueOfMovementStatus.Peek()!= MovementStatus.Completed)
             {
                 m_nowStatus = _queueOfMovementStatus.Dequeue();
-                m_walkTask = new Chara.walkTask {xBuff =0, yBuff =0,
-                    x = (m_nowStatus == MovementStatus.MovingRight) ? tileSize.x : ((m_nowStatus == MovementStatus.MovingLeft) ? -tileSize.x : 0),
-                    y = (m_nowStatus == MovementStatus.MovingUp) ? tileSize.y : ((m_nowStatus == MovementStatus.MovingDown) ? -tileSize.y : 0)
-                };
+                m_walkTask = new Chara.walkTask(
+                    (m_nowStatus == MovementStatus.MovingRight) ? tileSize.x : ((m_nowStatus == MovementStatus.MovingLeft) ? -tileSize.x : 0),
+                    (m_nowStatus == MovementStatus.MovingUp) ? tileSize.y : ((m_nowStatus == MovementStatus.MovingDown) ? -tileSize.y : 0),
+                    true
+                );
                 while (_queueOfMovementStatus.Peek() == m_nowStatus)
                 {
-                    m_walkTask.x = (m_nowStatus == MovementStatus.MovingRight) ? m_walkTask.x+tileSize.x : ((m_nowStatus == MovementStatus.MovingLeft) ? m_walkTask.x - tileSize.x : m_walkTask.x);
-                    m_walkTask.y = (m_nowStatus == MovementStatus.MovingUp) ? m_walkTask.y+tileSize.y : ((m_nowStatus == MovementStatus.MovingDown) ? m_walkTask.y - tileSize.y : m_walkTask.y);
+                    m_walkTask.xBuff = (m_nowStatus == MovementStatus.MovingRight) ? m_walkTask.x+tileSize.x : ((m_nowStatus == MovementStatus.MovingLeft) ? m_walkTask.x - tileSize.x : m_walkTask.x);
+                    m_walkTask.yBuff = (m_nowStatus == MovementStatus.MovingUp) ? m_walkTask.y+tileSize.y : ((m_nowStatus == MovementStatus.MovingDown) ? m_walkTask.y - tileSize.y : m_walkTask.y);
                     _queueOfMovementStatus.Dequeue();
                 }
-                m_myQueueWithIndex_rev.Enqueue(m_walkTask);
+                chara.walkTasks.Enqueue(m_walkTask);
             }
             return;
         }

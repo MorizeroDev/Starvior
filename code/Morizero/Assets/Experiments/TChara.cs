@@ -22,14 +22,14 @@ namespace MyNamespace.myQueueWithIndex
             isEmpty = inSize!=0;
         }
 
-        //public MyQueueWithIndex()
-        //{
-        //    inerSize = 0;
-        //    buffer = new T[0];
-        //    pAdd = pPeek;
-        //    pPeek = 0;
-        //    isEmpty = false;
-        //}
+        public MyQueueWithIndex()
+        {
+            inerSize = 0;
+            buffer = new T[0];
+            pAdd = pPeek;
+            pPeek = 0;
+            isEmpty = false;
+        }
 
         public T Peek()
         {

@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.Events;
 
 using MyNamespace.tRayMapBuilder;
-using MyNamespace.myQueueWithIndex;
+using MyNamespace.rayMapPathFinding.myQueueWithIndex;
 
 // 用于Drama Script的回调函数
 public delegate void WalkTaskCallback();
