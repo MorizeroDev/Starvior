@@ -5,7 +5,6 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
 
-using MyNamespace.tRayMapBuilder;
 using MyNamespace.rayMapPathFinding.myQueueWithIndex;
 
 // 用于Drama Script的回调函数
@@ -14,6 +13,7 @@ public delegate void WalkTaskCallback();
 public class Chara : MonoBehaviour
 {
     //public Vector2 outmPos;
+    [HideInInspector]
     public UnityEvent<Vector2> inPosEvent = new UnityEvent<Vector2>();
     
     // 朝向枚举

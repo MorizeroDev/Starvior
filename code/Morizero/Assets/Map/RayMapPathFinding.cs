@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEditor;
-using MyNamespace.editorControl;
 using UnityEngine.UI;
 
 using MyNamespace.rayMapPathFinding.rayMap;
@@ -13,7 +12,6 @@ using MyNamespace.rayMapPathFinding.myV2IPair;
 using MyNamespace.rayMapPathFinding.storageTree_Node;
 using MyNamespace.rayMapPathFinding.movementStatus;
 using MyNamespace.rayMapPathFinding.editorControl;
-using EditorControl = MyNamespace.rayMapPathFinding.editorControl.EditorControl;
 
 namespace MyNamespace.rayMapPathFinding
 {
@@ -371,7 +369,6 @@ namespace MyNamespace.rayMapPathFinding
 
         public GameObject prefab;//used for build visual tips
         public RayMap rayMap;
-        public UnityEvent unityEvent;
         public bool allowVisualStatus = false;//allow visualize Searching Points
         public Vector2 tileSize;
         public Vector2 pictureSize;// floatVector2, for how big this area u want to search (RayCast effect area)
@@ -383,14 +380,17 @@ namespace MyNamespace.rayMapPathFinding
 
 
         //Searcher's Entrance (activated by RayMapBuilder)
+        [HideInInspector]
         public UnityEvent<RayMap> inRayMapEvent;
 
         //Translator's Updating
+        [HideInInspector]
         public UnityEvent<MovementStatus> inMovementsEvent;
         private Chara.walkTask walkTaskUnitOut;
 
         private Queue<MovementStatus> _queueOfMovementStatus = new Queue<MovementStatus>();
 
+        [HideInInspector]
         public UnityEvent inClearQueueEvent = new UnityEvent();
         #endregion  //EditorFeed
 
