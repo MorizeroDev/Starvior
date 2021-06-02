@@ -16,6 +16,10 @@ public class Chara : MonoBehaviour
     [HideInInspector]
     public UnityEvent<Vector2> inPosEvent = new UnityEvent<Vector2>();
     
+    // 行走参数
+    public const float speed = 0.05f;
+    public const float step = 0.5f;
+
     // 朝向枚举
     public enum walkDir{
         Down,Left,Right,Up
@@ -103,7 +107,7 @@ public class Chara : MonoBehaviour
     // ⚠警告：x和y的取值只能为-1，0，1
     void Move(int x,int y){
         Vector3 pos = transform.localPosition;
-        float buff = 0.05f * Time.deltaTime * 60f * (Input.GetKey(KeyCode.X) ? 2 : 1);
+        float buff = speed * Time.deltaTime * 60f * (Input.GetKey(KeyCode.X) ? 2 : 1);
         pos.x += buff * x ;
         pos.y += buff * y ;
         if(pos.x < sx) pos.x = sx;
@@ -131,8 +135,8 @@ public class Chara : MonoBehaviour
             walkTask wt = walkTasks.referencePeek;
             // 如果坐标尚未初始化
             if(wt.xBuff != 0 || wt.yBuff != 0){
-                wt.x = pos.x + 0.5f * wt.xBuff;
-                wt.y = pos.y + 0.5f * wt.yBuff;
+                wt.x = pos.x + step * wt.xBuff;
+                wt.y = pos.y + step * wt.yBuff;
                 wt.xBuff = 0; wt.yBuff = 0;
                 Debug.Log("Walktask: relative position cale: " + wt.x + "," + wt.y);
             }
@@ -170,13 +174,11 @@ public class Chara : MonoBehaviour
         }
 
         // 如果屏幕被点击
-        if(Input.GetMouseButton(0) && !isWalkTask)
+        if(Input.GetMouseButtonUp(0) && !isWalkTask)
         {
             // 必要：开启tMode，将寻路WalkTask与DramaScript的WalkTask区别开来
             tMode = true;
             walkTasks.Clear();
-
-            MoveArrow.GetComponent<SpriteRenderer>().color = Color.white;
             // 从屏幕坐标换算到世界坐标
             Vector3 mpos = MapCamera.mcamera.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
             mpos.z = 0;
@@ -185,20 +187,10 @@ public class Chara : MonoBehaviour
             // 设置点击反馈
             MoveArrow.transform.localPosition = mpos;
             MoveArrow.SetActive(true);
-        }
-
-        //--------------------------------------------------------------------------------------------------------------Warning !!!
-        else if(Input.GetMouseButtonUp(0) && !isWalkTask)
-        {
-            // 必要：开启tMode，将寻路WalkTask与DramaScript的WalkTask区别开来
-            tMode = true;
-            Vector3 mpos = MapCamera.mcamera.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
-            MoveArrow.transform.localPosition = new Vector3(mpos.x,mpos.y,0);
             //prepare for Event to TRayMapBuilder
             inPosEvent.Invoke(mpos);
         }
-        //--------------------------------------------------------------------------------------------------------------
-
+        
         // 检测键盘输入
         bool isKeyboard = false;
         if(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)){
