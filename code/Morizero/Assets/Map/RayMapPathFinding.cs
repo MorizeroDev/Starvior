@@ -788,20 +788,19 @@ namespace MyNamespace.rayMapPathFinding
             }
             MovementStatus m_nowStatus;
             //MyQueueWithIndex<Chara.walkTask> m_myQueueWithIndex_rev = new MyQueueWithIndex<Chara.walkTask>();
-            Chara.walkTask m_walkTask = new Chara.walkTask(0, 0);
+            Chara.walkTask m_walkTask = Chara.walkTask.fromRaw(0, 0);
             
             while(_queueOfMovementStatus.Peek()!= MovementStatus.Completed)
             {
                 m_nowStatus = _queueOfMovementStatus.Dequeue();
-                m_walkTask = new Chara.walkTask(
+                m_walkTask = Chara.walkTask.fromRelative(
                     (m_nowStatus == MovementStatus.MovingRight) ? tileSize.x : ((m_nowStatus == MovementStatus.MovingLeft) ? -tileSize.x : 0),
-                    (m_nowStatus == MovementStatus.MovingUp) ? tileSize.y : ((m_nowStatus == MovementStatus.MovingDown) ? -tileSize.y : 0),
-                    true
+                    (m_nowStatus == MovementStatus.MovingUp) ? tileSize.y : ((m_nowStatus == MovementStatus.MovingDown) ? -tileSize.y : 0)
                 );
                 while (_queueOfMovementStatus.Peek() == m_nowStatus)
                 {
-                    m_walkTask.xBuff += ( (m_nowStatus == MovementStatus.MovingRight) ? tileSize.x : ((m_nowStatus == MovementStatus.MovingLeft) ? - tileSize.x : 0)) / Chara.step;
-                    m_walkTask.yBuff += ( (m_nowStatus == MovementStatus.MovingUp) ? tileSize.y : ((m_nowStatus == MovementStatus.MovingDown) ? - tileSize.y : 0)) / Chara.step;
+                    m_walkTask.xBuff += ( (m_nowStatus == MovementStatus.MovingRight) ? tileSize.x : ((m_nowStatus == MovementStatus.MovingLeft) ? - tileSize.x : 0)) ;
+                    m_walkTask.yBuff += ( (m_nowStatus == MovementStatus.MovingUp) ? tileSize.y : ((m_nowStatus == MovementStatus.MovingDown) ? - tileSize.y : 0)) ;
                     _queueOfMovementStatus.Dequeue();
                 }
                 chara.walkTasks.Enqueue(m_walkTask);

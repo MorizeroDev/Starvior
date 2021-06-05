@@ -11,8 +11,8 @@ public class Door : CheckObj
     public override void Update() {
         if(IsActive()){
             MapCamera.initTp = TPPort;MapCamera.initDir = TPDirection;
-            DontDestroyOnLoad(this.gameObject);
-            this.GetComponent<SpriteRenderer>().color = new Color(0,0,0,0);
+            DontDestroyOnLoad(this.transform.parent.gameObject);
+            this.transform.parent.GetComponent<SpriteRenderer>().color = new Color(0,0,0,0);
             this.transform.localPosition = new Vector3(-10000,-10000,-100);
             MapCamera.HitCheck = null;
             this.GetComponent<AudioSource>().Play();

@@ -8,7 +8,9 @@ public class MapCamera : MonoBehaviour
     public GameObject startDot;
     public GameObject endDot;
     public static Chara Player;
+    public static GameObject PlayerCollider;
     public static GameObject HitCheck;
+    public static Transform HitCheckTransform;
     public static bool SuspensionDrama;
     public static MapCamera mcamera;
     public static AudioSource bgm,bgs;
@@ -54,7 +56,7 @@ public class MapCamera : MonoBehaviour
     }
     private void FixedUpdate() {
         Vector3 t = bindObj.transform.localPosition;
-        if(HitCheck != null) t = HitCheck.transform.localPosition;
+        if(HitCheck != null) t = HitCheckTransform.localPosition;
         float cs = (HitCheck != null && !MapCamera.SuspensionDrama ? 1.8f : 2f);
         Vector3 pos = transform.localPosition;
         pos.x = pos.x + (t.x - pos.x) / 20;

@@ -15,9 +15,21 @@ PrefabInstance:
       propertyPath: m_Offset.y
       value: -0.090919346
       objectReference: {fileID: 0}
+    - target: {fileID: 5724599245858169070, guid: 2087e204a15c91446b40aa53798af3be, type: 3}
+      propertyPath: AllowDirection.Array.data[0]
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7464114063205522586, guid: 2087e204a15c91446b40aa53798af3be, type: 3}
+      propertyPath: m_Size.y
+      value: 0.61366767
+      objectReference: {fileID: 0}
+    - target: {fileID: 7464114063205522586, guid: 2087e204a15c91446b40aa53798af3be, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.066833824
+      objectReference: {fileID: 0}
     - target: {fileID: 9221026782038236609, guid: 2087e204a15c91446b40aa53798af3be, type: 3}
       propertyPath: m_Name
-      value: DoorOnTop
+      value: DoorOnTop Variant
       objectReference: {fileID: 0}
     - target: {fileID: 9221026782038236613, guid: 2087e204a15c91446b40aa53798af3be, type: 3}
       propertyPath: TargetMap

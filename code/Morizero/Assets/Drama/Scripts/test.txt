@@ -8,6 +8,7 @@ say:雪兰
 (shake)试试发抖的文字。
 (rainbow)彩虹文字。
 (Focus)试试用奇怪的视角看我。
+spy:调查调查调查，嘿咻嘿咻！
 say:世原
 即将测试地图传送。
 tp:Corridor_3F,1

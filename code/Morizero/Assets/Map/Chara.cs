@@ -26,22 +26,38 @@ public class Chara : MonoBehaviour
     }
     // 行走任务
     public class walkTask{
-        public float x,y;                       // 实际的任务坐标
-        public float xBuff,yBuff;               // 步数坐标（Drama Script）
-        public walkTask(float x,float y,bool isBuff = false){
-            if(!isBuff){
-                this.x = x; this.y = y;
-                xBuff = 0; yBuff = 0;
-            }else{
-                this.xBuff = x; this.yBuff = y;
-                x = 0;y = 0;
+        public float x,y;                        // 实际的任务坐标
+        public float xBuff,yBuff;                // 步数坐标（Drama Script）
+        private bool useStep = false;
+        public bool isCalculated{
+            get{
+                return (xBuff == 0 && yBuff == 0);
             }
+        }
+        public void Caculate(Vector3 pos){
+            x = pos.x + (useStep ? Chara.step : 1.0f) * xBuff;
+            y = pos.y + (useStep ? Chara.step : 1.0f) * yBuff;
+            xBuff = 0; yBuff = 0;
+            Debug.Log("Walktask: relative position cale: " + x + "," + y);
+        }
+        public static walkTask fromRaw(float x,float y){
+            return new walkTask{
+                x = x,y = y,xBuff = 0,yBuff = 0,useStep = false
+            };
+        } 
+        public static walkTask fromStep(float x,float y){
+            return new walkTask{
+                x = 0,y = 0,xBuff = x,yBuff = y,useStep = true
+            };
+        } 
+        public static walkTask fromRelative(float x,float y){
+            return new walkTask{
+                x = 0,y = 0,xBuff = x,yBuff = y,useStep = false
+            };
         } 
     }
     // 当列表长度为0时表示行走完毕
     public MyQueueWithIndex<walkTask> walkTasks = new MyQueueWithIndex<walkTask>();
-
-    public Text TipBox;
 
     private Sprite[] Animation;                 // 行走图图像集
     public string Character;                    // 对应的人物
@@ -57,12 +73,6 @@ public class Chara : MonoBehaviour
     public WalkTaskCallback walkTaskCallback;   // 行走人物回调
 
     private void Awake() {
-
-        if (TipBox!=null)
-            TipBox.gameObject.SetActive(true);
-        else if(TipBox != null)
-            TipBox.gameObject.SetActive(false);
-
         // 载入行走图图像集，并初始化相关设置
         Animation = Resources.LoadAll<Sprite>("Players\\" + Character);
         image = this.GetComponent<SpriteRenderer>();
@@ -75,7 +85,10 @@ public class Chara : MonoBehaviour
         pos = GameObject.Find("endDot").transform.localPosition;
         ex = pos.x - size.x; ey = pos.y + size.y * 1.7f; 
         // 如果是玩家则绑定至MapCamera
-        if(Controller) MapCamera.Player = this;
+        if(Controller) {
+            MapCamera.Player = this;
+            MapCamera.PlayerCollider = this.transform.Find("Pathfinding").gameObject;
+        }
         // 如果是玩家并且传送数据不为空，则按照传送设置初始化
         if(Controller && MapCamera.initTp != -1){
             dir = MapCamera.initDir;
@@ -134,12 +147,7 @@ public class Chara : MonoBehaviour
         if(isWalkTask){
             walkTask wt = walkTasks.referencePeek;
             // 如果坐标尚未初始化
-            if(wt.xBuff != 0 || wt.yBuff != 0){
-                wt.x = pos.x + step * wt.xBuff;
-                wt.y = pos.y + step * wt.yBuff;
-                wt.xBuff = 0; wt.yBuff = 0;
-                Debug.Log("Walktask: relative position cale: " + wt.x + "," + wt.y);
-            }
+            if(!wt.isCalculated) wt.Caculate(pos);
             // 决定是否修正行走坐标（完成行走）
             bool isFix = false;
             if(wt.x < pos.x){

@@ -61,7 +61,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3311677961071670908, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
       propertyPath: Drama.Array.data[0].motion
-      value: 0
+      value: Enter
       objectReference: {fileID: 0}
     - target: {fileID: 3311677961071670908, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
       propertyPath: Drama.Array.data[1].Effect
@@ -93,7 +93,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3311677961071670908, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
       propertyPath: Drama.Array.data[0].Character
-      value: 6
+      value: "\u65C1\u767D"
       objectReference: {fileID: 0}
     - target: {fileID: 3311677961071670908, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
       propertyPath: Drama.Array.data[2].Character

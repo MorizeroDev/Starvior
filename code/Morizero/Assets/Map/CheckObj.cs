@@ -11,9 +11,10 @@ public class CheckObj : MonoBehaviour
     public int CheckType = 0;
     public string Content;
     private void OnTriggerStay2D(Collider2D other) {
-        if(other.gameObject == MapCamera.Player.gameObject) {
+        if(other.gameObject == MapCamera.PlayerCollider) {
             if(AllowDirection.Contains(MapCamera.Player.dir)){
                 MapCamera.HitCheck = this.gameObject;
+                MapCamera.HitCheckTransform = this.transform.parent;
                 if(CheckType == 0) MapCamera.mcamera.CheckText.sprite = MapCamera.mcamera.CheckFore;
                 if(CheckType == 1) MapCamera.mcamera.CheckText.sprite = MapCamera.mcamera.TalkFore;
             }else if(MapCamera.HitCheck == this.gameObject){

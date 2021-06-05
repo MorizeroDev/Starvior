@@ -30,9 +30,15 @@ public class DramaScript
                 if(p[i].StartsWith("up")) yB = float.Parse(p[i].Substring(2));
                 if(p[i].StartsWith("down")) yB = -float.Parse(p[i].Substring(4));
                 Debug.Log("Drama script: walk task enqueue:" + xB + "," + yB);
-                chara.walkTasks.Enqueue(new Chara.walkTask(xB, yB, true));
+                chara.walkTasks.Enqueue(Chara.walkTask.fromStep(xB, yB));
             }
             chara.walkTaskCallback = carryTask;
+            handler = true;
+        }
+        // 调查任务
+        // spy:调查内容
+        if(cmd == "spy"){
+            Dramas.LaunchCheck(p[0],carryTask);
             handler = true;
         }
         // 对话任务
