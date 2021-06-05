@@ -3,39 +3,63 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace MyNamespace.databridge
 {
     //--------------------unique parament classes--------------------//
 
-    #region
-    public interface IBridgeTaskBuilder
+    #region builder
+    public abstract class BridgeTaskBuilder
     {
-        void BuildOrigin(Object originObject);
-        void BuildParament(IParament parament);
-        void BuildDestnation(Object destnationObject);
-        BridgeTask GetRequest();
+        protected abstract void BuildOrigin(Component originComponent);
+        protected abstract void BuildParament(object parament);
+        protected abstract void DefineBridgeParamentKind(BridgeParamentKind bridgeParamentKind);
+        protected abstract void BuildDestnation(Component destnationComponent);
+        public abstract BridgeTask GetProduct();
     }
+
     public class BridgeTask
     {
-        public BridgeTask(int actionCount)
-        {
-            unityActions = new UnityAction[actionCount];
-        }
-        public Object originObject;
-        public IParament parament;
-        public Object destnationObject;
-        public UnityAction[] unityActions; 
+        public Component originComponent;
+        public object parament;
+        public BridgeParamentKind bridgeParamentKind;
+        public Component destinationComponent;
     }
-    public interface IParament
+    
+    public enum BridgeParamentKind
     {
-        void getValue();
+        TUnitNormalAttackTUnit,
+        TUnitPoisonAttackTUnit,
     }
     #endregion
+
+    namespace AllowedParaments
+    {
+        public class PoisonAttackRequestParament
+        {
+            public PoisonAttackRequestParament(int indamage, float ingapTime, int inrepeatTimes)
+            {
+                damage = indamage;
+                gapTime = ingapTime;
+                repeatTimesRemaining = inrepeatTimes;
+            }
+            public PoisonAttackRequestParament NormalExec()
+            {
+                repeatTimesRemaining -= 1;
+                return this;
+            }
+            public int damage;
+            public float gapTime;
+            public int repeatTimesRemaining;
+        }
+    }
+
     public class TDataBridge : MonoBehaviour
     {
         public Queue<BridgeTask> bridgeTasks = new Queue<BridgeTask>(0);
-
+        public Text text;
+        private int m_i = 0;
         public void EnqueueTask(BridgeTask inTask)
         {
             bridgeTasks.Enqueue(inTask);
@@ -48,11 +72,45 @@ namespace MyNamespace.databridge
 
         private void Update()
         {
-            while(bridgeTasks.Count>0)
+            //test if clog
+            m_i ++ ;
+            text.text = m_i.ToString();
+            //
+
+            while (bridgeTasks.Count > 0)
             {
                 BridgeTask currentTask = bridgeTasks.Dequeue();
-                
-                System.Type t = currentTask.originObject.GetType();
+                switch(currentTask.bridgeParamentKind)
+                {
+                    case BridgeParamentKind.TUnitNormalAttackTUnit:
+                        {
+                            tunit.TUnit dC = currentTask.destinationComponent as tunit.TUnit;
+                            if (dC.unit.IsDead)
+                            { }
+                            else
+                               dC.unit.BeingAttack((int)currentTask.parament);
+
+                        }
+                        break;
+                    case BridgeParamentKind.TUnitPoisonAttackTUnit:
+                        {
+                            tunit.TUnit dC = currentTask.destinationComponent as tunit.TUnit;
+                            if (dC.unit.IsDead)
+                            { }
+                            else
+                            {
+                                StartCoroutine(
+                                    dC.unit.PositionEffect(
+                                        bridgeTasks, currentTask.originComponent,
+                                        (AllowedParaments.PoisonAttackRequestParament)currentTask.parament,
+                                        currentTask.destinationComponent
+                                        ));
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }
