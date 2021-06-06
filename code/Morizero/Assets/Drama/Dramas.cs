@@ -43,14 +43,14 @@ public class Dramas : MonoBehaviour
 
     private float x = 0,y = 0,step = 0;
 
-    public static Dramas LaunchScript(DramaCallback Callback){
+    public static Dramas LaunchScript(string frame,DramaCallback Callback){
         callback = Callback;
-        Debug.Log("Dramas: launched at " + "Dramas\\DialogFrameSrc");
-        GameObject fab = (GameObject)Resources.Load("Dramas\\DialogFrameSrc");    // 载入母体
+        Debug.Log("Dramas: launched at " + "Dramas\\" + frame);
+        GameObject fab = (GameObject)Resources.Load("Dramas\\" + frame);    // 载入母体
         GameObject box = Instantiate(fab,new Vector3(0,0,-1),Quaternion.identity);
         Dramas drama = box.transform.Find("Dialog").GetComponent<Dramas>();
         drama.Drama = new List<DramaData>();
-        box.GetComponent<Canvas>().worldCamera = Camera.current;
+        box.GetComponent<Canvas>().worldCamera = Camera.main;
         return drama;
     }
     public static Dramas Launch(string DramaName,DramaCallback Callback){
@@ -59,7 +59,7 @@ public class Dramas : MonoBehaviour
         GameObject fab = (GameObject)Resources.Load("Dramas\\" + DramaName);    // 载入母体
         GameObject box = Instantiate(fab,new Vector3(0,0,-1),Quaternion.identity);
         Dramas drama = box.transform.Find("Dialog").GetComponent<Dramas>();
-        box.GetComponent<Canvas>().worldCamera = Camera.current;
+        box.GetComponent<Canvas>().worldCamera = Camera.main;
         drama.ReadDrama();
         box.SetActive(true);
         return drama;
@@ -68,7 +68,7 @@ public class Dramas : MonoBehaviour
         callback = Callback;
         GameObject fab = (GameObject)Resources.Load("Dramas\\Check");    // 载入母体
         GameObject box = Instantiate(fab,new Vector3(0,0,-1),Quaternion.identity);
-        box.GetComponent<Canvas>().worldCamera = Camera.current;
+        box.GetComponent<Canvas>().worldCamera = Camera.main;
         Dramas drama = box.transform.Find("Dialog").GetComponent<Dramas>();
         DramaData data = drama.Drama[0];
         data.content = content;
@@ -91,13 +91,13 @@ public class Dramas : MonoBehaviour
         Effect = Drama[DramaIndex].Effect;
 
         Title.text = character; 
-        if(character != "旁白"){
+        if(character != "旁白" && character != "我"){
             Character.sprite = Resources.Load<Sprite>($"Characters\\{character}");
             Character.SetNativeSize();
             RectTransform rect = Character.GetComponent<RectTransform>();
             rect.sizeDelta = new Vector2(760f / rect.sizeDelta.y * rect.sizeDelta.x, 760f);
         }
-        Character.gameObject.SetActive(character != "旁白");
+        Character.gameObject.SetActive(character != "旁白" && character != "我");
 
         x = sWord.localPosition.x;
         y = sWord.localPosition.y;

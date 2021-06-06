@@ -78,7 +78,7 @@ public class Chara : MonoBehaviour
         // 载入行走图图像集，并初始化相关设置
         Animation = Resources.LoadAll<Sprite>("Players\\" + Character);
         image = this.GetComponent<SpriteRenderer>();
-        dir = walkDir.Down;
+        // dir = walkDir.Down;
         UploadWalk();
         // 获取地图边界并处理
         Vector3 size = new Vector3(0.25f,0.25f,0f);

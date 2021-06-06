@@ -3,6 +3,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public class PlotCreator : MonoBehaviour
+{
+    public static List<GameObject> Plots = new List<GameObject>();
+    public static void Clear(Loading.LoadingCallback callback){
+        Loading.Start(() => {
+            foreach(GameObject go in Plots)
+                Destroy(go);
+            Plots.Clear();
+            Loading.Finish();
+        },callback);
+    }
+    public static void LoadPlot(string plots){
+        GameObject fab = (GameObject)Resources.Load("Plot\\" + plots);    // 载入母体
+        GameObject plot = Instantiate(fab,new Vector3(0,0,-1),Quaternion.identity);
+        plot.SetActive(true);
+        Plots.Add(plot);
+    }
+}
+
 public class DramaScript
 {
     public CheckObj parent;
@@ -41,12 +60,29 @@ public class DramaScript
             Dramas.LaunchCheck(p[0],carryTask);
             handler = true;
         }
+        // 预留任务（如果最后一项任务是需要等待的，则需要加入此行缓冲）
+        if(cmd == "preserve"){
+            handler = true;
+        }
+        // 情节任务
+        // plot:情节预制体名称/clear
+        if(cmd == "plot"){
+            if(p[0] == "clear"){
+                PlotCreator.Clear(carryTask);
+            }else{
+                Loading.Start(() => {
+                    PlotCreator.LoadPlot(p[0]);
+                    Loading.Finish();
+                },carryTask);
+            }
+            handler = true;
+        }
         // 对话任务
-        // say:人物
+        // say/immersion:人物
         // [(shake)/(rainbow)/...]对话内容
-        if(cmd == "say"){
+        if(cmd == "say" || cmd == "immersion"){
             // 创建剧本框架
-            Dramas drama = Dramas.LaunchScript(carryTask);
+            Dramas drama = Dramas.LaunchScript(cmd == "say" ? "DialogFrameSrc" : "Immersion", carryTask);
             drama.Drama.Clear();
             string role = p[0];
             // 读取直至对话结束
@@ -87,8 +123,7 @@ public class DramaScript
                     drama.Drama.Add(data);
                 }else{
                     // 对话读取结束，跳出
-                    cmd = t[0];
-                    if(cmd == "say"){
+                    if(t[0] == cmd){
                         role = t[1];
                         currentLine++;
                         goto sayTag;
