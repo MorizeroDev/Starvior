@@ -34,14 +34,7 @@ public class CheckObj : MonoBehaviour
         CheckBtnPressed = false;
         return ret;
     }
-
-    private void Awake() {
-        scriptCarrier.callback = () => {
-            MapCamera.SuspensionDrama = false;
-        };
-        scriptCarrier.parent = this;
-    }
-
+    
     public virtual void Update() {
         if(!IsActive()) return;
 

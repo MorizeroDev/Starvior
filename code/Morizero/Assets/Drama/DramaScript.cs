@@ -3,6 +3,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public class DramaCrossScene : MonoBehaviour
+{
+    public DramaScript script;
+    public static DramaScript Start(DramaScript ods){
+        GameObject fab = (GameObject)Resources.Load("Prefabs\\Empty");    // 载入母体
+        GameObject go = Instantiate(fab,Vector3.zero,Quaternion.identity);
+        go.AddComponent(typeof(DramaCrossScene));
+        DramaCrossScene dos = go.GetComponent<DramaCrossScene>();
+        dos.script = new DramaScript();
+        DramaScript ds = dos.script;
+        ds.code = ods.code;
+        ds.currentLine = ods.currentLine;
+        ds.callback = () => {Destroy(go);};
+        DontDestroyOnLoad(go);
+        Debug.Log("DramaCrossScene: success.");
+        return ds;
+    }
+}
+
 public class PlotCreator : MonoBehaviour
 {
     public static List<GameObject> Plots = new List<GameObject>();
@@ -24,12 +43,15 @@ public class PlotCreator : MonoBehaviour
 
 public class DramaScript
 {
-    public CheckObj parent;
-    public DramaCallback callback;
     public string[] code;
     public int currentLine;
+    public DramaCallback callback;
+    public void Done(){
+        MapCamera.SuspensionDrama = false;
+        if(callback != null) callback();
+    }
     public void carryTask(){
-        if(currentLine >= code.Length) {callback(); return;} 
+        if(currentLine >= code.Length) {Done(); return;} 
         string[] t = code[currentLine].Split(':');
         string cmd = t[0];
         if(t.Length <= 1) {currentLine++; carryTask(); return;}
@@ -62,6 +84,19 @@ public class DramaScript
         }
         // 预留任务（如果最后一项任务是需要等待的，则需要加入此行缓冲）
         if(cmd == "preserve"){
+            handler = true;
+        }
+        // 传送任务
+        // tp:地图名称;传送点编号;朝向
+        if(cmd == "tp"){
+            MapCamera.initTp = int.Parse(p[1]);
+            if(p[2] == "left") MapCamera.initDir = Chara.walkDir.Left;
+            if(p[2] == "right") MapCamera.initDir = Chara.walkDir.Right;
+            if(p[2] == "up") MapCamera.initDir = Chara.walkDir.Up;
+            if(p[2] == "down") MapCamera.initDir = Chara.walkDir.Down;
+            MapCamera.HitCheck = null;
+            DramaScript nds = DramaCrossScene.Start(this);
+            Switcher.Carry(p[0],UnityEngine.SceneManagement.LoadSceneMode.Single,0,nds.carryTask);
             handler = true;
         }
         // 情节任务
@@ -142,6 +177,6 @@ public class DramaScript
             Debug.LogWarning("'" + cmd + $"'（行 {currentLine - 1}）未被处理。");
             carryTask(); return;
         }
-        if(currentLine >= code.Length) callback();
+        if(currentLine >= code.Length) Done();
     }
 }

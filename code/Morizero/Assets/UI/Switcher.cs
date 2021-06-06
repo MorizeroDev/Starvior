@@ -12,7 +12,6 @@ public class Switcher : MonoBehaviour
     public static string destination;           // 目标场景
     public static LoadSceneMode loadMode;       // 加载方式
     public delegate void SwitcherCallback();
-    public static SwitcherCallback Callback;
     public static int task;                     // 任务（0=加载，1=卸载）
     /// <summary>
     /// 场景切换器
@@ -20,13 +19,12 @@ public class Switcher : MonoBehaviour
     /// <param name="scene">场景名</param>
     /// <param name="mode">加载方式</param>
     /// <param name="Task">提交任务（0=加载，1=卸载）</param>
-    public static void Carry(string scene,LoadSceneMode mode = LoadSceneMode.Single,int task = 0,SwitcherCallback callback = null){
+    public static void Carry(string scene,LoadSceneMode mode = LoadSceneMode.Single,int task = 0,Loading.LoadingCallback callback = null){
         if(Loading.isUsing) return;
-        Callback = callback;
         Switcher.destination = scene; Switcher.loadMode = mode; Switcher.task = task;
         SceneManager.sceneLoaded += SceneLoaded_CallBack;       // 设置回调钩子
         SceneManager.sceneUnloaded += SceneUnLoaded_CallBack;   // 设置回调钩子
-        Loading.Start(Load);
+        Loading.Start(Load,callback);
     }
     static void Load(){
         if(task == 0){
