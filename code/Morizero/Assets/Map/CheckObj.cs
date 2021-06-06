@@ -35,6 +35,10 @@ public class CheckObj : MonoBehaviour
         return ret;
     }
     
+    private void Awake() {
+        scriptCarrier.parent = this;
+    }
+
     public virtual void Update() {
         if(!IsActive()) return;
 

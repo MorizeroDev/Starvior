@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using UnityEngine;
 
 public class DramaCrossScene : MonoBehaviour
@@ -46,13 +47,15 @@ public class DramaScript
     public string[] code;
     public int currentLine;
     public DramaCallback callback;
+    public CheckObj parent;
+
     public void Done(){
         MapCamera.SuspensionDrama = false;
         if(callback != null) callback();
     }
     public void carryTask(){
         if(currentLine >= code.Length) {Done(); return;} 
-        string[] t = code[currentLine].Split(':');
+        string[] t = code[currentLine].TrimStart().Split(':');
         string cmd = t[0];
         if(t.Length <= 1) {currentLine++; carryTask(); return;}
         string[] p = t[1].Split(',');
@@ -82,9 +85,84 @@ public class DramaScript
             Dramas.LaunchCheck(p[0],carryTask);
             handler = true;
         }
-        // 预留任务（如果最后一项任务是需要等待的，则需要加入此行缓冲）
-        if(cmd == "preserve"){
+        // 退出脚本（如果最后一项任务是需要等待的，则需要加入此行缓冲）
+        if(cmd == "break"){
+            currentLine = code.Length;
             handler = true;
+        }
+        // 设置开关
+        // set:开关名,global/personal,true/false
+        if(cmd == "set"){
+            string key = "";
+            if(p[1] == "global") key = p[0];
+            if(p[1] == "personal") key = parent.gameObject.scene + "." + parent.gameObject.name + "." + p[0];
+            PlayerPrefs.SetString(key,p[2]);
+            handler = true;
+            carryTask();
+        }
+        // 触发器
+        // if:开关名,global/personal,要求的true/false
+        if(cmd == "if"){
+            string key = "";
+            if(p[1] == "global") key = p[0];
+            if(p[1] == "personal") key = parent.gameObject.scene + "." + parent.gameObject.name + "." + p[0];
+            string data = PlayerPrefs.GetString(key);
+            if(p[2] != data){
+                int buff = 0;
+                while(true){
+                    if(code[currentLine].StartsWith("if:")) buff++;
+                    if(code[currentLine] == "endif:" && buff == 0) break;
+                    if(code[currentLine] == "else:" && buff == 0) break;
+                    if(code[currentLine] == "endif:") buff--;    
+                    currentLine++;
+                }
+                currentLine++;
+            }
+            handler = true;
+            carryTask();
+        }
+        if(cmd == "else") {
+            int buff = 0;
+            while(true){
+                if(code[currentLine].StartsWith("if:")) buff++;
+                if(code[currentLine] == "endif:" && buff == 0) break;
+                if(code[currentLine] == "endif:") buff--;    
+                currentLine++;
+            }
+            currentLine++;
+            handler = true; 
+            carryTask();
+        }
+        if(cmd == "endif") {handler = true; carryTask();}
+        // 更换背景音乐
+        // bgm:背景音乐名
+        if(cmd == "bgm"){
+            MapCamera.bgm.clip = (AudioClip)Resources.Load("BGM\\" + p[0]);
+            MapCamera.bgm.Play();
+            handler = true;
+            carryTask();
+        }
+        // 更换环境音效
+        // bgs:环境音效名
+        if(cmd == "bgs"){
+            MapCamera.bgs.clip = (AudioClip)Resources.Load("BGM\\" + p[0]);
+            MapCamera.bgs.Play();
+            handler = true;
+            carryTask();
+        }
+        // 音效任务
+        // snd:音效名称,nowait/wait
+        if(cmd == "snd"){
+            GameObject fab = (GameObject)Resources.Load("Prefabs\\MusicPlayer");    // 载入母体
+            GameObject player = GameObject.Instantiate(fab,new Vector3(0,0,-1),Quaternion.identity);
+            AudioSource source = player.GetComponent<AudioSource>();
+            source.clip = (AudioClip)Resources.Load("Snd\\" + p[0]);
+            player.SetActive(true);
+            source.Play();
+            GameObject.Destroy(player,source.clip.length);
+            handler = true;
+            if(p[1] == "nowait") carryTask();
+            if(p[1] == "wait") player.GetComponent<DestoryCallback>().callback = carryTask;
         }
         // 传送任务
         // tp:地图名称;传送点编号;朝向
@@ -123,7 +201,7 @@ public class DramaScript
             // 读取直至对话结束
             while(currentLine + 1 < code.Length){
                 sayTag:
-                t = code[currentLine].Split(':');
+                t = code[currentLine].TrimStart().Split(':');
                 Debug.Log("Drama script: (Dialog) " + code[currentLine]);
                 // 初始化对话参数
                 string motion = "Enter";
@@ -132,7 +210,7 @@ public class DramaScript
                 // 如果是对话
                 if(t.Length == 1){
                     // 格式化对话并提取附加参数
-                    p = code[currentLine].Replace("(",")").Split(')');
+                    p = code[currentLine].TrimStart().Replace("(",")").Split(')');
                     // 处理附加参数
                     for(int i = 1;i < p.Length;i+=2){
                         if(i == p.Length - 1) break;

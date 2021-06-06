@@ -2,14 +2,22 @@ plot:YULING_PLOT1
 immersion:
 奥医生，奥医生...
 醒醒...
-say:我
-我这是...？
-immersion:
-已经是晚上了，奥医生。
-你的晚饭我放在那里了。
-合同...还有三个月就要到期了吧？
-say:我
-嗯...是啊。
-这么说来，所剩的时间不多了。
+if:test,personal,true
+	immersion:
+	你还有几个bug没修...
+	你还不能睡...
+	set:test,personal,false
+else:
+	say:我
+	我这是...？
+	immersion:
+	已经是晚上了，奥医生。
+	你的晚饭我放在那里了。
+	合同...还有三个月就要到期了吧？
+	say:我
+	嗯...是啊。
+	这么说来，所剩的时间不多了。
+	set:test,personal,true
+endif:
 plot:clear
-preserve
+break
