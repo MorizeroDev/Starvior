@@ -21,8 +21,9 @@ public class Debuging : MonoBehaviour
 
         // Output
         text.text = $"<b>FPS</b>   {FPS}\n" +
-                    $"<b>Rendering</b>   " + Time.deltaTime.ToString("f3") + "s\n" +
-                    $"<b>Cursor</b>   (" + Input.mousePosition.x.ToString("f2") + "," + Input.mousePosition.y.ToString("f2")+")\n" +
-                    $"<b>Running</b>   "+ Time.realtimeSinceStartup.ToString("f3") + "s\n";
+                    $"<b>Rendering</b>   {Time.deltaTime.ToString("f3")}s\n" +
+                    $"<b>Cursor</b>   ({Input.mousePosition.x.ToString("f2")},{Input.mousePosition.y.ToString("f2")})\n" +
+                    $"<b>Running</b>   {Time.realtimeSinceStartup.ToString("f3")}s\n" +
+                    $"<b>SuspensionDrama</b>    {MapCamera.SuspensionDrama} \n";
     }
 }

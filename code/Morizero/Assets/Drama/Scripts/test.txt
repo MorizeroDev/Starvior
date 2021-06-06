@@ -1,4 +1,4 @@
-path:奥伦,down2,left2,up2,right2
+path:奥伦,down1,left1,up1,right1
 say:雪兰
 (Leap)你为什么要绕圈？
 path:奥伦,down2,up2

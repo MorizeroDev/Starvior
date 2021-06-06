@@ -70,6 +70,8 @@ public class Chara : MonoBehaviour
     private float sx,sy,ex,ey;                  // 地图边界x,y - x,y
     public GameObject MoveArrow;                // 点击移动反馈
     private bool tMode = false;                 // 点击移动模式（TouchMode）
+    private Vector2 lpos;
+    private int lposCount;
     public WalkTaskCallback walkTaskCallback;   // 行走人物回调
 
     private void Awake() {
@@ -195,26 +197,32 @@ public class Chara : MonoBehaviour
             // 设置点击反馈
             MoveArrow.transform.localPosition = mpos;
             MoveArrow.SetActive(true);
+            lpos = new Vector2(0,0);
+            lposCount = 3;
             //prepare for Event to TRayMapBuilder
             inPosEvent.Invoke(mpos);
         }
         
         // 检测键盘输入
         bool isKeyboard = false;
-        if(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)){
-            Move(-1,0); isKeyboard = true;
-        }else if(Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)){
-            Move(1,0); isKeyboard = true;
-        }else if(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)){
-            Move(0,1); isKeyboard = true;
-        }else if(Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)){
-            Move(0,-1); isKeyboard = true;
+        if((isWalkTask && tMode) || !isWalkTask){
+            if(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)){
+                Move(-1,0); isKeyboard = true;
+            }else if(Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)){
+                Move(1,0); isKeyboard = true;
+            }else if(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)){
+                Move(0,1); isKeyboard = true;
+            }else if(Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)){
+                Move(0,-1); isKeyboard = true;
+            }
         }
         // 仅打断寻路task（tMode），不打断DramaScript的task
-        if(isKeyboard && isWalkTask && tMode){
+        if(lpos.x == pos.x && lpos.y == pos.y && isWalkTask && tMode) lposCount--;
+        if((isKeyboard || lposCount == 0) && isWalkTask && tMode){
             Debug.Log("Walktask: tasks for Pathfinding is broke.");
             walkTasks.Clear(); tMode = false; MoveArrow.SetActive(false);
         }
+        lpos = pos;
 
         // 更新图片
         UploadWalk();

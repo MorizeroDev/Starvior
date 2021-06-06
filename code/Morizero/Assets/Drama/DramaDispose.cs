@@ -5,6 +5,7 @@ using UnityEngine;
 public class DramaDispose : MonoBehaviour
 {
     public void DramaDone(){
+        this.transform.Find("Dialog").GetComponent<Dramas>().DramaDone();
         Destroy(this.gameObject);
     }
 }

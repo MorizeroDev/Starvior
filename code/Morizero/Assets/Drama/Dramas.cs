@@ -94,6 +94,8 @@ public class Dramas : MonoBehaviour
         if(character != "旁白"){
             Character.sprite = Resources.Load<Sprite>($"Characters\\{character}");
             Character.SetNativeSize();
+            RectTransform rect = Character.GetComponent<RectTransform>();
+            rect.sizeDelta = new Vector2(760f / rect.sizeDelta.y * rect.sizeDelta.x, 760f);
         }
         Character.gameObject.SetActive(character != "旁白");
 
@@ -103,10 +105,12 @@ public class Dramas : MonoBehaviour
         WordIndex = 0;
     }
     public void DramaDone(){
-        Destroy(this.gameObject);
+        Debug.Log("Done!");
+        callback();
     }
     void Update()
     {
+        if(DramaIndex >= Drama.Count) return;
         if(Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.X)){
             if(DialogState == 0) Speed = 0;
         }
@@ -117,10 +121,8 @@ public class Dramas : MonoBehaviour
             DialogState = 0;
             DramaIndex++;
             if(DramaIndex >= Drama.Count){
-                Debug.Log("Done!");
                 DisposeWords();
                 this.transform.parent.GetComponent<Animator>().Play("ExitDrama",0);
-                callback();
                 return;
             }
             ReadDrama();
