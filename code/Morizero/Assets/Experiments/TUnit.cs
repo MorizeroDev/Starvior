@@ -10,7 +10,6 @@ using MyNamespace.databridge.AllowedParaments;
 
 namespace MyNamespace.tunit
 {
-    
     public class Unit
     {
         public Unit(int inBloodCount)
@@ -81,7 +80,7 @@ namespace MyNamespace.tunit
             NormalAttackRequestBuilder tNARequestBuilder = new NormalAttackRequestBuilder();
             PoisonAttackRequestBuilder tPARequestBuilder = new PoisonAttackRequestBuilder();
             bridgeTasks.Enqueue(tNARequestBuilder.BuildProduct(attacker, parament.damage, receiver));
-            bridgeTasks.Enqueue(tPARequestBuilder.BuildProduct(attacker, parament.NormalExec(), receiver));
+            bridgeTasks.Enqueue(tPARequestBuilder.BuildProduct(attacker, parament.Fade(), receiver));
             yield return 0;
         }
 

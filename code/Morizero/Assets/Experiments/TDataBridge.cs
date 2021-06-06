@@ -5,6 +5,8 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+using MyNamespace.tunit;
+
 namespace MyNamespace.databridge
 {
     //--------------------unique parament classes--------------------//
@@ -44,7 +46,7 @@ namespace MyNamespace.databridge
                 gapTime = ingapTime;
                 repeatTimesRemaining = inrepeatTimes;
             }
-            public PoisonAttackRequestParament NormalExec()
+            public PoisonAttackRequestParament Fade()
             {
                 repeatTimesRemaining -= 1;
                 return this;
@@ -84,7 +86,7 @@ namespace MyNamespace.databridge
                 {
                     case BridgeParamentKind.TUnitNormalAttackTUnit:
                         {
-                            tunit.TUnit dC = currentTask.destinationComponent as tunit.TUnit;
+                            TUnit dC = currentTask.destinationComponent as TUnit;
                             if (dC.unit.IsDead)
                             { }
                             else
@@ -94,7 +96,7 @@ namespace MyNamespace.databridge
                         break;
                     case BridgeParamentKind.TUnitPoisonAttackTUnit:
                         {
-                            tunit.TUnit dC = currentTask.destinationComponent as tunit.TUnit;
+                            TUnit dC = currentTask.destinationComponent as TUnit;
                             if (dC.unit.IsDead)
                             { }
                             else
