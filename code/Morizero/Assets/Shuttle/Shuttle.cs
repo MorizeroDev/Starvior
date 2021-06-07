@@ -1,15 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Shuttle : MonoBehaviour
 {
+    public Text Score,Combo;
+    private int score,combo;
+    public Animator Combos;
     public struct HitPoint{
         public float time;
         public int y;
     }
     public TextAsset OsuMap;
     public List<GameObject> Fireworks;
+    public GameObject Hithint,UICanvas;
+    public RectTransform HitDot;
     private AudioSource source;
     private List<HitPoint> HitPoints = new List<HitPoint>();
     private int nowhit = 0;
@@ -51,7 +57,7 @@ public class Shuttle : MonoBehaviour
     void UploadWalk(){
         // 行走时的图像
         walkspan += Time.deltaTime;
-        if(walkspan > 0.03f){
+        if(walkspan > 0.05f){
             walkBuff ++;
             if(walkBuff > 2) walkBuff = 0;
             walkspan = 0;
@@ -77,15 +83,29 @@ public class Shuttle : MonoBehaviour
                         GameObject go = Instantiate(Fireworks[Random.Range(0,Fireworks.Count)],
                                                     new Vector3(pos.x - MoveLength(1.5f),yPos[i],pos.z),
                                                     Quaternion.identity);
-                        go.GetComponent<SpriteRenderer>().sortingOrder = 2 + i;
+                        go.GetComponent<SpriteRenderer>().sortingOrder = 3 + i;
                     }
                 }
+                Vector3 dot = HitDot.transform.position;
+                GameObject hint = Instantiate(Hithint,new Vector3(dot.x + 10,dot.y,dot.z),Quaternion.identity,UICanvas.transform);
+                HintMotion hintMotion = hint.GetComponent<HintMotion>();
+                hintMotion.bgm = source;
+                hintMotion.rect = hint.GetComponent<RectTransform>();
+                hintMotion.ox = HitDot.localPosition.x + 2000;
+                hintMotion.tx = HitDot.localPosition.x;
+                hintMotion.targetTime = p.time;
+                hint.SetActive(true);
                 nowplay++;
             }
         }
         if(nowhit < HitPoints.Count){
             if(HitPoints[nowhit].time <= source.time){
                 pos.y = yPos[HitPoints[nowhit].y];
+                score += Random.Range(800,1200);
+                combo++;
+                Score.text = score.ToString();
+                Combo.text = $"{combo} Combo";
+                Combos.Play("TextSrink",0,0f);
                 nowhit++;
             }
         }
