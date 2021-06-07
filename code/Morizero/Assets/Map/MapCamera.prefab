@@ -676,7 +676,6 @@ MonoBehaviour:
   endDot: {fileID: 0}
   bindObj: {fileID: 0}
   checkHint: {fileID: 7293165566116530930}
-  bgmLighter: {fileID: 0}
   CheckFore: {fileID: 21300000, guid: fe20143c26e9f4649b433044571eec24, type: 3}
   TalkFore: {fileID: 21300000, guid: e800066301a9d2140841eef06c7dda5c, type: 3}
   CheckText: {fileID: 7293165566797132191}
@@ -812,6 +811,8 @@ GameObject:
   - component: {fileID: 7293165567445298132}
   - component: {fileID: 7293165567445298138}
   - component: {fileID: 7293165567445298133}
+  - component: {fileID: 1158554580395453171}
+  - component: {fileID: 8847022969174800972}
   m_Layer: 5
   m_Name: btnBack
   m_TagString: Untagged
@@ -876,6 +877,47 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1158554580395453171
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7293165567445298135}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96152481ec0cbb2459dad03759b07aa7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8847022969174800972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7293165567445298135}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1835087110725934309}
+          m_TargetAssemblyTypeName: CheckBtn, Assembly-CSharp
+          m_MethodName: OnClick
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 1
 --- !u!1 &7293165567506188715
 GameObject:
   m_ObjectHideFlags: 0
@@ -887,6 +929,8 @@ GameObject:
   - component: {fileID: 7293165567506188712}
   - component: {fileID: 7293165567506188718}
   - component: {fileID: 7293165567506188713}
+  - component: {fileID: 2133221595426736138}
+  - component: {fileID: 7588040601466406372}
   m_Layer: 5
   m_Name: checkTip
   m_TagString: Untagged
@@ -951,6 +995,47 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &2133221595426736138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7293165567506188715}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96152481ec0cbb2459dad03759b07aa7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7588040601466406372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7293165567506188715}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1835087110725934309}
+          m_TargetAssemblyTypeName: CheckBtn, Assembly-CSharp
+          m_MethodName: OnClick
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 1
 --- !u!1 &7293165567960629700
 GameObject:
   m_ObjectHideFlags: 0

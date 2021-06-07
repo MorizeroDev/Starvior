@@ -179,6 +179,8 @@ public class Chara : MonoBehaviour
                         Debug.Log("Walktask: tasks for Drama Script is done.");
                         walkTaskCallback();
                     } 
+                    walking = false;
+                    UploadWalk();
                 }
             }
         }
@@ -220,6 +222,8 @@ public class Chara : MonoBehaviour
         if(lpos.x == pos.x && lpos.y == pos.y && isWalkTask && tMode) lposCount--;
         if((isKeyboard || lposCount == 0) && isWalkTask && tMode){
             Debug.Log("Walktask: tasks for Pathfinding is broke.");
+            walking = false;
+            UploadWalk();
             walkTasks.Clear(); tMode = false; MoveArrow.SetActive(false);
         }
         lpos = pos;
