@@ -41,7 +41,7 @@ namespace MyNamespace.tunit
 
             public BridgeTask BuildProduct(Component attacker, int damage, Component receiver)
             {
-                DefineBridgeParamentKind(BridgeParamentKind.TUnitNormalAttackTUnit);
+                DefineBridgeParamentKind(BridgeParamentType.TUnitNormalAttackTUnit);
 
                 BuildOrigin(attacker);
                 BuildDestnation(receiver);
@@ -58,9 +58,9 @@ namespace MyNamespace.tunit
             {
                 _bridgeTask.parament = parament;
             }
-            protected override void DefineBridgeParamentKind(BridgeParamentKind bridgeParamentKind)
+            protected override void DefineBridgeParamentKind(BridgeParamentType bridgeParamentKind)
             {
-                _bridgeTask.bridgeParamentKind = bridgeParamentKind;
+                _bridgeTask.bridgeParamentType = bridgeParamentKind;
             }
             protected override void BuildDestnation(Component destnationComponent)
             {
@@ -90,7 +90,7 @@ namespace MyNamespace.tunit
 
             public BridgeTask BuildProduct(Component attacker, PoisonAttackRequestParament parament, Component receiver)
             {
-                DefineBridgeParamentKind(BridgeParamentKind.TUnitPoisonAttackTUnit);
+                DefineBridgeParamentKind(BridgeParamentType.TUnitPoisonAttackTUnit);
 
                 BuildOrigin(attacker);
                 BuildParament(parament);
@@ -107,9 +107,9 @@ namespace MyNamespace.tunit
             {
                 _bridgeTask.parament = parament;
             }
-            protected override void DefineBridgeParamentKind(BridgeParamentKind bridgeParamentKind)
+            protected override void DefineBridgeParamentKind(BridgeParamentType bridgeParamentKind)
             {
-                _bridgeTask.bridgeParamentKind = bridgeParamentKind;
+                _bridgeTask.bridgeParamentType = bridgeParamentKind;
             }
             protected override void BuildDestnation(Component destnationComponent)
             {

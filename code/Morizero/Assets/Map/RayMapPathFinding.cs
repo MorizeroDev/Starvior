@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEngine.UI;
 
 using MyNamespace.rayMapPathFinding.rayMap;
-using MyNamespace.rayMapPathFinding.myQueueWithIndex;
+using MyNamespace.rayMapPathFinding.myQueue;
 using MyNamespace.rayMapPathFinding.myV2IPair;
 using MyNamespace.rayMapPathFinding.storageTree_Node;
 using MyNamespace.rayMapPathFinding.movementStatus;
@@ -53,7 +53,7 @@ namespace MyNamespace.rayMapPathFinding
     }
 #endif
     }
-    namespace myQueueWithIndex
+    namespace myQueue
     {
         public class MyQueueWithIndex<T> //warning! this is a circle Queue!
         {
@@ -351,6 +351,8 @@ namespace MyNamespace.rayMapPathFinding
     public class RayMapPathFinding : MonoBehaviour
     {
         #region EditorFeed
+        public databridge.TDataBridge dataBridge;
+
         //public float translator_fixSpeed;
         public Chara chara;
 
@@ -387,8 +389,13 @@ namespace MyNamespace.rayMapPathFinding
         
         #endregion  //EditorFeed
 
-        #region RayMapBuilder
         //----------Entrance----------//
+        public void Entrance(Vector2 outArrowPosition)
+        {
+            _GenerateRayMap(outArrowPosition);
+        }
+
+        #region RayMapBuilder
         private void _GenerateRayMap(Vector2 outArrowPosition)
         {
             if (!_movementEndObject)
@@ -756,10 +763,9 @@ namespace MyNamespace.rayMapPathFinding
                 return default;
             }
         }
-
         private void _PushOut(MovementStatus s)
         {
-            _TranslatorEntrance(s)
+            _TranslatorEntrance(s);
         }
         #endregion
 
@@ -805,7 +811,7 @@ namespace MyNamespace.rayMapPathFinding
         #region UnityCalls
         private void Awake()
         {
-            chara.inPosEvent.AddListener(_GenerateRayMap);
+            //chara.inPosEvent.AddListener(_GenerateRayMap);
         }
         // Start is called before the first frame update
         private void Start()

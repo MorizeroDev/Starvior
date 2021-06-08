@@ -5,17 +5,65 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
 
-using MyNamespace.rayMapPathFinding.myQueueWithIndex;
+using MyNamespace.databridge;
+using MyNamespace.rayMapPathFinding.myQueue;
 
 // 用于Drama Script的回调函数
 public delegate void WalkTaskCallback();
 // 角色控制器
 public class Chara : MonoBehaviour
 {
+    private class OutMousePositionBuilder : BridgeTaskBuilder
+    {
+        public OutMousePositionBuilder(Component component)
+        {
+            _product = new BridgeTask();
+            _destnaion = component;
+        }
+        public BridgeTask BuildProduct(Component originComponent,Vector2 parament)
+        {
+            DefineBridgeParamentKind(BridgeParamentType.Chara_MousePosition_RayMapPathFinding);
+            BuildOrigin(originComponent);
+            BuildParament(parament);
+            BuildDestnation(_destnaion);
+            return _product;
+        }
+
+        public override BridgeTask GetProduct()
+        {
+            return _product;
+        }
+
+        protected override void BuildDestnation(Component destnationComponent)
+        {
+            _product.destinationComponent = destnationComponent;
+        }
+
+        protected override void BuildParament(object parament)
+        {
+            _product.parament = parament;
+        }
+
+        protected override void BuildOrigin(Component originComponent)
+        {
+            _product.originComponent = originComponent;
+        }
+
+        protected override void DefineBridgeParamentKind(BridgeParamentType bridgeParamentType)
+        {
+            _product.bridgeParamentType = bridgeParamentType;
+        }
+
+        private Component _destnaion;
+        private BridgeTask _product;
+    }
+
+    public TDataBridge dataBridge;
+
     public GameObject adjustableTrigger;
     //public Vector2 outmPos;
     [HideInInspector]
-    public UnityEvent<Vector2> inPosEvent = new UnityEvent<Vector2>();
+    
     
     // 行走参数
     public const float speed = 0.05f;
@@ -74,6 +122,8 @@ public class Chara : MonoBehaviour
     private Vector2 lpos;
     private int lposCount;
     public WalkTaskCallback walkTaskCallback;   // 行走人物回调
+
+    private OutMousePositionBuilder bridgeTaskbuilder;
 
     private void Awake() {
         // 载入行走图图像集，并初始化相关设置
@@ -136,12 +186,22 @@ public class Chara : MonoBehaviour
         if(y != 0) dir = y < 0 ? walkDir.Down : walkDir.Up;
     }
 
+    private void Start()
+    {
+        if(Controller) // only controller can havve a pathfinding movement
+            bridgeTaskbuilder = new OutMousePositionBuilder(dataBridge.defaultRayMapPathFindingScript);
+    }
+
     void FixedUpdate()
     {
         // 如果不是玩家
         if(!Controller) return;
         // 如果剧本正在进行则退出
-        if(MapCamera.SuspensionDrama && walkTasks.Count == 0) return;
+        if (MapCamera.SuspensionDrama && walkTasks.Count == 0)
+        {
+            adjustableTrigger.GetComponent<Collider2D>().isTrigger = true;
+            return;
+        }
         // 是否正在执行行走任务？
         bool isWalkTask = (walkTasks.Count > 0);
         Vector3 pos = transform.localPosition;
@@ -205,7 +265,11 @@ public class Chara : MonoBehaviour
             lpos = new Vector2(0,0);
             lposCount = 3;
             //prepare for Event to TRayMapBuilder
-            inPosEvent.Invoke(mpos);
+
+
+
+            dataBridge.EnqueueTask(bridgeTaskbuilder.BuildProduct(this, mpos));
+
             goto skipKeyboard;
         }
         
