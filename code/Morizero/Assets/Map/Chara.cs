@@ -12,6 +12,7 @@ public delegate void WalkTaskCallback();
 // 角色控制器
 public class Chara : MonoBehaviour
 {
+    public GameObject adjustableTrigger;
     //public Vector2 outmPos;
     [HideInInspector]
     public UnityEvent<Vector2> inPosEvent = new UnityEvent<Vector2>();
@@ -185,8 +186,10 @@ public class Chara : MonoBehaviour
             }
         }
 
+        bool isKeyboard = false;
+
         // 如果屏幕被点击
-        if(Input.GetMouseButtonUp(0) && !isWalkTask)
+        if (Input.GetMouseButtonUp(0) && !isWalkTask)
         {
             // 必要：开启tMode，将寻路WalkTask与DramaScript的WalkTask区别开来
             tMode = true;
@@ -203,10 +206,10 @@ public class Chara : MonoBehaviour
             lposCount = 3;
             //prepare for Event to TRayMapBuilder
             inPosEvent.Invoke(mpos);
+            goto skipKeyboard;
         }
         
         // 检测键盘输入
-        bool isKeyboard = false;
         if((isWalkTask && tMode) || !isWalkTask){
             if(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)){
                 Move(-1,0); isKeyboard = true;
@@ -218,8 +221,14 @@ public class Chara : MonoBehaviour
                 Move(0,-1); isKeyboard = true;
             }
         }
+
+        skipKeyboard:
+
+        if (Controller && adjustableTrigger!=null)
+            adjustableTrigger.GetComponent<Collider2D>().isTrigger = !isKeyboard;
+
         // 仅打断寻路task（tMode），不打断DramaScript的task
-        if(lpos.x == pos.x && lpos.y == pos.y && isWalkTask && tMode) lposCount--;
+        if (lpos.x == pos.x && lpos.y == pos.y && isWalkTask && tMode) lposCount--;
         if((isKeyboard || lposCount == 0) && isWalkTask && tMode){
             Debug.Log("Walktask: tasks for Pathfinding is broke.");
             walking = false;
