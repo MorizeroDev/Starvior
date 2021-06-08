@@ -99,10 +99,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3978afdd336aed441adcb7a1e9137364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  adjustableTrigger: {fileID: 0}
-  inPosEvent:
-    m_PersistentCalls:
-      m_Calls: []
+  dataBridge: {fileID: 0}
+  adjustableTrigger: {fileID: 8544068374234095405}
   Character: "\u4E16\u539F"
   Controller: 1
   dir: 0
@@ -119,6 +117,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b31ef3730cbf5a418c01509ebe190f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dataBridge: {fileID: 0}
   chara: {fileID: 8544068372687261224}
   movementEndObject_Prefab: {fileID: 1440383410493422035, guid: 9401ed0c140cb8546b373e8d149e0ccd, type: 3}
   moveArrowSpriteRenderer: {fileID: 0}
@@ -127,15 +126,6 @@ MonoBehaviour:
   allowVisualStatus: 0
   tileSize: {x: 0.175, y: 0.15}
   pictureSize: {x: 10, y: 6}
-  inRayMapEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  inMovementsEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  inClearQueueEvent:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!50 &884868787
 Rigidbody2D:
   serializedVersion: 4

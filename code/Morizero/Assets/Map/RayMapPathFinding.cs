@@ -1,13 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.EventSystems;
 using UnityEditor;
 using UnityEngine.UI;
 
 using MyNamespace.rayMapPathFinding.rayMap;
-using MyNamespace.rayMapPathFinding.myQueueWithIndex;
+using MyNamespace.rayMapPathFinding.myQueue;
 using MyNamespace.rayMapPathFinding.myV2IPair;
 using MyNamespace.rayMapPathFinding.storageTree_Node;
 using MyNamespace.rayMapPathFinding.movementStatus;
@@ -55,7 +53,7 @@ namespace MyNamespace.rayMapPathFinding
     }
 #endif
     }
-    namespace myQueueWithIndex
+    namespace myQueue
     {
         public class MyQueueWithIndex<T> //warning! this is a circle Queue!
         {
@@ -353,6 +351,8 @@ namespace MyNamespace.rayMapPathFinding
     public class RayMapPathFinding : MonoBehaviour
     {
         #region EditorFeed
+        public databridge.TDataBridge dataBridge;
+
         //public float translator_fixSpeed;
         public Chara chara;
 
@@ -380,23 +380,23 @@ namespace MyNamespace.rayMapPathFinding
 
 
         //Searcher's Entrance (activated by RayMapBuilder)
-        [HideInInspector]
-        public UnityEvent<RayMap> inRayMapEvent;
 
         //Translator's Updating
-        [HideInInspector]
-        public UnityEvent<MovementStatus> inMovementsEvent;
+        
         private Chara.walkTask walkTaskUnitOut;
 
         private Queue<MovementStatus> _queueOfMovementStatus = new Queue<MovementStatus>();
-
-        [HideInInspector]
-        public UnityEvent inClearQueueEvent = new UnityEvent();
+        
         #endregion  //EditorFeed
 
-        #region RayMapBuilder
         //----------Entrance----------//
-        private void _Shoot(Vector2 outArrowPosition)
+        public void Entrance(Vector2 outArrowPosition)
+        {
+            _GenerateRayMap(outArrowPosition);
+        }
+
+        #region RayMapBuilder
+        private void _GenerateRayMap(Vector2 outArrowPosition)
         {
             if (!_movementEndObject)
                 _movementEndObject = Instantiate(movementEndObject_Prefab);
@@ -528,7 +528,7 @@ namespace MyNamespace.rayMapPathFinding
                rayMap.endPoint.y < rayMap.size.y && rayMap.endPoint.x >= 0 &&
                !rayMap.buffer[rayMap.endPoint.x, rayMap.endPoint.y])
             {
-                inRayMapEvent.Invoke(rayMap);
+                _BuildQueueWork(rayMap);
             }
             else
             {
@@ -763,11 +763,9 @@ namespace MyNamespace.rayMapPathFinding
                 return default;
             }
         }
-
         private void _PushOut(MovementStatus s)
         {
-            inMovementsEvent.Invoke(s);
-            //outTmovements.inMovementsEvent.Invoke(s);
+            _TranslatorEntrance(s);
         }
         #endregion
 
@@ -809,21 +807,11 @@ namespace MyNamespace.rayMapPathFinding
             return;
         }
         #endregion
-
-        #region disrupter
-        public void disrupter()
-        {
-
-        }
-        #endregion
-
+        
         #region UnityCalls
         private void Awake()
         {
-            inClearQueueEvent.AddListener(disrupter);
-            chara.inPosEvent.AddListener(_Shoot);
-            inRayMapEvent.AddListener(_BuildQueueWork);
-            inMovementsEvent.AddListener(_TranslatorEntrance);
+            //chara.inPosEvent.AddListener(_GenerateRayMap);
         }
         // Start is called before the first frame update
         private void Start()

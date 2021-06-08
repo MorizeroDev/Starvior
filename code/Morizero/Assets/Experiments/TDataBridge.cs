@@ -11,12 +11,12 @@ namespace MyNamespace.databridge
 {
     //--------------------unique parament classes--------------------//
 
-    #region builder
+    #region builderInterface
     public abstract class BridgeTaskBuilder
     {
         protected abstract void BuildOrigin(Component originComponent);
         protected abstract void BuildParament(object parament);
-        protected abstract void DefineBridgeParamentKind(BridgeParamentKind bridgeParamentKind);
+        protected abstract void DefineBridgeParamentKind(BridgeParamentType bridgeParamentType);
         protected abstract void BuildDestnation(Component destnationComponent);
         public abstract BridgeTask GetProduct();
     }
@@ -25,14 +25,16 @@ namespace MyNamespace.databridge
     {
         public Component originComponent;
         public object parament;
-        public BridgeParamentKind bridgeParamentKind;
+        public BridgeParamentType bridgeParamentType;
         public Component destinationComponent;
     }
     
-    public enum BridgeParamentKind
+    public enum BridgeParamentType
     {
+        UnknownAction,
         TUnitNormalAttackTUnit,
         TUnitPoisonAttackTUnit,
+        Chara_MousePosition_RayMapPathFinding,
     }
     #endregion
 
@@ -59,9 +61,11 @@ namespace MyNamespace.databridge
 
     public class TDataBridge : MonoBehaviour
     {
+        #region UnityFeed
+        public MyNamespace.rayMapPathFinding.RayMapPathFinding defaultRayMapPathFindingScript;
+        #endregion
         public Queue<BridgeTask> bridgeTasks = new Queue<BridgeTask>(0);
-        public Text text;
-        private int m_i = 0;
+        
         public void EnqueueTask(BridgeTask inTask)
         {
             bridgeTasks.Enqueue(inTask);
@@ -74,17 +78,12 @@ namespace MyNamespace.databridge
 
         private void Update()
         {
-            //test if clog
-            m_i ++ ;
-            text.text = m_i.ToString();
-            //
-
             while (bridgeTasks.Count > 0)
             {
                 BridgeTask currentTask = bridgeTasks.Dequeue();
-                switch(currentTask.bridgeParamentKind)
+                switch(currentTask.bridgeParamentType)
                 {
-                    case BridgeParamentKind.TUnitNormalAttackTUnit:
+                    case BridgeParamentType.TUnitNormalAttackTUnit:
                         {
                             TUnit dC = currentTask.destinationComponent as TUnit;
                             if (dC.unit.IsDead)
@@ -94,7 +93,7 @@ namespace MyNamespace.databridge
 
                         }
                         break;
-                    case BridgeParamentKind.TUnitPoisonAttackTUnit:
+                    case BridgeParamentType.TUnitPoisonAttackTUnit:
                         {
                             TUnit dC = currentTask.destinationComponent as TUnit;
                             if (dC.unit.IsDead)
@@ -108,6 +107,12 @@ namespace MyNamespace.databridge
                                         currentTask.destinationComponent
                                         ));
                             }
+                        }
+                        break;
+                    case BridgeParamentType.Chara_MousePosition_RayMapPathFinding:
+                        {
+                            rayMapPathFinding.RayMapPathFinding dC = currentTask.destinationComponent as rayMapPathFinding.RayMapPathFinding;
+                            dC.Entrance((Vector2)currentTask.parament);
                         }
                         break;
                     default:
