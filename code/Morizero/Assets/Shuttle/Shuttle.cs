@@ -13,13 +13,16 @@ public class Shuttle : MonoBehaviour
         public int y;
     }
     public TextAsset OsuMap;
+    public List<GameObject> Judges;
     public List<GameObject> Fireworks;
     public GameObject Hithint,UICanvas;
     public RectTransform HitDot;
     private AudioSource source;
     private List<HitPoint> HitPoints = new List<HitPoint>();
-    private int nowhit = 0;
-    private int nowplay = 0;
+    public static Shuttle shuttle;
+    public static bool hitLock = false;
+    public static int nowhit = 0;
+    public static int nowplay = 0;
 
     public Sprite[] Animation;                  // 行走图图像集
     public SpriteRenderer image;                // 图形显示容器
@@ -29,9 +32,11 @@ public class Shuttle : MonoBehaviour
     private float walkspan;                     // 行走图动画间隔控制缓冲
 
     private void Awake() {
+        nowhit = 0;nowplay = 0;
+        shuttle = this;
         string[] data = OsuMap.text.Split(new char[]{'\r','\n'},System.StringSplitOptions.RemoveEmptyEntries);
         bool start = false;
-        int ly = 0;
+        int ly = 1;
         foreach(string line in data){
             if(start){
                 string[] t = line.Split(',');
@@ -71,17 +76,36 @@ public class Shuttle : MonoBehaviour
         return buff;
     }
 
+    public void Hit(float pitch,int grade){
+        if(pitch > 1){
+            combo = 0;
+            Combo.text = $"{combo} Combo";
+        }else{
+            Vector3 pos = Character.transform.localPosition;
+            pos.y = yPos[HitPoints[nowhit].y];
+            combo++;
+            score += (int)(1000f * (1 - pitch) * (1 + combo * 1f / 10f));
+            Score.text = score.ToString();
+            Combo.text = $"{combo} Combo";
+            Combos.Play("TextSrink",0,0f);
+            Character.transform.localPosition = pos;
+        }
+        nowhit++;
+        GameObject go = Instantiate(Judges[grade],Judges[grade].transform.position,Quaternion.identity,UICanvas.transform);
+        go.SetActive(true);
+    }
+
     void Update()
     {
         Vector3 pos = Character.transform.localPosition;
-        pos.x -= MoveLength();
+        pos.x += MoveLength();
         if(nowplay < HitPoints.Count){
             if(HitPoints[nowplay].time - 1.2f <= source.time){
                 HitPoint p = HitPoints[nowplay];
                 for(int i = 0;i < 3;i++){
                     if(i != p.y){
                         GameObject go = Instantiate(Fireworks[Random.Range(0,Fireworks.Count)],
-                                                    new Vector3(pos.x - MoveLength(1.5f),yPos[i],pos.z),
+                                                    new Vector3(pos.x + MoveLength(1.5f),yPos[i],pos.z),
                                                     Quaternion.identity);
                         go.GetComponent<SpriteRenderer>().sortingOrder = 3 + i;
                     }
@@ -91,22 +115,12 @@ public class Shuttle : MonoBehaviour
                 HintMotion hintMotion = hint.GetComponent<HintMotion>();
                 hintMotion.bgm = source;
                 hintMotion.rect = hint.GetComponent<RectTransform>();
-                hintMotion.ox = HitDot.localPosition.x + 2000;
+                hintMotion.ox = HitDot.localPosition.x + 2400;
                 hintMotion.tx = HitDot.localPosition.x;
+                hintMotion.id = nowplay;
                 hintMotion.targetTime = p.time;
                 hint.SetActive(true);
                 nowplay++;
-            }
-        }
-        if(nowhit < HitPoints.Count){
-            if(HitPoints[nowhit].time <= source.time){
-                pos.y = yPos[HitPoints[nowhit].y];
-                score += Random.Range(800,1200);
-                combo++;
-                Score.text = score.ToString();
-                Combo.text = $"{combo} Combo";
-                Combos.Play("TextSrink",0,0f);
-                nowhit++;
             }
         }
         Character.transform.localPosition = pos;

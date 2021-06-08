@@ -99,6 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3978afdd336aed441adcb7a1e9137364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  adjustableTrigger: {fileID: 0}
   inPosEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -257,6 +258,6 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.006924659, y: -0.028677076}
-  m_Size: {x: 0.2980966, y: 0.41844058}
+  m_Offset: {x: -0.003942877, y: -0.028677076}
+  m_Size: {x: 0.19671565, y: 0.41844058}
   m_Direction: 0
