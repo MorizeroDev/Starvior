@@ -7,6 +7,7 @@ public class CheckObj : MonoBehaviour
     public TextAsset Script;
     private DramaScript scriptCarrier = new DramaScript();
     public static bool CheckBtnPressed;
+    public bool StartOnTrigger;
     public List<Chara.walkDir> AllowDirection = new List<Chara.walkDir>(3);
     public int CheckType = 0;
     public string Content;
@@ -29,7 +30,7 @@ public class CheckObj : MonoBehaviour
 
     public bool IsActive(){
         if(MapCamera.HitCheck != this.gameObject) return false;
-        bool ret = (Input.GetKeyUp(KeyCode.Z) || CheckBtnPressed);
+        bool ret = (Input.GetKeyUp(KeyCode.Z) || CheckBtnPressed || StartOnTrigger);
         if(MapCamera.SuspensionDrama) ret = false;
         CheckBtnPressed = false;
         return ret;

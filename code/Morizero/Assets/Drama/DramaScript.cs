@@ -177,6 +177,16 @@ public class DramaScript
             Switcher.Carry(p[0],UnityEngine.SceneManagement.LoadSceneMode.Single,0,nds.carryTask);
             handler = true;
         }
+        // 切换场景任务
+        // sw:场景名称
+        if(cmd == "sw"){
+            MapCamera.HitCheck = null;
+            DramaScript nds = DramaCrossScene.Start(this);
+            Switcher.Carry(p[0],UnityEngine.SceneManagement.LoadSceneMode.Single,0,nds.carryTask);
+            if(MapCamera.bgm != null) {GameObject.Destroy(MapCamera.bgm); MapCamera.bgm = null;}
+            if(MapCamera.bgs != null) {GameObject.Destroy(MapCamera.bgs); MapCamera.bgs = null;}
+            handler = true;
+        }
         // 情节任务
         // plot:情节预制体名称/clear
         if(cmd == "plot"){
