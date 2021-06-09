@@ -12,6 +12,12 @@ public class HintMotion : MonoBehaviour
     public RectTransform rect;
     void Update()
     {
+        if(Shuttle.hitLock){
+            if(Input.GetKeyUp(KeyCode.Z) || Input.GetKeyUp(KeyCode.X) || Input.GetKeyUp(KeyCode.Space) || Input.GetMouseButtonUp(0)){
+                Debug.Log("Shuttle: key up.");
+                Shuttle.hitLock = false;
+            }
+        }
         if(ani) return;
         Vector3 pos = rect.localPosition;
         float pro = 1 - (targetTime - bgm.time) / 1.2f;
@@ -26,9 +32,11 @@ public class HintMotion : MonoBehaviour
                 ani = true;
             }
             if(id == Shuttle.nowhit){
-                if(Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.Space) || Input.GetMouseButton(0)){
+                if(Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.X) || Input.GetKey(KeyCode.Space) || Input.GetMouseButton(0)){
+                    if(!Shuttle.hitLock) Debug.Log("Shuttle: hit began:" + Mathf.Abs(bgm.time - targetTime));
                     if(Mathf.Abs(bgm.time - targetTime) <= 0.15f && !Shuttle.hitLock){
                         float pitch = Mathf.Abs(bgm.time - targetTime);
+                        Debug.Log("Shuttle: hit success with pitch " + pitch);
                         if(pitch <= 0.05f){
                             // Perfect
                             Shuttle.shuttle.Hit(pitch / 0.15f,0);
@@ -44,8 +52,6 @@ public class HintMotion : MonoBehaviour
                         Shuttle.hitLock = true;
                     }
                 }
-                if(Input.GetKeyUp(KeyCode.Z) || Input.GetKeyUp(KeyCode.Space) || Input.GetMouseButtonUp(0))
-                    Shuttle.hitLock = false;
             }
         }
     }

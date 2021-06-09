@@ -84,7 +84,7 @@ public class Shuttle : MonoBehaviour
             Vector3 pos = Character.transform.localPosition;
             pos.y = yPos[HitPoints[nowhit].y];
             combo++;
-            score += (int)(1000f * (1 - pitch) * (1 + combo * 1f / 10f));
+            score += (int)(1000f * (1 - pitch) * (1 + combo * 1f / 10f) * ((1 - grade * 1f / 2f) * 2));
             Score.text = score.ToString();
             Combo.text = $"{combo} Combo";
             Combos.Play("TextSrink",0,0f);
