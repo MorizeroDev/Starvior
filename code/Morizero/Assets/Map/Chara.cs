@@ -13,49 +13,28 @@ public delegate void WalkTaskCallback();
 // 角色控制器
 public class Chara : MonoBehaviour
 {
-    private class OutMousePositionBuilder : BridgeTaskBuilder
+    private class _OutMousePositionBuilder : DefaultBridgeTaskBuilder
     {
-        public OutMousePositionBuilder(Component component)
+        public _OutMousePositionBuilder(Component component)
         {
             _product = new BridgeTask();
-            _destnaion = component;
+            _destnaionComponent = component;
         }
         public BridgeTask BuildProduct(Component originComponent,Vector2 parament)
         {
-            DefineBridgeParamentKind(BridgeParamentType.Chara_MousePosition_RayMapPathFinding);
+            DefineBridgeParamentType(BridgeParamentType.Chara_MousePosition_RayMapPathFinding);
             BuildOrigin(originComponent);
             BuildParament(parament);
-            BuildDestnation(_destnaion);
+            BuildDestnation(_destnaionComponent);
             return _product;
         }
-
-        public override BridgeTask GetProduct()
-        {
-            return _product;
-        }
-
-        protected override void BuildDestnation(Component destnationComponent)
-        {
-            _product.destinationComponent = destnationComponent;
-        }
-
-        protected override void BuildParament(object parament)
-        {
-            _product.parament = parament;
-        }
-
-        protected override void BuildOrigin(Component originComponent)
-        {
-            _product.originComponent = originComponent;
-        }
-
-        protected override void DefineBridgeParamentKind(BridgeParamentType bridgeParamentType)
-        {
-            _product.bridgeParamentType = bridgeParamentType;
-        }
-
-        private Component _destnaion;
-        private BridgeTask _product;
+        
+        private Component _destnaionComponent;
+    }
+    
+    private class _RegisterCharacters : DefaultBridgeTaskBuilder
+    {
+        
     }
 
     public TDataBridge dataBridge;
@@ -123,7 +102,7 @@ public class Chara : MonoBehaviour
     private int lposCount;
     public WalkTaskCallback walkTaskCallback;   // 行走人物回调
 
-    private OutMousePositionBuilder bridgeTaskbuilder;
+    private _OutMousePositionBuilder bridgeTaskbuilderOMP;
 
     private void Awake() {
         // 载入行走图图像集，并初始化相关设置
@@ -189,7 +168,12 @@ public class Chara : MonoBehaviour
     private void Start()
     {
         if(Controller) // only controller can havve a pathfinding movement
-            bridgeTaskbuilder = new OutMousePositionBuilder(dataBridge.defaultRayMapPathFindingScript);
+            bridgeTaskbuilderOMP = new _OutMousePositionBuilder(dataBridge.defaultRayMapPathFindingScript);
+    }
+
+    private void _SpriteRenderer_AutoSortOrder()
+    {
+
     }
 
     void FixedUpdate()
@@ -245,7 +229,7 @@ public class Chara : MonoBehaviour
                 }
             }
         }
-
+        
         bool isKeyboard = false;
 
         // 如果屏幕被点击
@@ -268,7 +252,7 @@ public class Chara : MonoBehaviour
 
 
 
-            dataBridge.EnqueueTask(bridgeTaskbuilder.BuildProduct(this, mpos));
+            dataBridge.EnqueueTask(bridgeTaskbuilderOMP.BuildProduct(this, mpos));
 
             goto skipKeyboard;
         }
