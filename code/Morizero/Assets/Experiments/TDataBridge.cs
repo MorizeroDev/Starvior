@@ -9,19 +9,47 @@ using MyNamespace.tunit;
 
 namespace MyNamespace.databridge
 {
-    //--------------------unique parament classes--------------------//
+    #region builderInterfaces
+    public abstract class DefaultBridgeTaskBuilder : BridgeTaskBuilder
+    {
+        public override BridgeTask GetProduct()
+        {
+            return _product;
+        }
 
-    #region builderInterface
+        protected override void BuildDestnation(Component destnationComponent)
+        {
+            _product.destinationComponent = destnationComponent;
+        }
+
+        protected override void BuildParament(object parament)
+        {
+            _product.parament = parament;
+        }
+
+        protected override void BuildOrigin(Component originComponent)
+        {
+            _product.originComponent = originComponent;
+        }
+
+        protected override void DefineBridgeParamentType(BridgeParamentType bridgeParamentType)
+        {
+            _product.bridgeParamentType = bridgeParamentType;
+        }
+
+        protected BridgeTask _product;
+    }
+
     public abstract class BridgeTaskBuilder
     {
         protected abstract void BuildOrigin(Component originComponent);
         protected abstract void BuildParament(object parament);
-        protected abstract void DefineBridgeParamentKind(BridgeParamentType bridgeParamentType);
+        protected abstract void DefineBridgeParamentType(BridgeParamentType bridgeParamentType);
         protected abstract void BuildDestnation(Component destnationComponent);
         public abstract BridgeTask GetProduct();
     }
 
-    public class BridgeTask
+    public struct BridgeTask
     {
         public Component originComponent;
         public object parament;
@@ -40,6 +68,17 @@ namespace MyNamespace.databridge
 
     namespace AllowedParaments
     {
+        public class MyPair_Transform_SpriteRenderer
+        {
+            public MyPair_Transform_SpriteRenderer(Transform t,SpriteRenderer sr)
+            {
+                transform = t;
+                spriteRenderer = sr;
+            }
+            public Transform transform;
+            public SpriteRenderer spriteRenderer;
+        }
+        
         public class PoisonAttackRequestParament
         {
             public PoisonAttackRequestParament(int indamage, float ingapTime, int inrepeatTimes)
@@ -59,10 +98,12 @@ namespace MyNamespace.databridge
         }
     }
 
+    //--------------------MonoBehaviour--------------------//
     public class TDataBridge : MonoBehaviour
     {
         #region UnityFeed
         public MyNamespace.rayMapPathFinding.RayMapPathFinding defaultRayMapPathFindingScript;
+        public MyNamespace.spriteSortingOrder.TSpriteSortingOrder defaultSpriteSortingOrderScript;
         #endregion
         public Queue<BridgeTask> bridgeTasks = new Queue<BridgeTask>(0);
         

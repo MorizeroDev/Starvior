@@ -41,7 +41,7 @@ namespace MyNamespace.tunit
 
             public BridgeTask BuildProduct(Component attacker, int damage, Component receiver)
             {
-                DefineBridgeParamentKind(BridgeParamentType.TUnitNormalAttackTUnit);
+                DefineBridgeParamentType(BridgeParamentType.TUnitNormalAttackTUnit);
 
                 BuildOrigin(attacker);
                 BuildDestnation(receiver);
@@ -58,7 +58,7 @@ namespace MyNamespace.tunit
             {
                 _bridgeTask.parament = parament;
             }
-            protected override void DefineBridgeParamentKind(BridgeParamentType bridgeParamentKind)
+            protected override void DefineBridgeParamentType(BridgeParamentType bridgeParamentKind)
             {
                 _bridgeTask.bridgeParamentType = bridgeParamentKind;
             }
@@ -90,7 +90,7 @@ namespace MyNamespace.tunit
 
             public BridgeTask BuildProduct(Component attacker, PoisonAttackRequestParament parament, Component receiver)
             {
-                DefineBridgeParamentKind(BridgeParamentType.TUnitPoisonAttackTUnit);
+                DefineBridgeParamentType(BridgeParamentType.TUnitPoisonAttackTUnit);
 
                 BuildOrigin(attacker);
                 BuildParament(parament);
@@ -107,7 +107,7 @@ namespace MyNamespace.tunit
             {
                 _bridgeTask.parament = parament;
             }
-            protected override void DefineBridgeParamentKind(BridgeParamentType bridgeParamentKind)
+            protected override void DefineBridgeParamentType(BridgeParamentType bridgeParamentKind)
             {
                 _bridgeTask.bridgeParamentType = bridgeParamentKind;
             }
