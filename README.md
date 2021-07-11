@@ -12,7 +12,9 @@
 
 剧本：**Buger404/Shaye/Wey**
 
-美术：**棒棒黄Diffileft/Shaye/Victoria**
+美术：**棒棒黄Diffileft**
+
+音乐：**Noveky**
 
 # 特别感谢
 
