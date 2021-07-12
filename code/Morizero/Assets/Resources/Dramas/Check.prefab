@@ -36,6 +36,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3311677961071670908, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
+      propertyPath: Dialog1
+      value: 
+      objectReference: {fileID: 21300000, guid: fb57edf553012164e8bd93506e449e7a, type: 3}
+    - target: {fileID: 3311677961071670908, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
+      propertyPath: Dialog2
+      value: 
+      objectReference: {fileID: 21300000, guid: fb57edf553012164e8bd93506e449e7a, type: 3}
+    - target: {fileID: 3311677961071670908, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
       propertyPath: WordChild
       value: 
       objectReference: {fileID: 5595538854800732824, guid: 53e6e51b0b8220548b9efc04c3a3e016, type: 3}

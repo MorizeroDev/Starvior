@@ -41,11 +41,9 @@ public class Chara : MonoBehaviour
 
     public GameObject adjustableTrigger;
     //public Vector2 outmPos;
-    [HideInInspector]
-    
-    
+
     // 行走参数
-    public const float speed = 0.05f;
+    public float speed = 0.05f;
     public const float step = 0.5f;
 
     // 朝向枚举
@@ -130,7 +128,7 @@ public class Chara : MonoBehaviour
         }
     }
     // 更新行走图图形
-    void UploadWalk(){
+    public void UploadWalk(){
         if(walking){
             // 行走时的图像
             walkspan += Time.deltaTime;
@@ -178,10 +176,8 @@ public class Chara : MonoBehaviour
 
     void FixedUpdate()
     {
-        // 如果不是玩家
-        if(!Controller) return;
         // 如果剧本正在进行则退出
-        if (MapCamera.SuspensionDrama && walkTasks.Count == 0)
+        if (MapCamera.SuspensionDrama && walkTasks.Count == 0 && Controller)
         {
             adjustableTrigger.GetComponent<Collider2D>().isTrigger = true;
             return;
@@ -210,6 +206,7 @@ public class Chara : MonoBehaviour
                 Move(0,1);
                 if(wt.y <= transform.localPosition.y) isFix = true;
             }
+            if(!Controller) UploadWalk();
             // 修正坐标
             if(isFix){
                 Debug.Log("Walktask: " + (walkTasks.Count - 1) + " remaining...");
@@ -229,7 +226,9 @@ public class Chara : MonoBehaviour
                 }
             }
         }
-        
+        // 如果不是玩家
+        if(!Controller) return;
+
         bool isKeyboard = false;
 
         // 如果屏幕被点击

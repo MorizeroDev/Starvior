@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Script: {fileID: 0}
+  StartOnTrigger: 0
   AllowDirection: 03000000
   CheckType: 0
   Content: "\u6D77\u62A5\uFF1A\u516E\u7684\u6F14\u5531\u4F1A>>>\u516E\u7684\u75C5\u623F\uFF01\uFF01\uFF01"
@@ -147,7 +148,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: e3d7204752329ec4ea8ad11285dec5f2, type: 3}
-  m_Color: {r: 0.6369527, g: 0.64345294, b: 0.6792453, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

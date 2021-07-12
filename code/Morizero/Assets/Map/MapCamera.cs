@@ -55,12 +55,11 @@ public class MapCamera : MonoBehaviour
         ex = pos.x - size.x; ey = pos.y + size.y * 1f; 
     }
     private void FixedUpdate() {
-        Vector3 t = bindObj.transform.localPosition;
-        if(HitCheck != null) t = HitCheckTransform.localPosition;
+        Vector3 p = bindObj.transform.localPosition;
         float cs = (HitCheck != null && !MapCamera.SuspensionDrama ? 1.8f : 2f);
         Vector3 pos = transform.localPosition;
-        pos.x = pos.x + (t.x - pos.x) / 20;
-        pos.y = pos.y + (t.y - pos.y) / 20;
+        pos.x = pos.x + (p.x - pos.x) / 20;
+        pos.y = pos.y + (p.y - pos.y) / 20;
         if(pos.x < sx) pos.x = sx;
         if(pos.x > ex) pos.x = ex;
         if(pos.y > sy) pos.y = sy;

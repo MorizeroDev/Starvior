@@ -326,6 +326,10 @@ MonoBehaviour:
   Character: {fileID: 3311677961170915356}
   WordChild: {fileID: 2426687065984256380, guid: fd2908a8f8b6ac4408fbe8ed5ba4c57a, type: 3}
   Motion: {fileID: 3311677961170915354}
+  Dialog1: {fileID: 21300000, guid: 48d219a5d9ad36d49a706b7abd6c650b, type: 3}
+  Dialog2: {fileID: 21300000, guid: 90800b170fc986a4ab9abca5b5aaf9a9, type: 3}
+  DialogBox: {fileID: 3311677961071670910}
+  Drama: []
 --- !u!1 &3311677961170915358
 GameObject:
   m_ObjectHideFlags: 0

@@ -6,7 +6,7 @@ public class LaunchGame : MonoBehaviour
 {
     private void Update() {
         if(Input.GetMouseButtonUp(0)){
-            Switcher.Carry("ROOM_XUELAN");
+            Switcher.Carry("Yard");
         }
     }
 }

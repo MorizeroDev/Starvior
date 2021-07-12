@@ -79,6 +79,31 @@ public class DramaScript
             chara.walkTaskCallback = carryTask;
             handler = true;
         }
+        // 人物朝向改动
+        // face:人物,dir
+        if(cmd == "face"){
+            Chara chara = GameObject.Find(p[0]).GetComponent<Chara>();
+            if(p[1] == "left") chara.dir = Chara.walkDir.Left;
+            if(p[1] == "right") chara.dir = Chara.walkDir.Right;
+            if(p[1] == "up") chara.dir = Chara.walkDir.Up;
+            if(p[1] == "down")chara.dir = Chara.walkDir.Down;
+            chara.UploadWalk();
+            handler = true;
+            carryTask();
+        }
+        // 显示和隐藏
+        // show:物体
+        if(cmd == "show"){
+            GameObject.Find(p[0]).SetActive(true);
+            handler = true;
+            carryTask();
+        }
+        // hide:物体
+        if(cmd == "hide"){
+            GameObject.Find(p[0]).SetActive(false);
+            handler = true;
+            carryTask();
+        }
         // 调查任务
         // spy:调查内容
         if(cmd == "spy"){

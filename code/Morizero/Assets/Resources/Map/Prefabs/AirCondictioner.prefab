@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Script: {fileID: 0}
+  StartOnTrigger: 0
   AllowDirection: 03000000
   CheckType: 0
   Content: "\u4E00\u53F0\u5F88\u666E\u901A\u7684\u7A7A\u8C03\u3002"

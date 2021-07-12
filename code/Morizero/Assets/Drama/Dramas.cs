@@ -21,7 +21,10 @@ public class Dramas : MonoBehaviour
     public Animator Motion;                         // 立绘动画
     private float Speed;                            // 等待计数
     private int DialogState;                        // 对话框状态（-1=未就绪，0=等待显示，1=等待确认，2=完毕）
+    public Sprite Dialog1,Dialog2;
+    public Image DialogBox;
     private string motion;
+    public GameObject Continue;
     private WordEffect.Effect Effect;
     private string character;
     private string DisplayText;
@@ -82,22 +85,29 @@ public class Dramas : MonoBehaviour
     }
     public void ReadDrama(){
         DisposeWords();
+        if(Continue != null) Continue.SetActive(false);
 
         DialogState = 0;
         character = Drama[DramaIndex].Character;
-        Motion.Play("Drama_" + Drama[DramaIndex].motion,0);
         Speed = Drama[DramaIndex].Speed;
         DisplayText = Drama[DramaIndex].content;
         Effect = Drama[DramaIndex].Effect;
 
-        Title.text = character; 
         if(character != "旁白" && character != "我"){
             Character.sprite = Resources.Load<Sprite>($"Characters\\{character}");
             Character.SetNativeSize();
             RectTransform rect = Character.GetComponent<RectTransform>();
             rect.sizeDelta = new Vector2(760f / rect.sizeDelta.y * rect.sizeDelta.x, 760f);
+            DialogBox.sprite = Dialog1;
+            Title.text = character; 
+            Motion.Play("Drama_" + Drama[DramaIndex].motion,0);
+            Character.gameObject.SetActive(true);
+        }else if(Character.color.a == 1){
+            Motion.Play("Drama_Lostfocus",0);
+            Title.text = "";
+            DialogBox.sprite = Dialog2;
         }
-        Character.gameObject.SetActive(character != "旁白" && character != "我");
+        //Character.gameObject.SetActive(character != "旁白" && character != "我");
 
         x = sWord.localPosition.x;
         y = sWord.localPosition.y;
@@ -107,6 +117,9 @@ public class Dramas : MonoBehaviour
     public void DramaDone(){
         Debug.Log("Done!");
         callback();
+    }
+    private void Awake() {
+        Character.gameObject.SetActive(false);
     }
     void Update()
     {
@@ -133,6 +146,7 @@ public class Dramas : MonoBehaviour
             int i = WordIndex;
             if(i >= DisplayText.Length){
                 DialogState = 1;
+                if(Continue != null) Continue.SetActive(true);
                 return;
             }
             GameObject word = Instantiate(WordChild,new Vector3(0,0,-1),new Quaternion(0,0,0,0),this.transform);
