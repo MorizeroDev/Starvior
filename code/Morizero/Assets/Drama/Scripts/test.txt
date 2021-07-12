@@ -1,9 +1,5 @@
-path:奥伦,down1,left1,up1,right1
-say:雪兰
-(Leap)你为什么要绕圈？
-path:奥伦,down2,up2
 say:兮
-在测试剧本脚本功能。
+测试剧本脚本功能。
 似乎没问题了。
 say:域零
 (shake)试试发抖的文字。
