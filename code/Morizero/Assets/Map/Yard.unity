@@ -388,11 +388,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5020038772513920474, guid: 336998af23b18964e8290c19c4cd3aa5, type: 3}
       propertyPath: m_RootOrder
-      value: 37
+      value: 36
       objectReference: {fileID: 0}
     - target: {fileID: 5020038772513920474, guid: 336998af23b18964e8290c19c4cd3aa5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 7.21
+      value: 5.24
       objectReference: {fileID: 0}
     - target: {fileID: 5020038772513920474, guid: 336998af23b18964e8290c19c4cd3aa5, type: 3}
       propertyPath: m_LocalPosition.y

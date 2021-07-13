@@ -6,7 +6,7 @@ public class LaunchGame : MonoBehaviour
 {
     private void Update() {
         if(Input.GetMouseButtonUp(0)){
-            Switcher.Carry("Yard");
+            Switcher.Carry("EmptyScene");
         }
     }
 }

@@ -55,7 +55,7 @@ public class DramaScript
     }
     public void carryTask(){
         if(currentLine >= code.Length) {Done(); return;} 
-        string[] t = code[currentLine].TrimStart().Split(':');
+        string[] t = code[currentLine].Split(':');
         string cmd = t[0];
         if(t.Length <= 1) {currentLine++; carryTask(); return;}
         string[] p = t[1].Split(',');
@@ -125,6 +125,43 @@ public class DramaScript
             handler = true;
             carryTask();
         }
+        // 选择
+        // choice:标题,选项0,选项1,...
+        if(cmd == "choice"){
+            string explain = p[0];
+            List<string> choice = new List<string>();
+            for(int i = 1;i < p.Length;i++) choice.Add(p[i]);
+            handler = true;
+            MakeChoice.Create(carryTask,explain,choice.ToArray());
+        }
+        if(cmd == "distribute_choices"){
+            int buff = 0;
+            while(true){
+                if(code[currentLine].StartsWith("choice:")) buff++;
+                if(code[currentLine] == "endchoice:" && buff == 0) break;
+                if(code[currentLine] == "case:" + MakeChoice.choiceId.ToString() && buff == 0) break;
+                if(code[currentLine] == "endchoice:") buff--;  
+                Debug.Log("require:" + "case:" + MakeChoice.choiceId.ToString() + ",buff:" + buff + "\n" + code[currentLine]);  
+                currentLine++;
+            }
+            currentLine++;
+            handler = true;
+            carryTask();
+        }
+        // case:选项编号
+        if(cmd == "case") {
+            int buff = 0;
+            while(true){
+                if(code[currentLine].StartsWith("choice:")) buff++;
+                if(code[currentLine] == "endchoice:" && buff == 0) break;
+                if(code[currentLine] == "endchoice:") buff--;    
+                currentLine++;
+            }
+            currentLine++;
+            handler = true; 
+            carryTask();
+        }
+        if(cmd == "endchoice") {handler = true; carryTask();}
         // 触发器
         // if:开关名,global/personal,要求的true/false
         if(cmd == "if"){

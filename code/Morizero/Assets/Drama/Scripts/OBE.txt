@@ -1,0 +1,39 @@
+plot:OBE_PLOT
+immersion:
+我朝思暮想，终于盼到你来了。
+多亏你来了...
+这毫无进展的试验总算能继续下去了...
+恕我冒昧，现在还不能让你看见我的样子。
+我正在努力维持你与我的联系...
+一旦有了你的允许，
+你与这个世界的联系，就轻松许多了。
+那么。
+你将可能接受一些消极的内容，没问题吧？
+choice:可能接受一些消极的内容,没问题,拒绝
+distribute_choices:
+case:0
+	immersion:
+	你选择了没问题。
+	choice:套娃1：可能接受一些消极的内容,没问题,拒绝
+	distribute_choices:
+	case:0
+		immersion:
+		你选择了套娃1：没问题。
+	case:1
+		immersion:
+		你选择了套娃1：有问题。
+	endchoice:
+case:1
+	immersion:
+	你选择了有问题。
+	choice:套娃2：可能接受一些消极的内容,没问题,拒绝
+	distribute_choices:
+	case:0
+		immersion:
+		你选择了套娃2：没问题。
+	case:1
+		immersion:
+		你选择了套娃2：有问题。
+	endchoice:
+endchoice:
+break

@@ -24,6 +24,7 @@ public class MapCamera : MonoBehaviour
     public Image CheckText,CheckImg;
     public Animator animator;
     public AudioClip BGM,BGS;
+    public bool Disabled = false;
     private float sx = float.MinValue,sy = float.MaxValue,ex = float.MaxValue,ey = float.MinValue;
     
     //游戏的FPS，可在属性窗口中修改
@@ -57,6 +58,7 @@ public class MapCamera : MonoBehaviour
         ex = pos.x - size.x; ey = pos.y + size.y * 1f; 
     }
     private void FixedUpdate() {
+        if (Disabled) return;
         Vector3 p = bindObj.transform.localPosition;
         float cs = (HitCheck != null && !MapCamera.SuspensionDrama ? 1.8f : 2f);
         Vector3 pos = transform.localPosition;
