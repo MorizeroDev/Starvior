@@ -102,8 +102,6 @@ MonoBehaviour:
   dataBridge: {fileID: 0}
   adjustableTrigger: {fileID: 8544068374234095405}
   speed: 0.05
-  xRemain: 0
-  yRemain: 0
   Character: "\u4E16\u539F"
   Controller: 1
   dir: 0
@@ -160,7 +158,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8544068372836264537}
   - component: {fileID: 6744059324073850977}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: HardLight
   m_TagString: Untagged
   m_Icon: {fileID: 0}

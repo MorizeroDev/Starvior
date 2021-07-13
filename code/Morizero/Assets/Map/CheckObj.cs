@@ -26,10 +26,6 @@ public class CheckObj : MonoBehaviour
             MapCamera.mcamera.checkHint.SetActive(true);
             MapCamera.mcamera.animator.SetFloat("speed",1.0f);
             MapCamera.mcamera.animator.Play("CheckBtn",0,0f);
-        }else{
-            MapCamera.HitCheck = null;
-            MapCamera.mcamera.animator.SetFloat("speed",-2.0f);
-            MapCamera.mcamera.animator.Play("CheckBtn",0,1f);
         }
     }
     public void CheckGoodbye(){
