@@ -91,6 +91,27 @@ public class DramaScript
             handler = true;
             carryTask();
         }
+        // meta
+        if(cmd == "exit"){
+            Application.Quit();
+        }
+        // 标签
+        // label:标签
+        // goto:标签
+        if(cmd == "label"){
+            handler = true;
+            carryTask();
+        }
+        if(cmd == "goto"){
+            for(int i = 0;i < code.Length;i++){
+                if(code[i] == "label:" + p[0]){
+                    currentLine = i + 1;
+                    break;
+                }
+            }
+            handler = true;
+            carryTask();
+        }
         // 显示和隐藏
         // show:物体
         if(cmd == "show"){

@@ -9,31 +9,63 @@ immersion:
 你与这个世界的联系，就轻松许多了。
 那么。
 你将可能接受一些消极的内容，没问题吧？
+label:c1
 choice:可能接受一些消极的内容,没问题,拒绝
 distribute_choices:
 case:0
 	immersion:
-	你选择了没问题。
-	choice:套娃1：可能接受一些消极的内容,没问题,拒绝
+	那么，事情就简单多了。
+	你不是光敏性癫痫人士？
+	choice:你不是光敏性癫痫人士,不是
 	distribute_choices:
 	case:0
 		immersion:
-		你选择了套娃1：没问题。
-	case:1
+		......
+		......
+		现在我们之间的连接已经建立完毕了。
+		choice:你如何与这个世界互动？,键盘鼠标,触屏
+		distribute_choices:
+		case:0
+			immersion:
+			那么，我简单地说明。
+			按下Z或Enter键可以继续对话，X键可以跳过对话动画。
+			在地图上，你可以通过↑↓←→键或AWSD键移动。
+			同时，你可以按下Z键与人物互动或者调查这个世界。
+		case:1
+			immersion:
+			那么，我简单地说明。
+			在地图上，轻触你想要抵达的位置就可以移动了。
+			你也可以持续按着屏幕长距离移动。
+			当你可以与人物互动或调查这个世界时，
+			左下角将出现对应的按钮。
+		endchoice:
 		immersion:
-		你选择了套娃1：有问题。
+		听起来很有趣，不是吗？
+		毕竟，我们就是在一个'游戏'中啊。
+		接下来，我会为你呈现我的一段校园回忆。
+		或许，这能帮助你更好地完成试验。
+		那么。
+		也没有什么可再说的了。
+		再见。
+		choice:...,后院,雪兰的病房
+		distribute_choices:
+		case:0
+			tp:Yard,1,up
+		case:1
+			tp:XUELAN_ROOM,1,up
+		endchoice:
 	endchoice:
 case:1
 	immersion:
-	你选择了有问题。
-	choice:套娃2：可能接受一些消极的内容,没问题,拒绝
+	也就是说，你帮不了我了？
+	choice:你帮不了我？,是,否
 	distribute_choices:
 	case:0
 		immersion:
-		你选择了套娃2：没问题。
+		好的。
+		exit:
 	case:1
-		immersion:
-		你选择了套娃2：有问题。
+		goto:c1
 	endchoice:
 endchoice:
 break
