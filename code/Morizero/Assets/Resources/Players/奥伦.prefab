@@ -28,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8544068372687261229}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.4076816, y: 0.38396722, z: 0.5990021}
+  m_LocalPosition: {x: -1.432, y: 0.485, z: 0.5990021}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children:
   - {fileID: 8544068372836264537}
@@ -75,7 +75,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 6
+  m_SortingOrder: 3
   m_Sprite: {fileID: 6702276555087476945, guid: 50dc36ac2bdce9d4b983f79b3d32140f, type: 3}
   m_Color: {r: 0.93773586, g: 0.9570691, b: 1, a: 1}
   m_FlipX: 0
@@ -101,6 +101,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dataBridge: {fileID: 0}
   adjustableTrigger: {fileID: 8544068374234095405}
+  speed: 0.05
+  xRemain: 0
+  yRemain: 0
   Character: "\u4E16\u539F"
   Controller: 1
   dir: 0
@@ -124,8 +127,8 @@ MonoBehaviour:
   character: {fileID: 8544068372687261229}
   prefab: {fileID: 7457369956441625689, guid: c882aa2918a07b644b88a25d40c77238, type: 3}
   allowVisualStatus: 0
-  tileSize: {x: 0.175, y: 0.15}
-  pictureSize: {x: 10, y: 6}
+  tileSize: {x: 0.96, y: 0.96}
+  pictureSize: {x: 100, y: 100}
 --- !u!50 &884868787
 Rigidbody2D:
   serializedVersion: 4
@@ -156,7 +159,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8544068372836264537}
-  - component: {fileID: 8544068372836264536}
+  - component: {fileID: 6744059324073850977}
   m_Layer: 0
   m_Name: HardLight
   m_TagString: Untagged
@@ -178,7 +181,7 @@ Transform:
   m_Father: {fileID: 8544068372687261226}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &8544068372836264536
+--- !u!61 &6744059324073850977
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -191,18 +194,18 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.006540902, y: -0.12296939}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.48, y: 0.48}
-    newSize: {x: 0.48, y: 0.48}
-    adaptiveTilingThreshold: 0.5
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.13725546, y: 0.22359574}
+  m_Size: {x: 0.48, y: 0.48}
   m_EdgeRadius: 0
 --- !u!1 &8544068374234095405
 GameObject:
@@ -213,7 +216,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8544068374234095404}
-  - component: {fileID: 8544068374234095402}
+  - component: {fileID: 4803371887539880788}
   m_Layer: 6
   m_Name: Pathfinding
   m_TagString: Untagged
@@ -235,8 +238,8 @@ Transform:
   m_Father: {fileID: 8544068372687261226}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!70 &8544068374234095402
-CapsuleCollider2D:
+--- !u!61 &4803371887539880788
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -248,6 +251,16 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.003942877, y: -0.028677076}
-  m_Size: {x: 0.19671565, y: 0.41844058}
-  m_Direction: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.48, y: 0.48}
+  m_EdgeRadius: 0

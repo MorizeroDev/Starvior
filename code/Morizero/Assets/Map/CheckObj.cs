@@ -11,21 +11,31 @@ public class CheckObj : MonoBehaviour
     public List<Chara.walkDir> AllowDirection = new List<Chara.walkDir>(3);
     public int CheckType = 0;
     public string Content;
-    private void OnTriggerStay2D(Collider2D other) {
-        if(other.gameObject == MapCamera.PlayerCollider) {
-            if(AllowDirection.Contains(MapCamera.Player.dir)){
-                MapCamera.HitCheck = this.gameObject;
-                MapCamera.HitCheckTransform = this.transform.parent;
-                if(CheckType == 0) MapCamera.mcamera.CheckText.sprite = MapCamera.mcamera.CheckFore;
-                if(CheckType == 1) MapCamera.mcamera.CheckText.sprite = MapCamera.mcamera.TalkFore;
-            }else if(MapCamera.HitCheck == this.gameObject){
-                MapCamera.HitCheck = null;
+    public void CheckEncounter(){
+        if(AllowDirection.Contains(MapCamera.Player.dir)){
+            MapCamera.HitCheck = this.gameObject;
+            MapCamera.HitCheckTransform = this.transform.parent;
+            if(CheckType == 0) {
+                MapCamera.mcamera.CheckText.sprite = MapCamera.mcamera.CheckFore;
+                MapCamera.mcamera.CheckImg.sprite = MapCamera.mcamera.CheckBack;
             }
+            if(CheckType == 1) {
+                MapCamera.mcamera.CheckText.sprite = MapCamera.mcamera.TalkFore;
+                MapCamera.mcamera.CheckImg.sprite = MapCamera.mcamera.TalkBack;
+            }
+            MapCamera.mcamera.checkHint.SetActive(true);
+            MapCamera.mcamera.animator.SetFloat("speed",1.0f);
+            MapCamera.mcamera.animator.Play("CheckBtn",0,0f);
+        }else{
+            MapCamera.HitCheck = null;
+            MapCamera.mcamera.animator.SetFloat("speed",-2.0f);
+            MapCamera.mcamera.animator.Play("CheckBtn",0,1f);
         }
     }
-
-    private void OnTriggerExit2D(Collider2D other) {
-        if(MapCamera.HitCheck == this.gameObject) MapCamera.HitCheck = null;
+    public void CheckGoodbye(){
+        MapCamera.HitCheck = null;
+        MapCamera.mcamera.animator.SetFloat("speed",-2.0f);
+        MapCamera.mcamera.animator.Play("CheckBtn",0,1f);
     }
 
     public bool IsActive(){

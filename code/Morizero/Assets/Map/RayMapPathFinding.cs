@@ -532,7 +532,8 @@ namespace MyNamespace.rayMapPathFinding
             }
             else
             {
-                moveArrowSpriteRenderer.color = Color.red;
+                // Unable to move
+                //moveArrowSpriteRenderer.color = Color.red;
             }
             yield return 0;
         }
@@ -558,7 +559,7 @@ namespace MyNamespace.rayMapPathFinding
 
             if (_Search(ref rayMap, ref supplyQueue, ref avoidList, ref tMovementStack, ref storageTree))
             {
-                moveArrowSpriteRenderer.color = Color.green;
+                //moveArrowSpriteRenderer.color = Color.green;
                 while (tMovementStack.Count > 0)
                 {
                     _PushOut(tMovementStack.Pop());

@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 793072795188269992}
-  - component: {fileID: 8350233800941858085}
+  - component: {fileID: 1435946315470778552}
   m_Layer: 3
   m_Name: Pathfinding
   m_TagString: Untagged
@@ -31,8 +31,8 @@ Transform:
   m_Father: {fileID: 793072795629585587}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!60 &8350233800941858085
-PolygonCollider2D:
+--- !u!61 &1435946315470778552
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -54,16 +54,9 @@ PolygonCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: 0.118643045, y: 0.11648297}
-      - {x: -0.01858747, y: 0.1635623}
-      - {x: -0.11119068, y: 0.1237278}
-      - {x: -0.1208145, y: -0.019362181}
-      - {x: -0.098314226, y: -0.14606261}
-      - {x: -0.011021137, y: -0.08410418}
-      - {x: 0.12309778, y: -0.1460625}
-      - {x: 0.12081456, y: -0.013166487}
+  serializedVersion: 2
+  m_Size: {x: 0.48, y: 0.48}
+  m_EdgeRadius: 0
 --- !u!1 &793072795629585598
 GameObject:
   m_ObjectHideFlags: 0
@@ -89,7 +82,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 793072795629585598}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.7781644, y: 4.012185, z: 0}
+  m_LocalPosition: {x: 0.48, y: 0.48, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 1}
   m_Children:
   - {fileID: 793072795188269992}
@@ -135,7 +128,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 4
   m_Sprite: {fileID: 21300000, guid: fd88e22d8f513624f91c8cc885642d4b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

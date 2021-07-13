@@ -20,7 +20,9 @@ public class MapCamera : MonoBehaviour
     public GameObject bindObj;
     public GameObject checkHint;
     public Sprite CheckFore,TalkFore;
-    public Image CheckText;
+    public Sprite CheckBack,TalkBack;
+    public Image CheckText,CheckImg;
+    public Animator animator;
     public AudioClip BGM,BGS;
     private float sx = float.MinValue,sy = float.MaxValue,ex = float.MaxValue,ey = float.MinValue;
     
@@ -67,6 +69,9 @@ public class MapCamera : MonoBehaviour
         Camera camera = this.GetComponent<Camera>();
         camera.orthographicSize += (cs - camera.orthographicSize) / 20;
         transform.localPosition = pos;
-        checkHint.SetActive(HitCheck != null && !MapCamera.SuspensionDrama);
+        if(MapCamera.SuspensionDrama && animator.GetFloat("speed") == 1.0f){
+            HitCheck.GetComponent<CheckObj>().CheckGoodbye();
+        }
+        
     }
 }

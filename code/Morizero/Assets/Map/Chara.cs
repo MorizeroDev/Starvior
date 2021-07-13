@@ -43,8 +43,11 @@ public class Chara : MonoBehaviour
     //public Vector2 outmPos;
 
     // 行走参数
-    public float speed = 0.05f;
-    public const float step = 0.5f;
+    public float speed = 0.06f;
+    public const float step = 0.48f;
+    private float xRemain = 0,yRemain = 0;
+    private bool firstFreeMove = false;
+    private float freeTouchTick = 0;
 
     // 朝向枚举
     public enum walkDir{
@@ -148,7 +151,7 @@ public class Chara : MonoBehaviour
     }
 
     // ⚠警告：x和y的取值只能为-1，0，1
-    void Move(int x,int y){
+    float Move(int x,int y){
         Vector3 pos = transform.localPosition;
         float buff = speed * Time.deltaTime * 60f * (Input.GetKey(KeyCode.X) ? 2 : 1);
         pos.x += buff * x ;
@@ -161,6 +164,7 @@ public class Chara : MonoBehaviour
         walking = true;
         if(x != 0) dir = x < 0 ? walkDir.Left : walkDir.Right;
         if(y != 0) dir = y < 0 ? walkDir.Down : walkDir.Up;
+        return y == 0 ? buff * x : buff * y;
     }
 
     private void Start()
@@ -172,6 +176,13 @@ public class Chara : MonoBehaviour
     private void _SpriteRenderer_AutoSortOrder()
     {
 
+    }
+
+    void FixPos(){
+        Vector3 mpos = transform.localPosition;
+        mpos.x = Mathf.Round((mpos.x - 0.48f) / 0.96f) * 0.96f + 0.48f; 
+        mpos.y = Mathf.Round((mpos.y + 0.48f) / 0.96f) * 0.96f - 0.48f; 
+        transform.localPosition = mpos;
     }
 
     void FixedUpdate()
@@ -210,7 +221,8 @@ public class Chara : MonoBehaviour
             // 修正坐标
             if(isFix){
                 Debug.Log("Walktask: " + (walkTasks.Count - 1) + " remaining...");
-                transform.localPosition = new Vector3(wt.x,wt.y,pos.z);
+                FixPos();
+                //transform.localPosition = new Vector3(wt.x,wt.y,pos.z);
                 walkTasks.Dequeue();
                 if(walkTasks.Count == 0){
                     if(tMode){
@@ -231,8 +243,52 @@ public class Chara : MonoBehaviour
 
         bool isKeyboard = false;
 
+        // 判定调查
+        Vector2 spyRay = new Vector2(pos.x,pos.y);
+        if(dir == walkDir.Left){
+            spyRay.x -= 0.96f;
+        }else if(dir == walkDir.Right){
+            spyRay.x += 0.96f;
+        }else if(dir == walkDir.Up){
+            spyRay.y += 0.96f;
+        }else{
+            spyRay.y -= 0.96f;
+        }
+        CheckObj checkObj = null;
+        foreach(RaycastHit2D crash in Physics2D.RaycastAll(spyRay,new Vector2(0,0))){
+            if(crash.collider.gameObject.TryGetComponent<CheckObj>(out checkObj)){
+                if(MapCamera.HitCheck != checkObj.gameObject){
+                    checkObj.CheckEncounter();
+                }
+                break;
+            }
+        }
+        if(checkObj == null && MapCamera.HitCheck != null){
+            MapCamera.HitCheck.GetComponent<CheckObj>().CheckGoodbye();
+        }
+
         // 如果屏幕被点击
-        if (Input.GetMouseButtonUp(0) && !isWalkTask)
+        if (Input.GetMouseButton(0)){
+            if(freeTouchTick < 0.5f){
+                freeTouchTick += Time.deltaTime;
+            } else if(!isWalkTask && xRemain == 0 && yRemain == 0){
+                // 从屏幕坐标换算到世界坐标
+                Vector3 mpos = MapCamera.mcamera.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
+                mpos.z = 0;
+                // 格式化坐标
+                mpos.x = Mathf.Round((mpos.x - 0.48f) / 0.96f) * 0.96f + 0.48f; 
+                mpos.y = Mathf.Round((mpos.y + 0.48f) / 0.96f) * 0.96f - 0.48f; 
+                if(Mathf.Abs(mpos.x - pos.x) > 0.1f){
+                    xRemain = 1.02f * (mpos.x > pos.x ? 1 : -1); firstFreeMove = true; isKeyboard = true;
+                }else if(Mathf.Abs(mpos.y - pos.y) > 0.1f){
+                    yRemain = 1.02f * (mpos.y > pos.y ? 1 : -1); firstFreeMove = true; isKeyboard = true;
+                }
+                // 设置点击反馈
+                MoveArrow.transform.localPosition = mpos;
+                MoveArrow.SetActive(true);
+            }
+        }
+        if (Input.GetMouseButtonUp(0) && !isWalkTask && freeTouchTick < 0.5f && xRemain == 0 && yRemain == 0)
         {
             // 必要：开启tMode，将寻路WalkTask与DramaScript的WalkTask区别开来
             tMode = true;
@@ -242,9 +298,13 @@ public class Chara : MonoBehaviour
             mpos.z = 0;
             // 检查是否点击的是UI而不是地板
             if (EventSystem.current.IsPointerOverGameObject()) return;
+            // 格式化坐标
+            mpos.x = Mathf.Floor(mpos.x / 0.96f) * 0.96f + 0.48f - 0.06f;
+            mpos.y = Mathf.Ceil(mpos.y / 0.96f) * 0.96f - 0.48f;
             // 设置点击反馈
             MoveArrow.transform.localPosition = mpos;
             MoveArrow.SetActive(true);
+            // 设置walkTask保险
             lpos = new Vector2(0,0);
             lposCount = 3;
             //prepare for Event to TRayMapBuilder
@@ -255,17 +315,54 @@ public class Chara : MonoBehaviour
 
             goto skipKeyboard;
         }
-        
+        if (Input.GetMouseButtonUp(0)) freeTouchTick = 0;
+
         // 检测键盘输入
-        if((isWalkTask && tMode) || !isWalkTask){
+        if(!isWalkTask && xRemain == 0 && yRemain == 0){
             if(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)){
-                Move(-1,0); isKeyboard = true;
+                xRemain = -1.02f; firstFreeMove = true; isKeyboard = true;
             }else if(Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)){
-                Move(1,0); isKeyboard = true;
+                xRemain = 1.02f; firstFreeMove = true; isKeyboard = true;
             }else if(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)){
-                Move(0,1); isKeyboard = true;
+                yRemain = 1.02f; firstFreeMove = true; isKeyboard = true;
             }else if(Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)){
-                Move(0,-1); isKeyboard = true;
+                yRemain = -1.02f; firstFreeMove = true; isKeyboard = true;
+            }
+        }
+        // 自由移动
+        if(xRemain != 0 || yRemain != 0){
+            int xDir = xRemain < 0 ? -1 : 1,yDir = yRemain < 0 ? -1 : 1;
+            if(xRemain == 0) xDir = 0;
+            if(yRemain == 0) yDir = 0;
+            if(firstFreeMove){
+                Collider2D crash = Physics2D.Raycast(new Vector2(pos.x + xDir,pos.y + yDir),new Vector2(0,0)).collider;
+                if(crash != null){
+                    if(!crash.isTrigger){
+                        if(xDir != 0) dir = xDir < 0 ? walkDir.Left : walkDir.Right;
+                        if(yDir != 0) dir = yDir < 0 ? walkDir.Down : walkDir.Up;
+                        walking = true;
+                        xRemain = 0;yRemain = 0;
+                    }
+                }
+                firstFreeMove = false;
+            }
+            if(xRemain != 0) {
+                xRemain -= Move(xDir,0);
+                if((xRemain < 0 ? -1 : 1) != xDir){
+                    FixPos();
+                    walking = true;
+                    if(freeTouchTick == 0) MoveArrow.SetActive(false);
+                    xRemain = 0;
+                }
+            }
+            if(yRemain != 0) {
+                yRemain -= Move(0,yDir);
+                if((yRemain < 0 ? -1 : 1) != yDir){
+                    FixPos();
+                    walking = true;
+                    if(freeTouchTick == 0) MoveArrow.SetActive(false);
+                    yRemain = 0;
+                }
             }
         }
 
@@ -276,7 +373,7 @@ public class Chara : MonoBehaviour
 
         // 仅打断寻路task（tMode），不打断DramaScript的task
         if (lpos.x == pos.x && lpos.y == pos.y && isWalkTask && tMode) lposCount--;
-        if((isKeyboard || lposCount == 0) && isWalkTask && tMode){
+        if(lposCount == 0 && isWalkTask && tMode){
             Debug.Log("Walktask: tasks for Pathfinding is broke.");
             walking = false;
             UploadWalk();

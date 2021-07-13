@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 979042478973124567}
-  - component: {fileID: 979042478973124566}
+  - component: {fileID: 6077025743038787513}
   m_Layer: 3
   m_Name: Pathfinding
   m_TagString: Untagged
@@ -31,7 +31,7 @@ Transform:
   m_Father: {fileID: 5403778564977106214}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &979042478973124566
+--- !u!61 &6077025743038787513
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -44,7 +44,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.0048844814, y: -0.008199796}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -55,7 +55,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.3728518, y: 0.5135912}
+  m_Size: {x: 0.48, y: 0.48}
   m_EdgeRadius: 0
 --- !u!1 &979042479119310971
 GameObject:
@@ -102,6 +102,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Script: {fileID: 4900000, guid: 93952c645268cb74aa73dfb2231067a4, type: 3}
+  StartOnTrigger: 0
   AllowDirection: 0200000001000000
   CheckType: 1
   Content: 
@@ -118,7 +119,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.009930462, y: -0.020754084}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -129,7 +130,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.5923695, y: 0.6496092}
+  m_Size: {x: 0.48, y: 0.48}
   m_EdgeRadius: 0
 --- !u!1 &979042479990865627
 GameObject:
@@ -140,7 +141,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 979042479990865626}
-  - component: {fileID: 979042479990865625}
+  - component: {fileID: 8860221029152626376}
   m_Layer: 0
   m_Name: HardLight
   m_TagString: Untagged
@@ -162,7 +163,7 @@ Transform:
   m_Father: {fileID: 5403778564977106214}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &979042479990865625
+--- !u!61 &8860221029152626376
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -175,18 +176,18 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.006540902, y: -0.12296939}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.48, y: 0.48}
-    newSize: {x: 0.48, y: 0.48}
-    adaptiveTilingThreshold: 0.5
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.13725546, y: 0.22359574}
+  m_Size: {x: 0.48, y: 0.48}
   m_EdgeRadius: 0
 --- !u!1 &5403778564977106209
 GameObject:
@@ -215,7 +216,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5403778564977106209}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.1376816, y: 0.74996716, z: 0.5990021}
+  m_LocalPosition: {x: -0.481, y: 0.481, z: 0.5990021}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children:
   - {fileID: 979042479990865626}
@@ -287,9 +288,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3978afdd336aed441adcb7a1e9137364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inPosEvent:
-    m_PersistentCalls:
-      m_Calls: []
+  dataBridge: {fileID: 0}
+  adjustableTrigger: {fileID: 0}
+  speed: 0.05
   Character: "\u96EA\u5170"
   Controller: 0
   dir: 0

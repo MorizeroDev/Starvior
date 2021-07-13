@@ -26,7 +26,7 @@ public class Debuger : MonoBehaviour
         // Output
         if (sTime < 3){
             sTime += Time.deltaTime;
-            text.text = "⚠ Press <b>F3</b> for debug informations...";
+            text.text = "⚠ Press <b>F3</b> for debug information...";
             if(show) sTime = 3;
             return;
         }

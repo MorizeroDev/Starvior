@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5663171045435804808}
-  - component: {fileID: 5663171045435804809}
+  - component: {fileID: 3160932167590314012}
   m_Layer: 3
   m_Name: Pathfinding
   m_TagString: Untagged
@@ -31,8 +31,8 @@ Transform:
   m_Father: {fileID: 5663171046550809357}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!60 &5663171045435804809
-PolygonCollider2D:
+--- !u!61 &3160932167590314012
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -54,13 +54,9 @@ PolygonCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: -0.025480747, y: 0.08167869}
-      - {x: -0.28998286, y: -0.12762293}
-      - {x: -0.06144911, y: -0.27399385}
-      - {x: 0.26535523, y: -0.18735462}
-      - {x: 0.23989177, y: 0.0010977983}
+  serializedVersion: 2
+  m_Size: {x: 0.48, y: 0.48}
+  m_EdgeRadius: 0
 --- !u!1 &5663171046550809356
 GameObject:
   m_ObjectHideFlags: 0
