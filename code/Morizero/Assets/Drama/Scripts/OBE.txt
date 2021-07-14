@@ -44,6 +44,8 @@ case:0
 		毕竟，我们就是在一个'游戏'中啊。
 		接下来，我会为你呈现我的一段校园回忆。
 		或许，这能帮助你更好地完成试验。
+		试验内容非常简单。
+		你只要解开这个世界留下的谜题就可以了。
 		那么。
 		也没有什么可再说的了。
 		再见。
@@ -52,7 +54,7 @@ case:0
 		case:0
 			tp:Yard,1,up
 		case:1
-			tp:XUELAN_ROOM,1,up
+			tp:ROOM_XUELAN,1,up
 		endchoice:
 	endchoice:
 case:1

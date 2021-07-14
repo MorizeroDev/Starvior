@@ -52,6 +52,7 @@ public class MakeChoice : MonoBehaviour
             if(go != this.gameObject) go.GetComponent<Animator>().Play("ChoiceNo",0);
         }
         this.GetComponent<Animator>().Play("ChoiceYes",0);
+        this.transform.parent.gameObject.GetComponent<Animator>().Play("MakeChoiceExit",0);
         choiceId = id;
     }
 }
