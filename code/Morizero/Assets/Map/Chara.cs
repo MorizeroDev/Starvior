@@ -48,6 +48,8 @@ public class Chara : MonoBehaviour
     private float xRemain = 0,yRemain = 0;
     private bool firstFreeMove = false;
     private float freeTouchTick = 0;
+    private Vector2 srcPadPos,srcClickPos;
+    private Transform Pad;
 
     // 朝向枚举
     public enum walkDir{
@@ -121,6 +123,8 @@ public class Chara : MonoBehaviour
         if(Controller) {
             MapCamera.Player = this;
             MapCamera.PlayerCollider = this.transform.Find("Pathfinding").gameObject;
+            Pad = MapCamera.mcamera.transform.Find("MovePad").Find("ball");
+            srcPadPos = Pad.localPosition;
         }
         // 如果是玩家并且传送数据不为空，则按照传送设置初始化
         if(Controller && MapCamera.initTp != -1){
@@ -270,55 +274,73 @@ public class Chara : MonoBehaviour
         // 如果屏幕被点击
         if (Input.GetMouseButton(0)){
             if(freeTouchTick < 0.5f){
-                freeTouchTick += Time.deltaTime;
-            } else if(!isWalkTask && xRemain == 0 && yRemain == 0){
+                if(freeTouchTick < 0.2f && (!isWalkTask || tMode)){
+                    Vector3 mpos = MapCamera.mcamera.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
+                    srcClickPos = Input.mousePosition;
+                    if(Physics2D.Raycast(new Vector2(mpos.x,mpos.y),new Vector2(0,0))){
+                        Debug.Log("Freemove OK!");
+                        freeTouchTick = 1f;
+                    }else{
+                        Debug.Log("Freemove Failed!");
+                        freeTouchTick = 0.3f;
+                    }
+                }
+            } else {
+                // 从屏幕坐标换算到世界坐标
+                Vector3 mpos = Input.mousePosition;
+                // 测算
+                float xp = mpos.x - srcClickPos.x,yp = mpos.y - srcClickPos.y;
+                float xpro = Mathf.Abs(xp) / 30,ypro = Mathf.Abs(yp) / 30;
+                if(xpro > 1) xpro = 1;
+                if(ypro > 1) ypro = 1;
+                if(xRemain == 0 && yRemain == 0 && (xpro == 1 || ypro == 1)){
+                    if(Mathf.Abs(xp) > Mathf.Abs(yp)){
+                        xRemain = 1.02f * (xp > 0 ? 1 : -1); firstFreeMove = true; isKeyboard = true;
+                    }else {
+                        yRemain = 1.02f * (yp > 0 ? 1 : -1); firstFreeMove = true; isKeyboard = true;
+                    }
+                }
+                float t = Mathf.Sqrt(xp*xp+yp*yp);
+                if(t < 1) t = 1;
+                Pad.localPosition = new Vector3(srcPadPos.x + xpro * 120 * (xp / t),
+                                                srcPadPos.y + ypro * 120 * (yp / t),
+                                                0);
+            }
+        }
+        if (Input.GetMouseButtonUp(0))
+        {
+            freeTouchTick = 0;
+            Pad.localPosition = srcPadPos;
+            if(!isWalkTask && freeTouchTick < 0.5f && xRemain == 0 && yRemain == 0){
+                // 必要：开启tMode，将寻路WalkTask与DramaScript的WalkTask区别开来
+                tMode = true;
+                walkTasks.Clear();
                 // 从屏幕坐标换算到世界坐标
                 Vector3 mpos = MapCamera.mcamera.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
                 mpos.z = 0;
+                // 检查是否点击的是UI而不是地板
+                if (EventSystem.current.IsPointerOverGameObject()) return;
                 // 格式化坐标
-                mpos.x = Mathf.Round((mpos.x - 0.48f) / 0.96f) * 0.96f + 0.48f; 
-                mpos.y = Mathf.Round((mpos.y + 0.48f) / 0.96f) * 0.96f - 0.48f; 
-                if(Mathf.Abs(mpos.x - pos.x) > 0.1f){
-                    xRemain = 1.02f * (mpos.x > pos.x ? 1 : -1); firstFreeMove = true; isKeyboard = true;
-                }else if(Mathf.Abs(mpos.y - pos.y) > 0.1f){
-                    yRemain = 1.02f * (mpos.y > pos.y ? 1 : -1); firstFreeMove = true; isKeyboard = true;
-                }
+                mpos.x = Mathf.Floor(mpos.x / 0.96f) * 0.96f + 0.48f - 0.06f;
+                mpos.y = Mathf.Ceil(mpos.y / 0.96f) * 0.96f - 0.48f;
                 // 设置点击反馈
                 MoveArrow.transform.localPosition = mpos;
                 MoveArrow.SetActive(true);
+                // 设置walkTask保险
+                lpos = new Vector2(0,0);
+                lposCount = 3;
+                //prepare for Event to TRayMapBuilder
+
+
+
+                dataBridge.EnqueueTask(bridgeTaskbuilderOMP.BuildProduct(this, mpos));
+
+                goto skipKeyboard;
             }
         }
-        if (Input.GetMouseButtonUp(0) && !isWalkTask && freeTouchTick < 0.5f && xRemain == 0 && yRemain == 0)
-        {
-            // 必要：开启tMode，将寻路WalkTask与DramaScript的WalkTask区别开来
-            tMode = true;
-            walkTasks.Clear();
-            // 从屏幕坐标换算到世界坐标
-            Vector3 mpos = MapCamera.mcamera.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
-            mpos.z = 0;
-            // 检查是否点击的是UI而不是地板
-            if (EventSystem.current.IsPointerOverGameObject()) return;
-            // 格式化坐标
-            mpos.x = Mathf.Floor(mpos.x / 0.96f) * 0.96f + 0.48f - 0.06f;
-            mpos.y = Mathf.Ceil(mpos.y / 0.96f) * 0.96f - 0.48f;
-            // 设置点击反馈
-            MoveArrow.transform.localPosition = mpos;
-            MoveArrow.SetActive(true);
-            // 设置walkTask保险
-            lpos = new Vector2(0,0);
-            lposCount = 3;
-            //prepare for Event to TRayMapBuilder
-
-
-
-            dataBridge.EnqueueTask(bridgeTaskbuilderOMP.BuildProduct(this, mpos));
-
-            goto skipKeyboard;
-        }
-        if (Input.GetMouseButtonUp(0)) freeTouchTick = 0;
 
         // 检测键盘输入
-        if(!isWalkTask && xRemain == 0 && yRemain == 0){
+        if((!isWalkTask || tMode) && xRemain == 0 && yRemain == 0){
             if(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)){
                 xRemain = -1.02f; firstFreeMove = true; isKeyboard = true;
             }else if(Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)){
