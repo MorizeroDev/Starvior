@@ -128,11 +128,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 4924565927298321860, guid: 86491e6386554214e968bbaff4e8e16d, type: 3}
   m_PrefabInstance: {fileID: 4924565927294324183}
   m_PrefabAsset: {fileID: 0}
---- !u!212 &12910612 stripped
-SpriteRenderer:
-  m_CorrespondingSourceObject: {fileID: 4924565927298321859, guid: 86491e6386554214e968bbaff4e8e16d, type: 3}
-  m_PrefabInstance: {fileID: 4924565927294324183}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &18063190
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2248,7 +2243,7 @@ PrefabInstance:
     - target: {fileID: 751037297404548554, guid: 8b886f77f1faf634d9275e9baa843901, type: 3}
       propertyPath: moveArrowSpriteRenderer
       value: 
-      objectReference: {fileID: 12910612}
+      objectReference: {fileID: 0}
     - target: {fileID: 8544068372687261224, guid: 8b886f77f1faf634d9275e9baa843901, type: 3}
       propertyPath: dir
       value: 3

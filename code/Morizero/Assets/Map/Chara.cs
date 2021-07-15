@@ -278,10 +278,10 @@ public class Chara : MonoBehaviour
                     Vector3 mpos = MapCamera.mcamera.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
                     srcClickPos = Input.mousePosition;
                     if(Physics2D.Raycast(new Vector2(mpos.x,mpos.y),new Vector2(0,0))){
-                        Debug.Log("Freemove OK!");
+                        Debug.Log("Freemove OK!:" + this.gameObject.name);
                         freeTouchTick = 1f;
                     }else{
-                        Debug.Log("Freemove Failed!");
+                        Debug.Log("Freemove Failed!:" + this.gameObject.name);
                         freeTouchTick = 0.3f;
                     }
                 }
@@ -309,9 +309,8 @@ public class Chara : MonoBehaviour
         }
         if (Input.GetMouseButtonUp(0))
         {
-            freeTouchTick = 0;
-            Pad.localPosition = srcPadPos;
             if(!isWalkTask && freeTouchTick < 0.5f && xRemain == 0 && yRemain == 0){
+                Debug.Log("Occured pathfinding:" + this.gameObject.name);
                 // 必要：开启tMode，将寻路WalkTask与DramaScript的WalkTask区别开来
                 tMode = true;
                 walkTasks.Clear();
@@ -335,8 +334,13 @@ public class Chara : MonoBehaviour
 
                 dataBridge.EnqueueTask(bridgeTaskbuilderOMP.BuildProduct(this, mpos));
 
+                freeTouchTick = 0;
+                Pad.localPosition = srcPadPos;
                 goto skipKeyboard;
             }
+            Debug.Log("Reloaded freemove:" + this.gameObject.name);
+            freeTouchTick = 0;
+            Pad.localPosition = srcPadPos;
         }
 
         // 检测键盘输入
