@@ -107,7 +107,7 @@ public class Chara : MonoBehaviour
 
     private _OutMousePositionBuilder bridgeTaskbuilderOMP;
 
-    private void Awake() {
+    private void Start() {
         // 载入行走图图像集，并初始化相关设置
         Animation = Resources.LoadAll<Sprite>("Players\\" + Character);
         image = this.GetComponent<SpriteRenderer>();
@@ -123,9 +123,11 @@ public class Chara : MonoBehaviour
         if(Controller) {
             MapCamera.Player = this;
             MapCamera.PlayerCollider = this.transform.Find("Pathfinding").gameObject;
-            Pad = MapCamera.mcamera.transform.Find("MovePad").Find("ball");
+            Pad = GameObject.Find("MapCamera").transform.Find("MovePad").Find("ball");
             srcPadPos = Pad.localPosition;
         }
+        if(Controller) // only controller can havve a pathfinding movement
+            bridgeTaskbuilderOMP = new _OutMousePositionBuilder(dataBridge.defaultRayMapPathFindingScript);
         // 如果是玩家并且传送数据不为空，则按照传送设置初始化
         if(Controller && MapCamera.initTp != -1){
             dir = MapCamera.initDir;
@@ -169,12 +171,6 @@ public class Chara : MonoBehaviour
         if(x != 0) dir = x < 0 ? walkDir.Left : walkDir.Right;
         if(y != 0) dir = y < 0 ? walkDir.Down : walkDir.Up;
         return y == 0 ? buff * x : buff * y;
-    }
-
-    private void Start()
-    {
-        if(Controller) // only controller can havve a pathfinding movement
-            bridgeTaskbuilderOMP = new _OutMousePositionBuilder(dataBridge.defaultRayMapPathFindingScript);
     }
 
     private void _SpriteRenderer_AutoSortOrder()
