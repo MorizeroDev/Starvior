@@ -153,7 +153,7 @@ PrefabInstance:
     - target: {fileID: 751037297404548554, guid: 8b886f77f1faf634d9275e9baa843901, type: 3}
       propertyPath: moveArrowSpriteRenderer
       value: 
-      objectReference: {fileID: 1967451625}
+      objectReference: {fileID: 0}
     - target: {fileID: 8544068372687261224, guid: 8b886f77f1faf634d9275e9baa843901, type: 3}
       propertyPath: dir
       value: 3
@@ -404,6 +404,22 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 744261115924620039, guid: b43b1c85a0b81e14c978fc1f7fcf779c, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -835.00006
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053562336502302565, guid: b43b1c85a0b81e14c978fc1f7fcf779c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3147903939126394955, guid: b43b1c85a0b81e14c978fc1f7fcf779c, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -815.00006
+      objectReference: {fileID: 0}
+    - target: {fileID: 4949780511537345390, guid: b43b1c85a0b81e14c978fc1f7fcf779c, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7293165566190216848, guid: b43b1c85a0b81e14c978fc1f7fcf779c, type: 3}
       propertyPath: m_Name
       value: MapCamera
@@ -474,6 +490,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7293165567960629700, guid: b43b1c85a0b81e14c978fc1f7fcf779c, type: 3}
       propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7505675983946626096, guid: b43b1c85a0b81e14c978fc1f7fcf779c, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -835
+      objectReference: {fileID: 0}
+    - target: {fileID: 7507236930450634604, guid: b43b1c85a0b81e14c978fc1f7fcf779c, type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -785,10 +809,5 @@ PrefabInstance:
 --- !u!1 &1967451624 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4924565927298321860, guid: 86491e6386554214e968bbaff4e8e16d, type: 3}
-  m_PrefabInstance: {fileID: 1967451623}
-  m_PrefabAsset: {fileID: 0}
---- !u!212 &1967451625 stripped
-SpriteRenderer:
-  m_CorrespondingSourceObject: {fileID: 4924565927298321859, guid: 86491e6386554214e968bbaff4e8e16d, type: 3}
   m_PrefabInstance: {fileID: 1967451623}
   m_PrefabAsset: {fileID: 0}

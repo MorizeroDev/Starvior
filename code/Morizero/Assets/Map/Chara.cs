@@ -47,7 +47,7 @@ public class Chara : MonoBehaviour
     public const float step = 0.48f;
     private float xRemain = 0,yRemain = 0;
     private bool firstFreeMove = false;
-    private float freeTouchTick = 0;
+    private float freeTouchTick = 0,targetRotation = 0;
     private Vector2 srcPadPos,srcClickPos;
     private Transform Pad;
 
@@ -124,6 +124,9 @@ public class Chara : MonoBehaviour
             MapCamera.Player = this;
             MapCamera.PlayerCollider = this.transform.Find("Pathfinding").gameObject;
             Pad = GameObject.Find("MapCamera").transform.Find("MovePad").Find("ball");
+            srcClickPos = MapCamera.mcamera.GetComponent<Camera>().WorldToScreenPoint(
+                            GameObject.Find("MapCamera").transform.Find("MovePad").Find("tipPad").position
+                            );
             srcPadPos = Pad.localPosition;
         }
         if(Controller) // only controller can havve a pathfinding movement
@@ -272,11 +275,16 @@ public class Chara : MonoBehaviour
             if(freeTouchTick < 0.5f){
                 if(freeTouchTick < 0.2f && (!isWalkTask || tMode)){
                     Vector3 mpos = MapCamera.mcamera.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
-                    srcClickPos = Input.mousePosition;
-                    if(Physics2D.Raycast(new Vector2(mpos.x,mpos.y),new Vector2(0,0))){
-                        Debug.Log("Freemove OK!:" + this.gameObject.name);
-                        freeTouchTick = 1f;
-                    }else{
+                    foreach(RaycastHit2D hit in Physics2D.RaycastAll(new Vector2(mpos.x,mpos.y),new Vector2(0,0))){
+                        if(hit.collider.gameObject.name == "MovePad"){
+                            Animator padAni = Pad.transform.parent.GetComponent<Animator>();
+                            padAni.SetFloat("speed",1.0f);
+                            padAni.Play("MovePad",0,0f);
+                            Debug.Log("Freemove OK!:" + this.gameObject.name);
+                            freeTouchTick = 1f;
+                        }
+                    }
+                    if(freeTouchTick < 0.2f){
                         Debug.Log("Freemove Failed!:" + this.gameObject.name);
                         freeTouchTick = 0.3f;
                     }
@@ -292,15 +300,14 @@ public class Chara : MonoBehaviour
                 if(xRemain == 0 && yRemain == 0 && (xpro == 1 || ypro == 1)){
                     if(Mathf.Abs(xp) > Mathf.Abs(yp)){
                         xRemain = 1.02f * (xp > 0 ? 1 : -1); firstFreeMove = true; isKeyboard = true;
+                        targetRotation = (xp > 0 ? 270f : 90f);
                     }else {
                         yRemain = 1.02f * (yp > 0 ? 1 : -1); firstFreeMove = true; isKeyboard = true;
+                        targetRotation = (yp > 0 ? 0f : 180f);
                     }
                 }
-                float t = Mathf.Sqrt(xp*xp+yp*yp);
-                if(t < 1) t = 1;
-                Pad.localPosition = new Vector3(srcPadPos.x + xpro * 120 * (xp / t),
-                                                srcPadPos.y + ypro * 120 * (yp / t),
-                                                0);
+                float ro = Pad.eulerAngles.z + (targetRotation - Pad.eulerAngles.z) / 5;
+                Pad.eulerAngles = new Vector3(0,0,ro);
             }
         }
         if (Input.GetMouseButtonUp(0))
@@ -334,7 +341,9 @@ public class Chara : MonoBehaviour
                 Pad.localPosition = srcPadPos;
                 goto skipKeyboard;
             }
-            Debug.Log("Reloaded freemove:" + this.gameObject.name);
+            Animator padAni = Pad.transform.parent.GetComponent<Animator>();
+            padAni.SetFloat("speed",-2.0f);
+            padAni.Play("MovePad",0,1f);
             freeTouchTick = 0;
             Pad.localPosition = srcPadPos;
         }
