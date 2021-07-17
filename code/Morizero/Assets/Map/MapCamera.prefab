@@ -648,7 +648,7 @@ GameObject:
   - component: {fileID: 1726314396323000020}
   - component: {fileID: 7507236930450634604}
   - component: {fileID: 4949780511537345390}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: MovePad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -748,7 +748,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: -1009.78827, y: -435.43576}
@@ -784,7 +784,7 @@ GameObject:
   - component: {fileID: 744261115924620039}
   - component: {fileID: 6558329894294908056}
   - component: {fileID: 4510060147265217921}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: tipPad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -859,7 +859,7 @@ GameObject:
   - component: {fileID: 3147903939126394955}
   - component: {fileID: 6839517177496444518}
   - component: {fileID: 6984187267337861598}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: ball
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1594,7 +1594,7 @@ GameObject:
   - component: {fileID: 7505675983946626096}
   - component: {fileID: 3948512638276425459}
   - component: {fileID: 3400937753895591740}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: basePad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
