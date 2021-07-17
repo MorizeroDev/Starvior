@@ -1386,11 +1386,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3305f085e51b1b488e9a35e7846ef20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Script: {fileID: 0}
+  Script: {fileID: 4900000, guid: 70c2ab044951a7c48aeb812414249da8, type: 3}
   StartOnTrigger: 0
-  AllowDirection: 030000000200000001000000
-  CheckType: 0
-  Content: "\u770B\u8D77\u6765\u5DF2\u7ECF\u5F88\u4E45\u6CA1\u6709\u4EBA\u5728\u8FD9\u5F20\u5E8A\u4E0A\u4E86\u3002"
+  AllowDirection: 03000000020000000100000000000000
+  CheckType: 2
+  Content: 
 --- !u!61 &1629430902
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -1,0 +1,20 @@
+say:我
+（看起来是一张很舒适的病床。）
+choice:在床上休息一下吗？,休息,算了
+distribute_choices:
+case:0
+	stopbgm:
+	stopbgs:
+	plot:BedPlots
+	snd:save,nowait
+	immersion:,true
+	你感到放松，视野渐渐地消失...
+	wait:8
+	resume:
+	rebgm:
+	rebgs:
+	immersion:
+	你的存档已经被保存了。
+	plot:clear
+endchoice:
+break

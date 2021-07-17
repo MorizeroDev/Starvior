@@ -43,6 +43,7 @@ public class Dramas : MonoBehaviour
     private int DramaIndex = 0,WordIndex = 0;
     private float delTime = 0;
     public List<DramaData> Drama;
+    public bool DisableInput = false;
 
     private float x = 0,y = 0,step = 0;
 
@@ -121,14 +122,19 @@ public class Dramas : MonoBehaviour
     private void Awake() {
         Character.gameObject.SetActive(false);
     }
+    public void Resume(){
+        DialogState = 2;
+    }
     void Update()
     {
         if(DramaIndex >= Drama.Count) return;
-        if(Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.X)){
-            if(DialogState == 0) Speed = 0;
-        }
-        if(Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.Z)){
-            if(DialogState == 1) DialogState = 2;
+        if(!DisableInput){
+            if(Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.X)){
+                if(DialogState == 0) Speed = 0;
+            }
+            if(Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.Z)){
+                if(DialogState == 1) DialogState = 2;
+            }
         }
         if(DialogState == 2){
             DialogState = 0;

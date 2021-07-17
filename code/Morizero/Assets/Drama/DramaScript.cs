@@ -47,6 +47,7 @@ public class DramaScript
     public string[] code;
     public int currentLine;
     public DramaCallback callback;
+    public Dramas lastDrama;
     public CheckObj parent;
 
     public void Done(){
@@ -233,6 +234,42 @@ public class DramaScript
             handler = true;
             carryTask();
         }
+        // 停止BGM
+        // stopbgm
+        if(cmd == "stopbgm"){
+            MapCamera.bgm.Stop();
+            carryTask();
+            handler = true;
+        } 
+        // stopbgs
+        if(cmd == "stopbgs"){
+            MapCamera.bgs.Stop();
+            carryTask();
+            handler = true;
+        }  
+        // 恢复BGM
+        // rebgm
+        if(cmd == "rebgm"){
+            MapCamera.bgm.Play();
+            carryTask();
+            handler = true;
+        }
+        // rebgs
+        if(cmd == "rebgs"){
+            MapCamera.bgs.Play();
+            carryTask();
+            handler = true;
+        }
+        // 等待任务
+        // wait:等待时间
+        if(cmd == "wait"){
+            GameObject fab = (GameObject)Resources.Load("Prefabs\\WaitTicker");    // 载入母体
+            GameObject ticker = GameObject.Instantiate(fab,new Vector3(0,0,-1),Quaternion.identity);
+            WaitTicker wait = ticker.GetComponent<WaitTicker>();
+            wait.waitTime = float.Parse(p[0]);
+            wait.callback = carryTask;
+            handler = true;
+        }
         // 音效任务
         // snd:音效名称,nowait/wait
         if(cmd == "snd"){
@@ -284,10 +321,15 @@ public class DramaScript
             handler = true;
         }
         // 对话任务
-        // say/immersion:人物
+        // say/immersion:人物,[是否禁止输入]
         // [(shake)/(rainbow)/...]对话内容
         if(cmd == "say" || cmd == "immersion"){
             // 创建剧本框架
+            bool dinput = false;
+            if(p.Length > 1){
+                if(p[1] == "true") dinput = true;
+                Debug.Log("DramaScript: say's third param detected:" + dinput);
+            }
             Dramas drama = Dramas.LaunchScript(cmd == "say" ? "DialogFrameSrc" : "Immersion", carryTask);
             drama.Drama.Clear();
             string role = p[0];
@@ -340,9 +382,17 @@ public class DramaScript
             }
             // 刷新剧本
             drama.ReadDrama();
+            drama.DisableInput = dinput;
             drama.gameObject.SetActive(true);
+            lastDrama = drama;
             handler = true;
+            if(dinput) carryTask();
         }
+        // 继续对话
+        if(cmd == "resume"){
+            lastDrama.Resume();
+            handler = true;
+        } 
         // 未处理的脚本
         if(!handler){
             Debug.LogWarning("'" + cmd + $"'（行 {currentLine - 1}）未被处理。");
