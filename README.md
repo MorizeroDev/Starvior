@@ -16,6 +16,10 @@
 
 音乐：**Noveky**
 
+# 第三方资源引用
+
+参加**ThirdParty.md**。
+
 # 特别感谢
 
 **森之零点 测试群**的各位朋友！！！
@@ -27,10 +31,6 @@ Unity版本：`2020.3.6lts`                   Android 最低支持：`5.1`
 工具：`Visual Studio Code `
 
 需要`.Net Core 2.1`和`.Net Framework 4.7.1`，Android相关开发工具。
-
-# 剧情和程序架构  
-
-详情参见'wiki'。
 
 # 计划发布平台
 
