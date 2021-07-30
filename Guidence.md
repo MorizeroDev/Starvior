@@ -24,16 +24,5 @@ code\Morizero：代码主目录
       --Shuttle：走廊音乐游戏（需要大改）
       --Startup：启动页面
       --UI：一些和全局UI相关的东西
-source：原稿主目录
-   -ai：已由AI上色完成的立绘
-   -map：地图原始美术文件
-   -map_final：一些特殊处理过的地图美术资源（比如手动P过）
-   -map2：地图原始美术文件2
-   -map3：地图原始美术文件3
-   -material：剧情和一些文字材料
-   -old_version：废稿集中营...
-   -scan：已使用扫描仪扫描的立绘原稿
-   -soundtrack：游戏原创音乐
-   -ui：游戏UI界面设计
 release：编译成品（已在.gitignore中设置忽略）
 ```
