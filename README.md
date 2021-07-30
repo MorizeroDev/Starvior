@@ -24,7 +24,7 @@
 
 # 游戏资源参考
 
-参见：https://github.com/buger404/Morizero.Sources
+参见：https://github.com/Morizerodev/Morizero.Sources
 
 # 特别感谢
 
