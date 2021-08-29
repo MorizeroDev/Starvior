@@ -12,11 +12,17 @@
 
 程序：**Buger404/YcMia**
 
-剧本：**Buger404/Shaye/Wey**
+监督：**Wey**
+
+剧本：**Buger404/Shaye**
 
 美术：**棒棒黄Diffileft**
 
 音乐：**Noveky**
+
+测试：**蛋黄**
+
+特别感谢：冰棍，加冰，南笙，王者铜，Victoria，在玩家群里的各位
 
 # 第三方资源引用
 
@@ -26,17 +32,13 @@
 
 参见：https://github.com/Morizerodev/Morizero.Sources
 
-# 特别感谢
-
-**森之零点 测试群**的各位朋友！！！
-
 # 开发  
 
-Unity版本：`2020.3.6lts`                   Android 最低支持：`5.1` 
+Unity版本：**2020.3.6lts**                   Android 最低支持：**5.1**
 
-工具：`Visual Studio Code `
+工具：**Visual Studio Code**
 
-需要`.Net Core 2.1`和`.Net Framework 4.7.1`，Android相关开发工具。
+需要**.Net Core 2.1**和**.Net Framework 4.7.1**，Android相关开发工具。
 
 # 计划发布平台
 
