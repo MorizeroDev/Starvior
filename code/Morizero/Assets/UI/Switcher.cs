@@ -19,12 +19,15 @@ public class Switcher : MonoBehaviour
     /// <param name="scene">场景名</param>
     /// <param name="mode">加载方式</param>
     /// <param name="Task">提交任务（0=加载，1=卸载）</param>
-    public static void Carry(string scene,LoadSceneMode mode = LoadSceneMode.Single,int task = 0,Loading.LoadingCallback callback = null){
+    public static void Carry(string scene,LoadSceneMode mode = LoadSceneMode.Single,int task = 0,Loading.LoadingCallback callback = null,bool ShowLoadCircle = false){
         if(Loading.isUsing) return;
         Switcher.destination = scene; Switcher.loadMode = mode; Switcher.task = task;
         SceneManager.sceneLoaded += SceneLoaded_CallBack;       // 设置回调钩子
         SceneManager.sceneUnloaded += SceneUnLoaded_CallBack;   // 设置回调钩子
-        Loading.Start(Load,callback);
+        Loading.Start(Load,callback,ShowLoadCircle);
+    }
+    public static void CarryWithLoadCircle(string scene){
+        Carry(scene,ShowLoadCircle: true);
     }
     static void Load(){
         if(task == 0){

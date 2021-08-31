@@ -10,12 +10,13 @@ public class Loading : MonoBehaviour
     public LoadingCallback loadingCallback,finishCallback;
     private static Loading loading;
 
-    public static void Start(LoadingCallback callback,LoadingCallback finish = null){
+    public static void Start(LoadingCallback callback,LoadingCallback finish = null,bool ShowLoadCircle = false){
         GameObject fab = (GameObject)Resources.Load("Prefabs\\Loading");    // 载入母体
         GameObject box = Instantiate(fab,new Vector3(0,0,-1),Quaternion.identity);
         loading = box.GetComponent<Loading>();
         loading.loadingCallback = callback;
         loading.finishCallback = finish;
+        if(ShowLoadCircle) box.transform.Find("Ani").gameObject.SetActive(true);
         isUsing = true;
         box.SetActive(true);
     }

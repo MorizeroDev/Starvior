@@ -20,9 +20,11 @@
 
 音乐：**Noveky**
 
-测试：**蛋黄**
+界面：**Buger404**
 
-特别感谢：冰棍，加冰，南笙，王者铜，Victoria，在玩家群里的各位
+测试：**hero_sword**
+
+特别感谢：冰棍，加冰，南笙，王者铜，玩家群里的各位
 
 # 第三方资源引用
 
@@ -38,7 +40,7 @@ Unity版本：**2020.3.6lts**                   Android 最低支持：**5.1**
 
 工具：**Visual Studio Code**
 
-需要**.Net Core 2.1**和**.Net Framework 4.7.1**，Android相关开发工具。
+需要**.Net Core 2.1** 和 **.Net Framework 4.7.1**，Android相关开发工具。
 
 # 计划发布平台
 
