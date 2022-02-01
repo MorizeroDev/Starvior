@@ -1,36 +1,50 @@
-# 森之零点
+# <名称待定>
+
+本作剧本内容映射现实。
 
 制作组 Taptap 页面：https://www.taptap.com/developer/97100
 
-玩家QQ群：1075696523，计划并群至807490445。
+玩家QQ群：**1075696523**，计划并群至**807490445**。
 
-预测完工时间：**2022.7-2023.7**
-
-# ⚠警告
-
-进行游戏前，请确保您可以接受游戏内的**消极内容**，并已**年满十六周岁**。
-
-如您不能接受游戏内的消极内容或未满十六周岁**仍进行游戏**，森零制作组**概不负责**。
+预测完工时间：**2023.7-2024.7**
 
 # 制作组名单
 
-总制作：**Buger404**
+制作：Buger404
 
-监督：**Wey**
+导演：Wey
 
-程序：**Buger404/YcMia**
+## 剧本组
 
-剧本：**Buger404/Shaye**
+主笔：Shaye
 
-美术：**棒棒黄Diffileft**
+协助：Wey/Buger404
 
-音乐：**Noveky**
+## 美术组
 
-界面：**Buger404**
+人物立绘/插画：泺罗
 
-测试：**hero_sword**
+Q版人物/地图美术：Diffileft（勒勒）
 
-特别感谢：冰棍，加冰，南笙，王者铜，玩家群里的各位
+界面设计：Buger404
+
+摄影支持：冰棍
+
+## 程序组
+
+程序：Buger404
+
+援助：YcMia
+
+测试：hero_sword（蛋黄）
+
+## 音乐组
+
+原创音乐授权/作曲：Noveky（如雨）
+
+## 特别感谢
+
+王者铜，南笙，阳光加冰，凳子以及关注这个项目的每一个人！！！
 
 # 材料
 
@@ -42,7 +56,7 @@
 
 # 开发环境 
 
-Unity版本：**2020.3.6lts**                   
+Unity版本：**2021.2.9f1c1**                   
 
 Android 最低支持：**5.1**
 
@@ -52,7 +66,9 @@ Android 最低支持：**5.1**
 
 # 计划发布平台
 
-Windows（可能 Steam），Android（确认 Taptap）
+1. Windows（Steam）
+
+2. Android（Taptap）
 
 # 许可证
 
@@ -60,11 +76,9 @@ Windows（可能 Steam），Android（确认 Taptap）
 
 # 鸣谢
 
-《森之零点》的出版商、作者和发布者希望向包括但不限于监督、插画师、摄影师、音乐制作人、用户界面设计师、游戏脚本作者和校对在内的个人表示诚挚的感谢，他们为这款游戏的创作贡献了时间、精力和专业知识。我们感谢他们的宝贵资源和建议，这对这个游戏的发展至关重要。
+《森之零点》的出版商、作者和发布者希望向包括但不限于导演、插画师、摄影师、音乐制作人、用户界面设计师、游戏脚本作者和校对在内的个人表示诚挚的感谢，他们为这款游戏的创作贡献了时间、精力和专业知识。我们感谢他们的宝贵资源和建议，这对这个游戏的发展至关重要。
 
-Copyright (C) 2021，森零制作组。保留所有权利。未经 "森零制作组 "事先书面许可，不得以任何形式或通过任何与 "森零制作组 "没有直接关系的方式使用本资源库中的资源，或将其存储在与 "森零制作组 "没有直接关系的数据库或检索系统中。任何关于复制或使用本出版物的请求，应以书面形式提交给 "森零制作组"。未经原创作者或制作者的许可，任何人不得复制或使用本资源库中的资源，并以原始或修改的形式重新传播，用于商业目的。
-
-感谢美术协力项目：[Style2Paints](https://github.com/lllyasviel/style2paints)
+Copyright (C) 2021-2022，森零制作组。保留所有权利。未经 "森零制作组 "事先书面许可，不得以任何形式或通过任何与 "森零制作组 "没有直接关系的方式使用本资源库中的资源，或将其存储在与 "森零制作组 "没有直接关系的数据库或检索系统中。任何关于复制或使用本出版物的请求，应以书面形式提交给 "森零制作组"。未经原创作者或制作者的许可，任何人不得复制或使用本资源库中的资源，并以原始或修改的形式重新传播，用于商业目的。
 
 # 隐私政策
 
@@ -72,37 +86,51 @@ Copyright (C) 2021，森零制作组。保留所有权利。未经 "森零制作
 
 # Morizero
 
+The story of this game reflects the reality.
+
 MoriDev's profile on Taptap：https://www.taptap.com/developer/97100
 
-Expected completion date：**2022.7-2023.7**
+Expected completion date：**2023.7-2024.7**
 
-Morizero QQ group：1075696523，and this will be merged into 807490445.
-
-# ⚠Warning
-
-Before playing the game, please ensure you have the ability to accept the **negative contents in the game**, and you are **NOT** under **16**.
-
-If you have not ability to accept the negative contents in the game or you are under 16 **but still** play the game, MoriDev is **NOT** responsible for all the responsibility.
+Morizero QQ group：**1075696523**，and this will be merged into **807490445**.
 
 # Credits
 
-Producer：**Buger404**
+Producer：Buger404
 
-Director：**Wey**
+Director：Wey
 
-Programming：**Buger404/YcMia**
+## Script Writing
 
-Script：**Buger404/Shaye**
+Cheif Script Writer：Shaye
 
-Art：**Diffileft（棒棒黄Diffileft）**
+Writer Assistant：Wey/Buger404
 
-Music：**Noveky**
+## Art
 
-UI Design：**Buger404**
+Character & CG Illustratior：泺罗
 
-Test：**hero_sword**
+Q-Character & Map Illustratior：Diffileft（勒勒）
 
-Special Thanks：SweetIcelolly（冰棍），Sun+Ice（加冰），Nanshenger（南笙），Cuking（王者铜），and everyone in the Morizero QQ group
+UI Designer：Buger404
+
+Photographer：冰棍
+
+## Programming
+
+Programmer：Buger404
+
+Programmer Assistant：YcMia
+
+Test：hero_sword（蛋黄）
+
+## Music
+
+Original Music Authorization Provider & Music Producer：Noveky（如雨）
+
+## Special Thanks
+
+王者铜，南笙，阳光加冰，凳子 and everyone that supports our project!!!
 
 # Material
 
@@ -114,7 +142,7 @@ Special Thanks：SweetIcelolly（冰棍），Sun+Ice（加冰），Nanshenger（
 
 # Developing Environment 
 
-Unity Version：**2020.3.6lts**                   
+Unity Version：**2021.2.9f1c1**                   
 
 Android Lowest Support：**5.1**
 
@@ -134,10 +162,8 @@ Please note that this repository is licensed under the **MIT License**.
 
 The publishers, authors, and producers of Morizero wish to extend their sincere thanks to individuals including but not limited to directors, illustrators, photographers, music producers, UI designers, game scriptwriters, and reviewers who contributed their time, energy, and expertise to the creation of this video game. We are grateful for their valuable resources and suggestions, which have been crucial for the development of this video game.
 
-Copyright (C) 2021, MoriDev. All rights reserved. The resources in this repository may not be used in any form or by any means that has no direct relationship with "Morizero", or stored in a data base or retrieval system that has no direct relationship with "Morizero", without the prior written permission of "MoriDev". Any request for copying or using of this publication shall be directed in writing to "MoriDev". Anyone are forbidden to copy or use the resources in this repository and redisseminate them, in an original or modified form, for commercial purposes, without permission from the original creator or producer.
-
-Thanks for art supporting：[Style2Paints](https://github.com/lllyasviel/style2paints)
+Copyright (C) 2021-2022, MoriDev. All rights reserved. The resources in this repository may not be used in any form or by any means that has no direct relationship with "Morizero", or stored in a data base or retrieval system that has no direct relationship with "Morizero", without the prior written permission of "MoriDev". Any request for copying or using of this publication shall be directed in writing to "MoriDev". Anyone are forbidden to copy or use the resources in this repository and redisseminate them, in an original or modified form, for commercial purposes, without permission from the original creator or producer.
 
 # Privacy Policy
 
-> We'll worked it out later.
+> We'll work it out later.
