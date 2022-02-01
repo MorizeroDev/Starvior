@@ -39,15 +39,11 @@ public class Chara : MonoBehaviour
 
     public TDataBridge dataBridge;
 
-    public GameObject adjustableTrigger;
-    //public Vector2 outmPos;
-
     // 行走参数
     public float speed = 0.06f;
     public const float step = 0.48f;
-    private float xRemain = 0,yRemain = 0;
-    private bool firstFreeMove = false;
-    private float freeTouchTick = 0,targetRotation = 0;
+    private float targetRotation = 0;
+    private bool padMode = false;
     private Vector2 srcPadPos,srcClickPos;
     private Transform Pad;
 
@@ -99,10 +95,7 @@ public class Chara : MonoBehaviour
     private int walkBuff = 1;                   // 行走图系列帧序数
     private float walkspan;                     // 行走图动画间隔控制缓冲
     private float sx,sy,ex,ey;                  // 地图边界x,y - x,y
-    public GameObject MoveArrow;                // 点击移动反馈
-    private bool tMode = false;                 // 点击移动模式（TouchMode）
     private Vector2 lpos;
-    private int lposCount;
     public WalkTaskCallback walkTaskCallback;   // 行走人物回调
 
     private _OutMousePositionBuilder bridgeTaskbuilderOMP;
@@ -193,7 +186,6 @@ public class Chara : MonoBehaviour
         // 如果剧本正在进行则退出
         if (MapCamera.SuspensionDrama && walkTasks.Count == 0 && Controller)
         {
-            adjustableTrigger.GetComponent<Collider2D>().isTrigger = true;
             return;
         }
         // 是否正在执行行走任务？
@@ -228,14 +220,8 @@ public class Chara : MonoBehaviour
                 //transform.localPosition = new Vector3(wt.x,wt.y,pos.z);
                 walkTasks.Dequeue();
                 if(walkTasks.Count == 0){
-                    if(tMode){
-                        Debug.Log("Walktask: tasks for Pathfinding is done.");
-                        tMode = false;
-                        MoveArrow.SetActive(false);
-                    }else{
-                        Debug.Log("Walktask: tasks for Drama Script is done.");
-                        walkTaskCallback();
-                    } 
+                    Debug.Log("Walktask: tasks for Drama Script is done.");
+                    walkTaskCallback();
                     walking = false;
                     UploadWalk();
                 }
@@ -243,8 +229,6 @@ public class Chara : MonoBehaviour
         }
         // 如果不是玩家
         if(!Controller) return;
-
-        bool isKeyboard = false;
 
         // 判定调查
         Vector2 spyRay = new Vector2(pos.x,pos.y);
@@ -272,21 +256,16 @@ public class Chara : MonoBehaviour
 
         // 如果屏幕被点击
         if (Input.GetMouseButton(0)){
-            if(freeTouchTick < 0.5f){
-                if(freeTouchTick < 0.2f && (!isWalkTask || tMode)){
+            if(!padMode){
+                if(!isWalkTask){
                     Vector3 mpos = MapCamera.mcamera.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
                     foreach(RaycastHit2D hit in Physics2D.RaycastAll(new Vector2(mpos.x,mpos.y),new Vector2(0,0))){
                         if(hit.collider.gameObject.name == "MovePad"){
                             Animator padAni = Pad.transform.parent.GetComponent<Animator>();
                             padAni.SetFloat("speed",1.0f);
                             padAni.Play("MovePad",0,0f);
-                            Debug.Log("Freemove OK!:" + this.gameObject.name);
-                            freeTouchTick = 1f;
+                            padMode = true;
                         }
-                    }
-                    if(freeTouchTick < 0.2f){
-                        Debug.Log("Freemove Failed!:" + this.gameObject.name);
-                        freeTouchTick = 0.3f;
                     }
                 }
             } else {
@@ -297,119 +276,38 @@ public class Chara : MonoBehaviour
                 float xpro = Mathf.Abs(xp) / 30,ypro = Mathf.Abs(yp) / 30;
                 if(xpro > 1) xpro = 1;
                 if(ypro > 1) ypro = 1;
-                if(xRemain == 0 && yRemain == 0 && (xpro == 1 || ypro == 1)){
+                if(xpro == 1 || ypro == 1){
                     if(Mathf.Abs(xp) > Mathf.Abs(yp)){
-                        xRemain = 1.02f * (xp > 0 ? 1 : -1); firstFreeMove = true; isKeyboard = true;
+                        Move(xp > 0 ? 1 : -1, 0);
                         targetRotation = (xp > 0 ? 270f : 90f);
                     }else {
-                        yRemain = 1.02f * (yp > 0 ? 1 : -1); firstFreeMove = true; isKeyboard = true;
+                        Move(0, yp > 0 ? 1 : -1);
                         targetRotation = (yp > 0 ? 0f : 180f);
                     }
                 }
                 float ro = Pad.eulerAngles.z + (targetRotation - Pad.eulerAngles.z) / 5;
                 Pad.eulerAngles = new Vector3(0,0,ro);
             }
-        }
-        if (Input.GetMouseButtonUp(0))
-        {
-            if(!isWalkTask && freeTouchTick < 0.5f && xRemain == 0 && yRemain == 0){
-                Debug.Log("Occured pathfinding:" + this.gameObject.name);
-                // 必要：开启tMode，将寻路WalkTask与DramaScript的WalkTask区别开来
-                tMode = true;
-                walkTasks.Clear();
-                // 从屏幕坐标换算到世界坐标
-                Vector3 mpos = MapCamera.mcamera.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
-                mpos.z = 0;
-                // 检查是否点击的是UI而不是地板
-                if (EventSystem.current.IsPointerOverGameObject()) return;
-                // 格式化坐标
-                mpos.x = Mathf.Floor(mpos.x / 0.96f) * 0.96f + 0.48f - 0.06f;
-                mpos.y = Mathf.Ceil(mpos.y / 0.96f) * 0.96f - 0.48f;
-                // 设置点击反馈
-                MoveArrow.transform.localPosition = mpos;
-                MoveArrow.SetActive(true);
-                // 设置walkTask保险
-                lpos = new Vector2(0,0);
-                lposCount = 3;
-                //prepare for Event to TRayMapBuilder
-
-
-
-                dataBridge.EnqueueTask(bridgeTaskbuilderOMP.BuildProduct(this, mpos));
-
-                freeTouchTick = 0;
-                Pad.localPosition = srcPadPos;
-                goto skipKeyboard;
-            }
+        } else if (padMode){
             Animator padAni = Pad.transform.parent.GetComponent<Animator>();
             padAni.SetFloat("speed",-2.0f);
             padAni.Play("MovePad",0,1f);
-            freeTouchTick = 0;
-            Pad.localPosition = srcPadPos;
+            padMode = false;
         }
 
         // 检测键盘输入
-        if((!isWalkTask || tMode) && xRemain == 0 && yRemain == 0){
+        if(!isWalkTask){
             if(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)){
-                xRemain = -1.02f; firstFreeMove = true; isKeyboard = true;
+                Move(-1, 0); 
             }else if(Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)){
-                xRemain = 1.02f; firstFreeMove = true; isKeyboard = true;
+                Move(1, 0);
             }else if(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)){
-                yRemain = 1.02f; firstFreeMove = true; isKeyboard = true;
+                Move(0, 1);
             }else if(Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)){
-                yRemain = -1.02f; firstFreeMove = true; isKeyboard = true;
-            }
-        }
-        // 自由移动
-        if(xRemain != 0 || yRemain != 0){
-            int xDir = xRemain < 0 ? -1 : 1,yDir = yRemain < 0 ? -1 : 1;
-            if(xRemain == 0) xDir = 0;
-            if(yRemain == 0) yDir = 0;
-            if(firstFreeMove){
-                Collider2D crash = Physics2D.Raycast(new Vector2(pos.x + xDir,pos.y + yDir),new Vector2(0,0)).collider;
-                if(crash != null){
-                    if(!crash.isTrigger){
-                        if(xDir != 0) dir = xDir < 0 ? walkDir.Left : walkDir.Right;
-                        if(yDir != 0) dir = yDir < 0 ? walkDir.Down : walkDir.Up;
-                        walking = true;
-                        xRemain = 0;yRemain = 0;
-                    }
-                }
-                firstFreeMove = false;
-            }
-            if(xRemain != 0) {
-                xRemain -= Move(xDir,0);
-                if((xRemain < 0 ? -1 : 1) != xDir){
-                    FixPos();
-                    walking = true;
-                    if(freeTouchTick == 0) MoveArrow.SetActive(false);
-                    xRemain = 0;
-                }
-            }
-            if(yRemain != 0) {
-                yRemain -= Move(0,yDir);
-                if((yRemain < 0 ? -1 : 1) != yDir){
-                    FixPos();
-                    walking = true;
-                    if(freeTouchTick == 0) MoveArrow.SetActive(false);
-                    yRemain = 0;
-                }
+                Move(0, -1);
             }
         }
 
-        skipKeyboard:
-
-        if (Controller && adjustableTrigger!=null)
-            adjustableTrigger.GetComponent<Collider2D>().isTrigger = !isKeyboard;
-
-        // 仅打断寻路task（tMode），不打断DramaScript的task
-        if (lpos.x == pos.x && lpos.y == pos.y && isWalkTask && tMode) lposCount--;
-        if(lposCount == 0 && isWalkTask && tMode){
-            Debug.Log("Walktask: tasks for Pathfinding is broke.");
-            walking = false;
-            UploadWalk();
-            walkTasks.Clear(); tMode = false; MoveArrow.SetActive(false);
-        }
         lpos = pos;
 
         // 更新图片

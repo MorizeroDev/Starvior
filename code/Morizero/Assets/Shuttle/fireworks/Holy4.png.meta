@@ -78,6 +78,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -87,8 +88,8 @@ TextureImporter:
   textureSettings:
     serializedVersion: 2
     filterMode: 0
-    aniso: -1
-    mipBias: -100
+    aniso: 1
+    mipBias: 0
     wrapU: 1
     wrapV: 1
     wrapW: 1
@@ -556,6 +557,25 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      Holy4_12: -5970252356060168447
+      Holy4_0: -949100211179464801
+      Holy4_9: -6844104473502286832
+      Holy4_13: -1369962638160207337
+      Holy4_2: -6040361258168683303
+      Holy4_3: -1514078913519248608
+      Holy4_16: -565772952818931122
+      Holy4_8: 8462776294867768881
+      Holy4_14: 7749184730869301998
+      Holy4_11: 4200033483111298299
+      Holy4_17: -4842441099078197190
+      Holy4_6: -4159608874833048508
+      Holy4_1: -2148598532712422166
+      Holy4_5: -3590482318013882425
+      Holy4_15: -3629582204645491766
+      Holy4_7: 5803676324487857881
+      Holy4_10: 4581186305554265377
+      Holy4_4: 345928900255238359
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
