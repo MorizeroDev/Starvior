@@ -32,9 +32,9 @@ public class HintMotion : MonoBehaviour
                 ani = true;
             }
             if(id == Shuttle.nowhit){
-                if(Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.X) || Input.GetKey(KeyCode.Space) || Input.GetMouseButton(0)){
-                    if(!Shuttle.hitLock) Debug.Log("Shuttle: hit began:" + Mathf.Abs(bgm.time - targetTime));
-                    if(Mathf.Abs(bgm.time - targetTime) <= 0.15f && !Shuttle.hitLock){
+                if(Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.X) || Input.GetKey(KeyCode.Space) || Input.GetMouseButton(0) || true){
+                    if(!Shuttle.hitLock || true) Debug.Log("Shuttle: hit began:" + Mathf.Abs(bgm.time - targetTime));
+                    if(Mathf.Abs(bgm.time - targetTime) <= 0.05f && (!Shuttle.hitLock || true)){
                         float pitch = Mathf.Abs(bgm.time - targetTime);
                         Debug.Log("Shuttle: hit success with pitch " + pitch);
                         if(pitch <= 0.05f){

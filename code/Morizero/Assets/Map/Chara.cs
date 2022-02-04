@@ -42,6 +42,7 @@ public class Chara : MonoBehaviour
     // 行走参数
     public float speed = 0.06f;
     public const float step = 0.48f;
+    private int freemoveFinger = 0;
     private float targetRotation = 0;
     private bool padMode = false;
     private Vector2 srcPadPos,srcClickPos;
@@ -181,6 +182,24 @@ public class Chara : MonoBehaviour
         transform.localPosition = mpos;
     }
 
+    List<Vector3> GetClickPos(int fingerId = -1){
+        List<Vector3> pos = new List<Vector3>();
+        Vector3 p;
+        if (Input.touchSupported){
+            foreach(Touch t in Input.touches){
+                p = t.position;
+                p.z = t.fingerId;
+                if (t.fingerId == fingerId || fingerId == -1)
+                    pos.Add (p);
+            }
+        }else{
+            p = Input.mousePosition;
+            p.z = -1;
+            pos.Add (p);
+        }
+        return pos;
+    }
+
     void FixedUpdate()
     {
         // 如果剧本正在进行则退出
@@ -256,21 +275,29 @@ public class Chara : MonoBehaviour
 
         // 如果屏幕被点击
         if (Input.GetMouseButton(0)){
+            List<Vector3> cpos = GetClickPos(freemoveFinger);
             if(!padMode){
                 if(!isWalkTask){
-                    Vector3 mpos = MapCamera.mcamera.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
-                    foreach(RaycastHit2D hit in Physics2D.RaycastAll(new Vector2(mpos.x,mpos.y),new Vector2(0,0))){
-                        if(hit.collider.gameObject.name == "MovePad"){
-                            Animator padAni = Pad.transform.parent.GetComponent<Animator>();
-                            padAni.SetFloat("speed",1.0f);
-                            padAni.Play("MovePad",0,0f);
-                            padMode = true;
+                    foreach(Vector3 cp in cpos){
+                        Vector3 mpos = cp; int fId = (int)cp.z;
+                        mpos.z = 0;
+                        mpos = MapCamera.mcamera.GetComponent<Camera>().ScreenToWorldPoint(cp);
+                        foreach(RaycastHit2D hit in Physics2D.RaycastAll(new Vector2(mpos.x,mpos.y),new Vector2(0,0))){
+                            if(hit.collider.gameObject.name == "MovePad"){
+                                Animator padAni = Pad.transform.parent.GetComponent<Animator>();
+                                padAni.SetFloat("speed",1.0f);
+                                padAni.Play("MovePad",0,0f);
+                                padMode = true;
+                                freemoveFinger = fId;
+                                break;
+                            }
                         }
                     }
                 }
             } else {
                 // 从屏幕坐标换算到世界坐标
-                Vector3 mpos = Input.mousePosition;
+                Vector3 mpos = cpos[0];
+                mpos.z = 0;
                 // 测算
                 float xp = mpos.x - srcClickPos.x,yp = mpos.y - srcClickPos.y;
                 float xpro = Mathf.Abs(xp) / 30,ypro = Mathf.Abs(yp) / 30;
