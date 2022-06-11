@@ -49,7 +49,7 @@ Q版人物/地图美术：Diffileft（勒勒）
 # 材料
 
 * 游戏漏洞和建议跟踪：**BUG.md**/**Issue**
-* 仓库目录结构：**Guidence.md**
+* 仓库目录结构：**Guidance.md**
 
 * 第三方资源引用参见：**ThirdParty.md**。
 * 游戏资源库：[Morizero.Resources](https://github.com/Morizerodev/Morizero.Resources)
