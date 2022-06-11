@@ -1,6 +1,6 @@
 # 拾落星辰
 
-**简体中文** | [English](https://github.com/Morizerodev/Starvior/README_EN.md)
+**简体中文** | [English](https://github.com/MorizeroDev/Starvior/blob/master/README_EN.md)
 
 制作组 Taptap 页面：https://www.taptap.com/developer/97100
 

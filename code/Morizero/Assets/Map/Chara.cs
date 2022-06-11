@@ -170,6 +170,14 @@ public class Chara : MonoBehaviour
         return y == 0 ? buff * x : buff * y;
     }
 
+    public void ClosePadAni()
+    {
+        Animator padAni = Pad.transform.parent.GetComponent<Animator>();
+        padAni.SetFloat("speed", -2.0f);
+        padAni.Play("MovePad", 0, 1f);
+        padMode = false;
+    }
+
     private void _SpriteRenderer_AutoSortOrder()
     {
 
@@ -316,10 +324,7 @@ public class Chara : MonoBehaviour
                 Pad.eulerAngles = new Vector3(0,0,ro);
             }
         } else if (padMode){
-            Animator padAni = Pad.transform.parent.GetComponent<Animator>();
-            padAni.SetFloat("speed",-2.0f);
-            padAni.Play("MovePad",0,1f);
-            padMode = false;
+            ClosePadAni();
         }
 
         // 检测键盘输入

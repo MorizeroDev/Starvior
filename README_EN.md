@@ -1,6 +1,6 @@
 # Starvior
 
-[简体中文](https://github.com/Morizerodev/Starvior/README.md) | **English**
+[简体中文](https://github.com/MorizeroDev/Starvior/blob/master/README.md) | **English**
 
 MoriDev's profile on Taptap：https://www.taptap.com/developer/97100
 

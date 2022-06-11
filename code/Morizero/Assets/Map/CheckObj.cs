@@ -50,7 +50,8 @@ public class CheckObj : MonoBehaviour
         if(!IsActive()) return;
 
         MapCamera.SuspensionDrama = true;
-        if(Script != null){
+        MapCamera.Player.ClosePadAni();
+        if (Script != null){
             scriptCarrier.code = Script.text.Split(new string[]{"\r\n"},System.StringSplitOptions.RemoveEmptyEntries);
             for(int i = 0;i < scriptCarrier.code.Length;i++){
                 scriptCarrier.code[i] = scriptCarrier.code[i].TrimStart();
