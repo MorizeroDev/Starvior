@@ -1,12 +1,34 @@
 # 拾落星辰
 
-本作剧本内容映射现实。
+**简体中文** | [English](https://github.com/Morizerodev/Starvior/README_EN.md)
 
 制作组 Taptap 页面：https://www.taptap.com/developer/97100
 
-玩家QQ群：**1075696523**，计划并群至**807490445**。
+玩家QQ群：**1075696523**。
 
-预测完工时间：**2023.7-2024.7**
+我们是用爱发电的独游制作团队，不对游戏本体收费。
+
+请勿将仓库和游戏里的图像，音乐等素材以任何形式用于与《拾落星辰》无关的任何目的，以书面申请形式获得插画师，作曲师，其他拥有素材版权的个体或制作组的许可的除外，详情请见《拾落星辰资源库声明》。
+
+Q：这是什么类型的游戏？
+
+A：角色扮演，解谜，恋爱（也含友情培养）
+
+Q：游戏剧本的核心元素是什么？
+
+A：映射现实，主要讨论的是消极情感，但整作剧本情节并非全是压抑消极的。
+
+Q：游戏何时可以上架？
+
+A：暂不明。
+
+Q：游戏体验很糟糕，这是游戏最终效果吗？
+
+A：我们会持续优化体验，但开发早期的体验确实会比较糟糕。
+
+Q：群友的网名会出现在游戏致谢名单吗？
+
+A：会的。
 
 # 制作组名单
 
@@ -52,7 +74,7 @@ Q版人物/地图美术：Diffileft（勒勒）
 * 仓库目录结构：**Guidance.md**
 
 * 第三方资源引用参见：**ThirdParty.md**。
-* 游戏资源库：[Morizero.Resources](https://github.com/Morizerodev/Morizero.Resources)
+* 游戏资源库（仅限组内成员）：[Starvior.Resources](https://github.com/Morizerodev/Starvior.Resources)
 
 # 开发环境 
 
@@ -76,15 +98,13 @@ Android 最低支持：**7.0**
 
 # 计划发布平台
 
-1. Windows（Steam）
-
-2. Android（Taptap）
+Windows（Steam）、Android（Taptap）
 
 # 许可证
 
 该仓库使用**MIT开源许可证**，请注意。
 
-# 鸣谢
+# 拾落星辰资源库声明
 
 《拾落星辰》的出版商、作者和发布者希望向包括但不限于导演、插画师、摄影师、音乐制作人、用户界面设计师、游戏脚本作者和校对在内的个人表示诚挚的感谢，他们为这款游戏的创作贡献了时间、精力和专业知识。我们感谢他们的宝贵资源和建议，这对这个游戏的发展至关重要。
 
@@ -93,97 +113,3 @@ Copyright (C) 2021-2022，森零制作组。保留所有权利。未经 "森零�
 # 隐私政策
 
 > 待补充
-
-# Starvior
-
-The story of this game reflects the reality.
-
-MoriDev's profile on Taptap：https://www.taptap.com/developer/97100
-
-Expected completion date：**2023.7-2024.7**
-
-Morizero QQ group：**1075696523**，and this will be merged into **807490445**.
-
-# Credits
-
-Producer：Buger404
-
-Director：Wey
-
-## Script Writing
-
-Cheif Script Writer：Shaye
-
-Writer Assistant：Wey/Buger404
-
-## Art
-
-Character & CG Illustratior：泺罗
-
-Q-Character & Map Illustratior：Diffileft（勒勒）
-
-UI Designer：Buger404
-
-Photographer & Translator：冰棍
-
-## Programming
-
-Programmer：Buger404
-
-Programmer Assistant：YcMia
-
-Test：hero_sword（蛋黄）
-
-## Music
-
-Original Music Authorization Provider & Music Producer：Noveky（如雨）
-
-## Special Thanks
-
-王者铜，南笙，阳光加冰，凳子 and everyone that supports our project!!!
-
-# Material
-
-* Bugs and suggestions：**BUG.md**/**Issue**
-* The directory structure guidence：**Guidence.md**
-
-* Third party references：**ThirdParty.md**。
-* Game resources：[Morizero.Resources](https://github.com/Morizerodev/Morizero.Resources)
-
-# Developing Environment 
-
-Unity Version：**2021.3.4f1c1**                   
-
-Android Lowest Support：**7.0**
-
-Tool：**Visual Studio Code**
-
-Require **.Net Core 2.1** and **.Net Framework 4.7.1**，Android SDK.
-
-# Dependencies List & Other Settings
-
-Due to the developing environment conflict of programmers in our team, the following files are not updated in their original path, please copy files in 'backup' folder into the following paths:
-
-* /code/Morizero/Packages/packages-lock.json
-
-* /code/Morizero/Packages/manifest.json
-
-* /code/Morizero/ProjectSettings/EditorBuildSettings.asset
-
-# Release Platform
-
-Windows（Maybe Steam），Android（Taptap）
-
-# License
-
-Please note that this repository is licensed under the **MIT License**.
-
-# Acknowledgments
-
-The publishers, authors, and producers of Starvior wish to extend their sincere thanks to individuals including but not limited to directors, illustrators, photographers, music producers, UI designers, game scriptwriters, and reviewers who contributed their time, energy, and expertise to the creation of this video game. We are grateful for their valuable resources and suggestions, which have been crucial for the development of this video game.
-
-Copyright (C) 2021-2022, MoriDev. All rights reserved. The resources in this repository may not be used in any form or by any means that has no direct relationship with "Morizero", or stored in a data base or retrieval system that has no direct relationship with "Morizero", without the prior written permission of "MoriDev". Any request for copying or using of this publication shall be directed in writing to "MoriDev". Anyone are forbidden to copy or use the resources in this repository and redisseminate them, in an original or modified form, for commercial purposes, without permission from the original creator or producer.
-
-# Privacy Policy
-
-> Need to be filled.
