@@ -172,6 +172,8 @@ public class Chara : MonoBehaviour
 
     public void ClosePadAni()
     {
+        if (!padMode) return;
+
         Animator padAni = Pad.transform.parent.GetComponent<Animator>();
         padAni.SetFloat("speed", -2.0f);
         padAni.Play("MovePad", 0, 1f);

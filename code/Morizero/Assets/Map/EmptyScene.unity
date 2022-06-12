@@ -343,7 +343,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 113964965}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a54740d685d31c240aa250fef90bb0ad, type: 3}
   m_Name: 
@@ -425,7 +425,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 744261115924620039, guid: b43b1c85a0b81e14c978fc1f7fcf779c, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -835.00006
+      value: -835
       objectReference: {fileID: 0}
     - target: {fileID: 1053562336502302565, guid: b43b1c85a0b81e14c978fc1f7fcf779c, type: 3}
       propertyPath: m_IsActive
@@ -433,7 +433,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3147903939126394955, guid: b43b1c85a0b81e14c978fc1f7fcf779c, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -815.00006
+      value: -815
       objectReference: {fileID: 0}
     - target: {fileID: 4949780511537345390, guid: b43b1c85a0b81e14c978fc1f7fcf779c, type: 3}
       propertyPath: m_Enabled
