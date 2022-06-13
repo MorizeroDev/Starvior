@@ -18,26 +18,11 @@ public class Debuger : MonoBehaviour
         {
             dTime = 0;
             FPS = FPSCount;
+            text.text = $"{FPS}";
             FPSCount = 0;
         }
 
-        if(Input.GetKeyUp(KeyCode.F3)) show = !show;
-
-        // Output
-        if (sTime < 3){
-            sTime += Time.deltaTime;
-            text.text = "当前游戏版本：alpha-0221.1";
-            if(!show) sTime = 3;
-            return;
-        }
-        
-        if(!show){
-            text.text = "";
-        }else{
-            text.text = $"<b>FPS</b>   {FPS}\n" +
-                        $"<b>Cursor</b>   ({Input.mousePosition.x.ToString("f2")},{Input.mousePosition.y.ToString("f2")})\n" +
-                        $"<b>SuspensionDrama</b>    {MapCamera.SuspensionDrama} \n";
-        }
+        if (Input.GetKeyUp(KeyCode.F3)) text.gameObject.SetActive(!text.gameObject.activeSelf);
 
     }
 }
