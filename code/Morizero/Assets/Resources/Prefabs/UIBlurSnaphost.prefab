@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 7293165566190216855}
   - component: {fileID: 7293165566190216854}
   - component: {fileID: 1267397584}
-  - component: {fileID: 2822082282875738590}
+  - component: {fileID: 2297341607544201796}
   m_Layer: 0
-  m_Name: BlurListener
+  m_Name: UIBlurSnaphost
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -65,9 +65,9 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 95
+    m_Bits: 128
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 8400000, guid: 084033ee88c7b426eb726ffc6737840a, type: 2}
+  m_TargetTexture: {fileID: 8400000, guid: ceb1de9a393ceec48b5055fbd5f2e427, type: 2}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
@@ -110,7 +110,7 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
---- !u!114 &2822082282875738590
+--- !u!114 &2297341607544201796
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

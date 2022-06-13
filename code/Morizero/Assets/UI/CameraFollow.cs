@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public void Adjust()
     {
         Camera cam = this.gameObject.GetComponent<Camera>();
         cam.rect = Camera.main.rect;
@@ -13,9 +12,13 @@ public class CameraFollow : MonoBehaviour
         cam.nearClipPlane = Camera.main.nearClipPlane;
         cam.farClipPlane = Camera.main.farClipPlane;
         cam.sensorSize = Camera.main.sensorSize;
+        this.gameObject.transform.position = Camera.main.transform.position;
+        this.gameObject.transform.eulerAngles = Camera.main.transform.eulerAngles;
     }
-
-    // Update is called once per frame
+    void Awake()
+    {
+        Adjust();
+    }
     void Update()
     {
         this.gameObject.transform.position = Camera.main.transform.position;

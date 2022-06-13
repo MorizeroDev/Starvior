@@ -3,8 +3,7 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-  - NoBlur
+  tags: []
   layers:
   - Default
   - TransparentFX
@@ -13,7 +12,7 @@ TagManager:
   - Water
   - UI
   - Character
-  - 
+  - BlurUI
   - 
   - 
   - 

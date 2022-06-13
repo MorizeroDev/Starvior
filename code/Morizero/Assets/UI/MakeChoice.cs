@@ -15,17 +15,6 @@ public class MakeChoice : MonoBehaviour
     public static int choiceId = -1;
     private List<GameObject> Choices = new List<GameObject>();
 
-    private void Start()
-    {
-        if (id != -1) return;
-        GameObject fab = (GameObject)Resources.Load("Prefabs\\BlurListener");    // 载入母体
-        GameObject cam = Instantiate(fab, new Vector3(0, 0, -1), Quaternion.identity, this.transform.parent);
-        foreach(Canvas canvas in GameObject.FindObjectsOfType<Canvas>())
-        {
-            if(canvas.gameObject.tag != "NoBlur")
-                canvas.worldCamera = cam.GetComponent<Camera>();
-        }
-    }
     public static void Create(MakeChoiceCallback callback, string explain,string[] choices){
         GameObject fab = (GameObject)Resources.Load("Prefabs\\MakeChoice");    // 载入母体
         GameObject box = Instantiate(fab,new Vector3(0,0,-1),Quaternion.identity);
