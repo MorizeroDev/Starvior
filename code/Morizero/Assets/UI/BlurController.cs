@@ -26,12 +26,12 @@ public class BlurController : MonoBehaviour
             if(!Container.transform.GetChild(i).gameObject.Equals(this.gameObject))
                 Container.transform.GetChild(i).gameObject.SetActive(false);
         }
-        RenderTexture.active = blurTexture;
         ncam.GetComponent<CameraFollow>().Adjust();
         ncam.Render();
-        Displayer.GetComponent<RawImage>().texture = outputTexture;
+        RenderTexture.active = blurTexture;
         outputTexture.ReadPixels(new Rect(0, 0, outputTexture.width, outputTexture.height), 0, 0);
         outputTexture.Apply();
+        Displayer.GetComponent<RawImage>().texture = outputTexture;
         RenderTexture.active = null;
         blurTexture.Release();
         Destroy(cam);
