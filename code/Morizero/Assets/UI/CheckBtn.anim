@@ -7,7 +7,7 @@ AnimationClip:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: CheckBtn
-  serializedVersion: 6
+  serializedVersion: 7
   m_Legacy: 0
   m_Compressed: 0
   m_UseHighQualityCurve: 1
@@ -189,7 +189,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.33333334
-        value: 1
+        value: 0.5
         inSlope: 1.2690834
         outSlope: 1.2690834
         tangentMode: 0
@@ -226,7 +226,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.6666667
-        value: 1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -518,7 +518,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.33333334
-        value: 1
+        value: 0.5
         inSlope: 1.2690834
         outSlope: 1.2690834
         tangentMode: 0
@@ -555,7 +555,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.6666667
-        value: 1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 136
