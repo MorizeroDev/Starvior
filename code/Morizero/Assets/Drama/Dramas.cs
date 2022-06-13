@@ -156,16 +156,19 @@ public class Dramas : MonoBehaviour
                 return;
             }
             GameObject word = Instantiate(WordChild,new Vector3(0,0,-1),new Quaternion(0,0,0,0),this.transform);
-            word.GetComponent<RectTransform>().localPosition = new Vector3(x,y,0);
+            RectTransform rect = word.GetComponent<RectTransform>();
             word.GetComponent<Text>().text = DisplayText[i].ToString();
+            LayoutRebuilder.ForceRebuildLayoutImmediate(rect);
+            if(i > 0) x += ((rect.sizeDelta.x + 10) / 2); //step;
+            rect.localPosition = new Vector3(x, y, 0);
             word.GetComponent<WordEffect>().basex = x;
             word.GetComponent<WordEffect>().basey = y;
             word.GetComponent<WordEffect>().effect = Effect;
             word.SetActive(true);
             DisWords.Add(word);
-            x += step;
-            if(x >= eWord.localPosition.x + step){
-                x = sWord.localPosition.x;
+            x += ((rect.sizeDelta.x + 10) / 2); //step;
+            if (x >= eWord.localPosition.x + step){
+                x = sWord.localPosition.x - ((rect.sizeDelta.x + 10) / 2);
                 y -= step*1.2f;
             }
             WordIndex++;
