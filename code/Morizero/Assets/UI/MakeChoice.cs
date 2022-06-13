@@ -9,15 +9,24 @@ public class MakeChoice : MonoBehaviour
 {
     public Text Explaination;
     public GameObject ChoicePrefab;
-    public Sprite Focus, UnFocus;
-    public Image BtnImage;
+    public Animator Lit, UnLit;
     public MakeChoiceCallback Callback;
     public int id;
+    private int lastid = 0;
     public MakeChoice parent;
     public static int choiceId = -1, choiceMax = 0;
     public static bool choiceFinished = false;
     private List<GameObject> Choices = new List<GameObject>();
 
+    public void DisableAnimator()
+    {
+        foreach (GameObject go in parent.Choices)
+        {
+            MakeChoice mc = go.GetComponent<MakeChoice>();
+            mc.Lit.enabled = false;
+            mc.UnLit.enabled = false;
+        }
+    }
     public static void Create(MakeChoiceCallback callback, string explain,string[] choices){
         GameObject fab = (GameObject)Resources.Load("Prefabs\\MakeChoice");    // 载入母体
         GameObject box = Instantiate(fab,new Vector3(0,0,-1),Quaternion.identity);
@@ -35,6 +44,16 @@ public class MakeChoice : MonoBehaviour
             choice.parent = mc;
             mc.Choices.Add(Choice);
             Choice.SetActive(true);
+            if(i == 0)
+            {
+                choice.Lit.gameObject.SetActive(true);
+                choice.UnLit.gameObject.SetActive(false);
+            }
+            else
+            {
+                choice.Lit.gameObject.SetActive(false);
+                choice.UnLit.gameObject.SetActive(true);
+            }
             y -= 200;
         }
         mc.parent = mc;
@@ -74,7 +93,6 @@ public class MakeChoice : MonoBehaviour
         parent.gameObject.GetComponent<Animator>().Play("MakeChoiceExit", 0);
         choiceFinished = true;
     }
-
     private void Update()
     {
         if (id == -1)
@@ -87,9 +105,29 @@ public class MakeChoice : MonoBehaviour
             return;
         }
 
-        if (id == choiceId)
-            BtnImage.sprite = Focus;
-        else
-            BtnImage.sprite = UnFocus;
+        if (lastid != choiceId)
+        {
+            if(choiceId == id)
+            {
+                // 摆脱父对象的动画机控制并显示
+                Lit.gameObject.SetActive(false);
+                UnLit.gameObject.SetActive(false);
+                Lit.gameObject.SetActive(true);
+                UnLit.gameObject.SetActive(true);
+                Lit.Play("ChoiceLit", 0);
+                UnLit.Play("ChoiceUnLit", 0);
+            }
+            else if(lastid == id)
+            {
+                // 摆脱父对象的动画机控制并显示
+                Lit.gameObject.SetActive(false);
+                UnLit.gameObject.SetActive(false);
+                Lit.gameObject.SetActive(true);
+                UnLit.gameObject.SetActive(true);
+                Lit.Play("ChoiceUnLit", 0);
+                UnLit.Play("ChoiceUnLitLit", 0);
+            }
+            lastid = choiceId;
+        }
     }
 }

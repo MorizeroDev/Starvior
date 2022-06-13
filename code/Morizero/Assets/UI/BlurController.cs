@@ -32,8 +32,8 @@ public class BlurController : MonoBehaviour
         Displayer.GetComponent<RawImage>().texture = outputTexture;
         outputTexture.ReadPixels(new Rect(0, 0, outputTexture.width, outputTexture.height), 0, 0);
         outputTexture.Apply();
-        blurTexture.Release();
         RenderTexture.active = null;
+        blurTexture.Release();
         Destroy(cam);
         for (int i = 0; i < Container.transform.childCount; i++)
         {
