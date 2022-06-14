@@ -7,7 +7,9 @@ public class CheckObj : MonoBehaviour
     public TextAsset Script;
     private DramaScript scriptCarrier = new DramaScript();
     public static bool CheckBtnPressed;
+    public static bool CheckAvaliable = false;
     public bool StartOnTrigger;
+    private static float checkshowTime;
     public List<Chara.walkDir> AllowDirection = new List<Chara.walkDir>(3);
     public int CheckType = 0;
     public string Content;
@@ -24,14 +26,25 @@ public class CheckObj : MonoBehaviour
                 MapCamera.mcamera.CheckImg.sprite = MapCamera.mcamera.TalkBack;
             }
             MapCamera.mcamera.checkHint.SetActive(true);
+            checkshowTime = Time.time;
             MapCamera.mcamera.animator.SetFloat("speed",1.0f);
             MapCamera.mcamera.animator.Play("CheckBtn",0,0f);
+            CheckAvaliable = true;
         }
     }
     public void CheckGoodbye(){
         MapCamera.HitCheck = null;
         MapCamera.mcamera.animator.SetFloat("speed",-2.0f);
-        MapCamera.mcamera.animator.Play("CheckBtn",0,1f);
+        // 如果调查框显示的时候还太短的话，直接隐藏
+        if(Time.time - checkshowTime <= 0.6f)
+        {
+            MapCamera.mcamera.animator.Play("CheckBtn", 0, 0f);
+        }
+        else
+        {
+            MapCamera.mcamera.animator.Play("CheckBtn", 0, 1f);
+        }
+        CheckAvaliable = false;
     }
 
     public bool IsActive(){

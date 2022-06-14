@@ -19,3 +19,7 @@
   来源：Unity Assets Store
 
   ​		    https://unity3d.com/legal/as_terms
+  
+* Adobe Audition Sound Effects
+
+  许可证：[End User License Agreement (“EULA”) for Adobe Audition](https://www.adobe.com/legal/terms.html)

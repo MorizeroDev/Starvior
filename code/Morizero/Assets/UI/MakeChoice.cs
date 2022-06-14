@@ -16,6 +16,7 @@ public class MakeChoice : MonoBehaviour
     public MakeChoice parent;
     public static int choiceId = -1, choiceMax = 0;
     public static bool choiceFinished = false;
+    public AudioSource switchSnd,finishSnd;
     private List<GameObject> Choices = new List<GameObject>();
 
     public void DisableAnimator()
@@ -80,6 +81,7 @@ public class MakeChoice : MonoBehaviour
         if (choiceFinished) return;
         if (choiceId != Id)
         {
+            parent.switchSnd.Play();
             choiceId = Id;
             return;
         }
@@ -91,16 +93,17 @@ public class MakeChoice : MonoBehaviour
                 go.GetComponent<Animator>().Play("ChoiceYes", 0);
         }
         parent.gameObject.GetComponent<Animator>().Play("MakeChoiceExit", 0);
+        parent.finishSnd.Play();
         choiceFinished = true;
     }
     private void Update()
     {
         if (id == -1)
         {
-            if (Input.GetKeyUp(KeyCode.DownArrow)) choiceId++;
-            if (Input.GetKeyUp(KeyCode.UpArrow)) choiceId--;
-            if (choiceId < 0) choiceId = choiceMax;
-            if (choiceId > choiceMax) choiceId = 0;
+            if (Input.GetKeyUp(KeyCode.DownArrow)) { choiceId++; switchSnd.Play(); }
+            if (Input.GetKeyUp(KeyCode.UpArrow)) { choiceId--; switchSnd.Play(); }
+            if (choiceId < 0) choiceId = choiceMax; 
+            if (choiceId > choiceMax) choiceId = 0; 
             if (Input.GetKeyUp(KeyCode.Z) || Input.GetKeyUp(KeyCode.Return) || Input.GetKeyUp(KeyCode.Space)) ChoiceClick(choiceId);
             return;
         }

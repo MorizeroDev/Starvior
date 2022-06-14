@@ -44,8 +44,28 @@ public class Dramas : MonoBehaviour
     private float delTime = 0;
     public List<DramaData> Drama;
     public bool DisableInput = false;
+    private static List<int> existingFingers = new List<int>();
 
     private float x = 0,y = 0,step = 0;
+
+    private static void RecordExistingFingers()
+    {
+        // 记录进入对话框之前仍在屏幕上的手指，这样玩家便可以不放开轮盘，一边快速地对地图进行探索。
+        if (!Input.touchSupported) return;
+        existingFingers.Clear();
+        foreach (Touch t in Input.touches)
+        {
+            if (t.phase != TouchPhase.Ended)
+            {
+                //Debuger.InstantMessage("Existing" + t.fingerId, Camera.main.ScreenToWorldPoint(t.position));
+                existingFingers.Add(t.fingerId);
+            }
+            else
+            {
+                //Debuger.InstantMessage("GONE" + t.fingerId, Camera.main.ScreenToWorldPoint(t.position));
+            }
+        }
+    }
 
     public static Dramas LaunchScript(string frame,DramaCallback Callback){
         callback = Callback;
@@ -55,6 +75,7 @@ public class Dramas : MonoBehaviour
         Dramas drama = box.transform.Find("Dialog").GetComponent<Dramas>();
         drama.Drama = new List<DramaData>();
         box.GetComponent<Canvas>().worldCamera = Camera.main;
+        RecordExistingFingers();
         return drama;
     }
     public static Dramas Launch(string DramaName,DramaCallback Callback){
@@ -66,6 +87,7 @@ public class Dramas : MonoBehaviour
         box.GetComponent<Canvas>().worldCamera = Camera.main;
         drama.ReadDrama();
         box.SetActive(true);
+        RecordExistingFingers();
         return drama;
     }
     public static Dramas LaunchCheck(string content,DramaCallback Callback){
@@ -79,6 +101,7 @@ public class Dramas : MonoBehaviour
         drama.Drama[0] = data;
         drama.ReadDrama();
         box.SetActive(true);
+        RecordExistingFingers();
         return drama;
     }
     public void DisposeWords(){
@@ -129,10 +152,32 @@ public class Dramas : MonoBehaviour
     {
         if(DramaIndex >= Drama.Count) return;
         if(!DisableInput){
-            if(Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.X)){
+            bool Touched = Input.GetMouseButtonUp(0);
+            if (Input.touchSupported)
+            {
+                Touched = false;
+                foreach (Touch t in Input.touches)
+                {
+                    if (t.phase == TouchPhase.Ended)
+                    {
+                        if (existingFingers.Contains(t.fingerId))
+                        {
+                            //Debuger.InstantMessage("Remove" + t.fingerId, Camera.main.ScreenToWorldPoint(t.position));
+                            existingFingers.Remove(t.fingerId);
+                        }
+                        else
+                        {
+                            //Debuger.InstantMessage("Detected" + t.fingerId, Camera.main.ScreenToWorldPoint(t.position));
+                            Touched = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (Touched || Input.GetKeyUp(KeyCode.X)){
                 if(DialogState == 0) Speed = 0;
             }
-            if(Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.Z)){
+            if(Touched || Input.GetKeyUp(KeyCode.Z)){
                 if(DialogState == 1) DialogState = 2;
             }
         }

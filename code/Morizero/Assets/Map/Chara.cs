@@ -175,9 +175,12 @@ public class Chara : MonoBehaviour
         if (!padMode) return;
 
         Animator padAni = Pad.transform.parent.GetComponent<Animator>();
-        padAni.SetFloat("speed", -2.0f);
+        padAni.SetFloat("speed", -0.5f);
         padAni.Play("MovePad", 0, 1f);
+        Pad.eulerAngles = new Vector3(0, 0, targetRotation);
         padMode = false;
+        walking = false;
+        UploadWalk();
     }
 
     private void _SpriteRenderer_AutoSortOrder()
