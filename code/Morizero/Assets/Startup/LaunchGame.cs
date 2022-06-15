@@ -24,7 +24,7 @@ public class LaunchGame : MonoBehaviour
     }
     public void AnimationCallback(){
         // Startup Scene
-        Switcher.Carry("EmptyScene", "LoadingWhite");
+        Switcher.Carry("EmptyScene");
     }
     private void Update() {
         //Camera.main.transform.eulerAngles = new Vector3(0, 0, Input.gyro.gravity.y);
