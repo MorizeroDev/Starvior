@@ -35,7 +35,7 @@ public class CheckObj : MonoBehaviour
     public void CheckGoodbye(){
         MapCamera.HitCheck = null;
         MapCamera.mcamera.animator.SetFloat("speed",-2.0f);
-        // 如果调查框显示的时候还太短的话，直接隐藏
+        // 如果距离调查框显示的时候还太短的话，直接隐藏
         if(Time.time - checkshowTime <= 0.6f)
         {
             MapCamera.mcamera.animator.Play("CheckBtn", 0, 0f);

@@ -14,6 +14,7 @@ public class BlurController : MonoBehaviour
         outputTexture = new Texture2D(renderTexture.width, renderTexture.height);
         Camera.main.targetTexture = renderTexture;
         Camera.main.Render();
+        Camera.main.Render();
         Camera.main.targetTexture = null;
         GameObject fab = (GameObject)Resources.Load("Prefabs\\UIBlurSnaphost");    // ‘ÿ»Îƒ∏ÃÂ
         GameObject cam = Instantiate(fab, new Vector3(0, 0, -1), Quaternion.identity, null);
@@ -27,6 +28,7 @@ public class BlurController : MonoBehaviour
                 Container.transform.GetChild(i).gameObject.SetActive(false);
         }
         ncam.GetComponent<CameraFollow>().Adjust();
+        ncam.Render();
         ncam.Render();
         RenderTexture.active = blurTexture;
         outputTexture.ReadPixels(new Rect(0, 0, outputTexture.width, outputTexture.height), 0, 0);

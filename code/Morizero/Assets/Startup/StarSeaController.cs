@@ -65,14 +65,14 @@ public class StarSeaController : MonoBehaviour
                 GameObject.Destroy(this.gameObject);
             }
             if (seted) return;
-            if (delta > 0.5f)
+            if (delta > 0.6f)
             {
                 a = 1;
                 seted = true;
             }
             else
             {
-                a = Cubic(delta / 0.5f,0,1,1,1);
+                a = Cubic(delta / 0.6f,0,1,1,1);
             }
             spriteRenderer.color = new Color(1, 1, 1, a);
             this.transform.localScale = new Vector3(a * MaxScale, a * MaxScale, 1);

@@ -106,7 +106,7 @@ public class Chara : MonoBehaviour
         Animation = Resources.LoadAll<Sprite>("Players\\" + Character);
         image = this.GetComponent<SpriteRenderer>();
         // dir = walkDir.Down;
-        UploadWalk();
+        UpdateWalkImage();
         // 获取地图边界并处理
         Vector3 size = new Vector3(0.25f,0.25f,0f);
         Vector3 pos = GameObject.Find("startDot").transform.localPosition;
@@ -128,13 +128,13 @@ public class Chara : MonoBehaviour
         // 如果是玩家并且传送数据不为空，则按照传送设置初始化
         if(Controller && MapCamera.initTp != -1){
             dir = MapCamera.initDir;
-            UploadWalk();
+            UpdateWalkImage();
             // 取得传送位置坐标
             this.transform.localPosition = GameObject.Find("tp" + MapCamera.initTp).transform.localPosition;
         }
     }
     // 更新行走图图形
-    public void UploadWalk(){
+    public void UpdateWalkImage(){
         if(walking){
             // 行走时的图像
             walkspan += Time.deltaTime;
@@ -180,7 +180,7 @@ public class Chara : MonoBehaviour
         Pad.eulerAngles = new Vector3(0, 0, targetRotation);
         padMode = false;
         walking = false;
-        UploadWalk();
+        UpdateWalkImage();
     }
 
     private void _SpriteRenderer_AutoSortOrder()
@@ -244,7 +244,7 @@ public class Chara : MonoBehaviour
                 Move(0,1);
                 if(wt.y <= transform.localPosition.y) isFix = true;
             }
-            if(!Controller) UploadWalk();
+            if(!Controller) UpdateWalkImage();
             // 修正坐标
             if(isFix){
                 Debug.Log("Walktask: " + (walkTasks.Count - 1) + " remaining...");
@@ -255,7 +255,7 @@ public class Chara : MonoBehaviour
                     Debug.Log("Walktask: tasks for Drama Script is done.");
                     walkTaskCallback();
                     walking = false;
-                    UploadWalk();
+                    UpdateWalkImage();
                 }
             }
         }
@@ -282,7 +282,7 @@ public class Chara : MonoBehaviour
                 break;
             }
         }
-        if(checkObj == null && MapCamera.HitCheck != null){
+        if((checkObj == null || !checkObj.AllowDirection.Contains(dir)) && MapCamera.HitCheck != null){
             MapCamera.HitCheck.GetComponent<CheckObj>().CheckGoodbye();
         }
 
@@ -348,7 +348,7 @@ public class Chara : MonoBehaviour
         lpos = pos;
 
         // 更新图片
-        UploadWalk();
+        UpdateWalkImage();
 
     }
 }

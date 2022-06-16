@@ -88,7 +88,7 @@ public class DramaScript
             if(p[1] == "right") chara.dir = Chara.walkDir.Right;
             if(p[1] == "up") chara.dir = Chara.walkDir.Up;
             if(p[1] == "down")chara.dir = Chara.walkDir.Down;
-            chara.UploadWalk();
+            chara.UpdateWalkImage();
             handler = true;
             carryTask();
         }
