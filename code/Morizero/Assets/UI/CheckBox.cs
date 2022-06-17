@@ -68,13 +68,7 @@ public class CheckBox : MonoBehaviour
         }
         
     }
-    private void Start()
-    {
-        if (isController) return;
-        // 我也不知道Unity怎么回事，总之得Editor先关闭，再从这里开启才不会抽风。
-        this.GetComponent<BoxCollider2D>().enabled = true;
-    }
-    private void OnMouseUpAsButton()
+    public void MouseUpAsButton()
     {
         if (isController) return;
         if (Parent.Value == id) return;

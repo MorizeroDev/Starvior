@@ -349,6 +349,5 @@ public class Chara : MonoBehaviour
 
         // 更新图片
         UpdateWalkImage();
-
     }
 }

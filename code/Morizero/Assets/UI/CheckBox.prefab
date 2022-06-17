@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4935680933126690934}
-  - component: {fileID: 4935680933126690932}
   - component: {fileID: 4935680933126690933}
   m_Layer: 5
   m_Name: CheckSection
@@ -40,32 +39,6 @@ RectTransform:
   m_AnchoredPosition: {x: -50.00003, y: 0.000091552734}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0, y: 0.5}
---- !u!61 &4935680933126690932
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4935680933126690935}
-  m_Enabled: 0
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 49.80982, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 68.228065, y: 70}
-  m_EdgeRadius: 0
 --- !u!114 &4935680933126690933
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -86,6 +59,8 @@ MonoBehaviour:
   NoSprite: {fileID: 0}
   Items: []
   id: 0
+  LinkDataName: 
+  DefaultValue: 0
   Parent: {fileID: 0}
 --- !u!1 &4935680933346559185
 GameObject:
@@ -147,7 +122,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.827451}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -193,6 +168,7 @@ GameObject:
   - component: {fileID: 4935680933863289536}
   - component: {fileID: 4935680933863289550}
   - component: {fileID: 4935680933863289551}
+  - component: {fileID: 1330307615823408072}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -242,7 +218,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 0
+  m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -258,6 +234,35 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1330307615823408072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4935680933863289537}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 3
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 4935680933126690933}
+          m_TargetAssemblyTypeName: CheckBox, Assembly-CSharp
+          m_MethodName: MouseUpAsButton
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &4935680934315113350
 GameObject:
   m_ObjectHideFlags: 0
@@ -319,4 +324,6 @@ MonoBehaviour:
   - "\u4E2D\u7B49"
   - "\u6162"
   id: 0
+  LinkDataName: 
+  DefaultValue: 0
   Parent: {fileID: 0}

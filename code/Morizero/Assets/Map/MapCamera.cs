@@ -9,7 +9,7 @@ public class MapCamera : MonoBehaviour
     public GameObject endDot;
     public static Chara Player;
     public static GameObject PlayerCollider;
-    public static GameObject HitCheck;
+    public static GameObject HitCheck = null;
     public static Transform HitCheckTransform;
     public static bool SuspensionDrama;
     public static MapCamera mcamera;
@@ -71,8 +71,10 @@ public class MapCamera : MonoBehaviour
         Camera camera = this.GetComponent<Camera>();
         camera.orthographicSize += (cs - camera.orthographicSize) / 20;
         transform.localPosition = pos;
-        if(MapCamera.SuspensionDrama && animator.GetFloat("speed") == 1.0f){
-            HitCheck.GetComponent<CheckObj>().CheckGoodbye();
+        if(MapCamera.SuspensionDrama && HitCheck != null)
+        {
+            if(animator.GetFloat("speed") == 1.0f)
+                HitCheck.GetComponent<CheckObj>().CheckGoodbye();
         }
         
     }

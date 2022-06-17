@@ -27,11 +27,11 @@ public class SliderBar : MonoBehaviour
         UpdateDisplay();
         if(LinkDataName != "") Value = PlayerPrefs.GetFloat(LinkDataName, DefaultValue);
     }
-    private void OnMouseUp()
+    public void MouseUp()
     {
         ScrollController.UIUsing = false;
     }
-    private void OnMouseDrag()
+    public void MouseDrag()
     {
         ScrollController.UIUsing = true;
         Vector2 mouse = Vector2.zero;
