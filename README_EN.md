@@ -90,6 +90,10 @@ Tool：**Visual Studio Code**
 
 Require **.Net Core 2.1** and **.Net Framework 4.7.1**，Android SDK.
 
+# Startup Scene
+
+Startup/Startup
+
 # Dependencies List & Other Settings
 
 Due to the developing environment conflict of programmers in our team, the following files are not updated in their original path, please copy files in 'backup' folder into the following paths:

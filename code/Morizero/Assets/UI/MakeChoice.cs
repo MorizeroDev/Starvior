@@ -9,7 +9,7 @@ public class MakeChoice : MonoBehaviour
 {
     public Text Explaination;
     public GameObject ChoicePrefab;
-    public Animator Lit, UnLit;
+    public Animator Lit, UnLit, TextLit;
     public MakeChoiceCallback Callback;
     public int id;
     private int lastid = 0;
@@ -49,6 +49,7 @@ public class MakeChoice : MonoBehaviour
             {
                 choice.Lit.gameObject.SetActive(true);
                 choice.UnLit.gameObject.SetActive(false);
+                choice.TextLit.Play("ChoiceTextLit", 0, 1.0f);
             }
             else
             {
@@ -119,6 +120,7 @@ public class MakeChoice : MonoBehaviour
                 UnLit.gameObject.SetActive(true);
                 Lit.Play("ChoiceLit", 0);
                 UnLit.Play("ChoiceUnLit", 0);
+                TextLit.Play("ChoiceTextLit", 0);
             }
             else if(lastid == id)
             {
@@ -129,6 +131,7 @@ public class MakeChoice : MonoBehaviour
                 UnLit.gameObject.SetActive(true);
                 Lit.Play("ChoiceUnLit", 0);
                 UnLit.Play("ChoiceUnLitLit", 0);
+                TextLit.Play("ChoiceTextUnLit", 0);
             }
             lastid = choiceId;
         }

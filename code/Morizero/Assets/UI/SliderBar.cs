@@ -12,8 +12,13 @@ public class SliderBar : MonoBehaviour
     {
         UpdateDisplay();
     }
+    private void OnMouseUp()
+    {
+        ScrollController.UIUsing = false;
+    }
     private void OnMouseDrag()
     {
+        ScrollController.UIUsing = true;
         Vector2 mouse = Vector2.zero;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(Background, Input.mousePosition, Camera.main, out mouse);
         float f = (mouse.x - Background.transform.position.x) / Background.sizeDelta.x;

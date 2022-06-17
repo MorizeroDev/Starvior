@@ -1,40 +1,40 @@
 plot:OBE_PLOT
 immersion:
-哩哩啦啦哈哈哈哈
-欢迎来到拾落星辰测试版哈哈哈哈
-这个背景上的人是旧剧本的
-反正测试用嘛就先留着
+欢迎来到《拾落星辰》-Alpha测试版。
+我是被遗弃的医院时代的最终大Boss。
+为了方便404的测试我幸免留在这里和您见面。
 label:c1
-choice:啦啦啦啦选项测试,选我,不要选这个
+choice:这是404要求我列出的选项,选我,不要选这个,选这个药丸
 distribute_choices:
 case:0
 	immersion:
-	好耶
-	choice:没有选择的屑选项,总之只能选我
+	恭喜您，选中了正确的选项。
+	choice:来一道送分题吧,我是正确选项
 	distribute_choices:
 	case:0
 		immersion:
-		对啦对啦来读操作说明吧！
-		choice:你想咋玩？,键盘鼠标,触屏
+		很简单的题目呢。
+		好啦，让我为您介绍一下基本操作方式。
+		choice:您想看哪个说明书？,键盘鼠标,触屏
 		distribute_choices:
 		case:0
 			immersion:
 			按下Z或Enter键可以继续对话，X键可以跳过对话动画。
-			在地图上，你可以通过↑↓←→键或AWSD键移动。
-			同时，你可以按下Z键与人物互动或者调查这个世界。
+			在地图上，您可以通过↑↓←→键或AWSD键移动。
+			同时，您可以按下Z键与人物互动或者调查这个世界。
 		case:1
 			immersion:
-			在地图上，轻触你想要抵达的位置就可以移动了。
-			你也可以使用屏幕左下角的摇杆移动。
-			当你可以与人物互动或调查这个世界时，
-			右下角将出现对应的按钮。
+			在地图上，您可以使用屏幕左下角的轮盘移动。
+			当您可以与人物互动或调查这个世界时，
+			右下角将出现对应的调查按钮。
 		endchoice:
 		immersion:
-		好耶好耶啦啦啦啦啦
+		好的，为您介绍完毕，我们开始吧！
 		say:雪兰
 		突然出现~
-		(shake)打破沉浸体验~（不是）
-		choice:都是旧剧本的地图啦，反正测试用，选一个吧,后院,雪兰的病房
+		(shake)我是被遗弃的医院时代女主~
+		(rainbow)好吧~其实我是被叫来测试对话框的。
+		choice:您想进入已被遗弃的旧剧本的哪个地图作为测试？,后院,雪兰的病房
 		distribute_choices:
 		case:0
 			tp:Yard,1,up
@@ -44,15 +44,21 @@ case:0
 	endchoice:
 case:1
 	immersion:
-	你选错啦！我要走了！
-	choice:那我走？,走,不要啊
+	很抱歉，您选错了，重新考虑一下吧？
+	choice:请重新考虑一下,不要选这个,选择我
 	distribute_choices:
 	case:0
 		immersion:
-		好的。
+		非常抱歉，您很幸运地进入了我们的与游戏本体交互的测试环节。
+		接下来我将测试：关闭这个游戏。
 		exit:
 	case:1
 		goto:c1
 	endchoice:
+case:2
+	immersion:
+	Fatal Error\: You selected a 药丸 item.
+	Sorry. The game is crashed.
+	exit:
 endchoice:
 break

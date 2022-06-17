@@ -336,7 +336,7 @@ public class DramaScript
             // 读取直至对话结束
             while(currentLine + 1 < code.Length){
                 sayTag:
-                t = code[currentLine].TrimStart().Split(':');
+                t = code[currentLine].TrimStart().Replace("\\:", "").Split(':');
                 Debug.Log("Drama script: (Dialog) " + code[currentLine]);
                 // 初始化对话参数
                 string motion = "Enter";
@@ -345,7 +345,7 @@ public class DramaScript
                 // 如果是对话
                 if(t.Length == 1){
                     // 格式化对话并提取附加参数
-                    p = code[currentLine].TrimStart().Replace("(",")").Split(')');
+                    p = code[currentLine].TrimStart().Replace("\\:", ":").Replace("(",")").Split(')');
                     // 处理附加参数
                     for(int i = 1;i < p.Length;i+=2){
                         if(i == p.Length - 1) break;
