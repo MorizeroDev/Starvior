@@ -6,11 +6,26 @@ using UnityEngine.UI;
 public class SliderBar : MonoBehaviour
 {
     public RectTransform Background, Foreground;
-    [Range(0f, 1f)]
-    public float Value;
+    public float Value
+    {
+        get
+        {
+            return v;
+        }
+        set
+        {
+            v = value;
+            UpdateDisplay();
+            if(LinkDataName != "") PlayerPrefs.SetFloat(LinkDataName, value);
+        }
+    }
+    private float v;
+    public string LinkDataName = "";
+    public float DefaultValue;
     private void Awake()
     {
         UpdateDisplay();
+        if(LinkDataName != "") Value = PlayerPrefs.GetFloat(LinkDataName, DefaultValue);
     }
     private void OnMouseUp()
     {
@@ -24,7 +39,7 @@ public class SliderBar : MonoBehaviour
         float f = (mouse.x - Background.transform.position.x) / Background.sizeDelta.x;
         if (f < 0) f = 0;
         if(f > 1f) f = 1f;
-        Value = f;
+        v = f;
         UpdateDisplay();
     }
     public void UpdateDisplay()

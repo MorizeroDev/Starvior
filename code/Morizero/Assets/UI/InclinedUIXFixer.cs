@@ -14,7 +14,7 @@ public class InclinedUIXFixer : MonoBehaviour
         SY = Origin.localPosition.y;
         rect = GetComponent<RectTransform>();
     }
-    void Update()
+    void LateUpdate()
     {
         //y = kx => x = y/k
         Vector3 pos = rect.localPosition;

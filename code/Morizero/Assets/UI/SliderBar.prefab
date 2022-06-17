@@ -206,7 +206,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Background: {fileID: 4813275787353880616}
   Foreground: {fileID: 4813275787744737606}
-  Value: 0
+  LinkDataName: 
+  DefaultValue: 0
 --- !u!61 &4813275788135723244
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -220,7 +221,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 72.36633, y: -38.324253}
+  m_Offset: {x: 72.36633, y: -49.195118}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -231,5 +232,5 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1109.1616, y: 73.55152}
+  m_Size: {x: 1109.1616, y: 95.29325}
   m_EdgeRadius: 0

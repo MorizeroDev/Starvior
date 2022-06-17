@@ -85,6 +85,11 @@ public class ScrollController : MonoBehaviour
                 {
                     UpAni.Play("ScrollLight", 0, 0.0f);
                     UpPlayed = true;
+                    if (DownPlayed)
+                    {
+                        DownPlayed = false;
+                        DownAni.Play("ScrollUnLight", 0, 0.0f);
+                    }
                 }
                 del = ScrollContainer.GetChild(0).localPosition.y - FY;
             }
@@ -96,6 +101,11 @@ public class ScrollController : MonoBehaviour
                 {
                     DownAni.Play("ScrollLight", 0, 0.0f);
                     DownPlayed = true;
+                    if (UpPlayed)
+                    {
+                        UpPlayed = false;
+                        UpAni.Play("ScrollUnLight", 0, 0.0f);
+                    }
                 }
                 del = ScrollContainer.GetChild(ScrollContainer.childCount - 1).localPosition.y - LY;
             }
