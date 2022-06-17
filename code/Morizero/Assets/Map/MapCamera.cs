@@ -52,8 +52,28 @@ public class MapCamera : MonoBehaviour
             DontDestroyOnLoad(bgm);
             DontDestroyOnLoad(bgs);
         }
-        if(BGM != null && bgm.clip != BGM) {bgm.clip = BGM; bgm.Play();}
-        if(BGS != null && bgs.clip != BGS) {bgs.clip = BGS; bgs.Play();}
+        if (bgm.clip != BGM)
+        {
+            if (BGM == null)
+            {
+                bgm.Stop();
+            }
+            else
+            {
+                bgm.clip = BGM; bgm.Play();
+            }
+        }
+        if (bgs.clip != BGS)
+        {
+            if (BGS == null)
+            {
+                bgs.Stop();
+            }
+            else
+            {
+                bgs.clip = BGS; bgs.Play();
+            }
+        }
         mcamera = this;
         Vector3 cornerPos=Camera.main.ViewportToWorldPoint(new Vector3(1f,1f,Mathf.Abs(-Camera.main.transform.position.z)));
         float w = (cornerPos.x - Camera.main.transform.position.x) * 2;

@@ -11,18 +11,21 @@ public class VolumeSet : MonoBehaviour
     public AudioType audioType;
     public void ApplyVolumeSettings()
     {
-        AudioSource source = GetComponent<AudioSource>();
+        AudioSource[] sources = GetComponents<AudioSource>();
         if (audioType == AudioType.BGM)
         {
-            source.volume = PlayerPrefs.GetFloat("Settings.BGMVolume", 1);
+            foreach(AudioSource source in sources)
+                source.volume = PlayerPrefs.GetFloat("Settings.BGMVolume", 1);
         }
         else if (audioType == AudioType.BGS)
         {
-            source.volume = PlayerPrefs.GetFloat("Settings.BGSVolume", 0.1f);
+            foreach (AudioSource source in sources)
+                source.volume = PlayerPrefs.GetFloat("Settings.BGSVolume", 0.1f);
         }
         else if (audioType == AudioType.SE)
         {
-            source.volume = PlayerPrefs.GetFloat("Settings.SEVolume", 0.5f);
+            foreach (AudioSource source in sources)
+                source.volume = PlayerPrefs.GetFloat("Settings.SEVolume", 0.5f);
         }
     }
     private void Awake()

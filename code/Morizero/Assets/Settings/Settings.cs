@@ -8,6 +8,7 @@ public class Settings : MonoBehaviour
     public static List<VolumeSet> VolumeSets = new List<VolumeSet>();
     public static bool Active = false;
     public static bool Loading = false;
+    private static int stage = 0;
     public static bool LastSuspensionDrama;
     public static Animator ActiveSetAnimator;
     static Settings()
@@ -22,6 +23,7 @@ public class Settings : MonoBehaviour
         Active = true; Loading = true;
         LastSuspensionDrama = MapCamera.SuspensionDrama;
         MapCamera.SuspensionDrama = true;
+        stage = 1;
         SettingsBtn.ActiveSettingsBtn.GetComponent<Animator>().Play("SetBtnHide", 0, 0.0f);
         SceneManager.LoadSceneAsync("Settings", LoadSceneMode.Additive);
     }
@@ -31,12 +33,14 @@ public class Settings : MonoBehaviour
     }
     private static void SceneManager_sceneLoaded(Scene arg0, LoadSceneMode arg1)
     {
+        if (stage == 0) return;
         Loading = false;
     }
 
     private static void SceneManager_sceneUnloaded(Scene arg0)
     {
-        Loading = false;
+        if (stage == 0) return;
+        Loading = false; stage = 0;
         SettingsBtn.ActiveSettingsBtn.GetComponent<Animator>().Play("SetBtnShow", 0, 0.0f);
     }
     public void AnimationCallback()

@@ -334,6 +334,7 @@ GameObject:
   - component: {fileID: 4800142320729849238}
   - component: {fileID: 276391695455489433}
   - component: {fileID: 7719662095404016950}
+  - component: {fileID: 1565184418243156991}
   m_Layer: 7
   m_Name: MakeChoice
   m_TagString: Untagged
@@ -492,7 +493,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 07cc046ea0325be43a0d400332395de4, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -588,7 +589,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: bbd31f1ec60b6c140be53a80ab645385, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -672,6 +673,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1565184418243156991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9159393394843230274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c770c6a123c3a94193e1bbabffea03a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioType: 2
 --- !u!1 &9159393395352897635
 GameObject:
   m_ObjectHideFlags: 0

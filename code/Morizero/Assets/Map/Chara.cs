@@ -101,6 +101,13 @@ public class Chara : MonoBehaviour
 
     private _OutMousePositionBuilder bridgeTaskbuilderOMP;
 
+    public void ApplyMovePadSettings()
+    {
+        srcClickPos = MapCamera.mcamera.GetComponent<Camera>().WorldToScreenPoint(
+                            GameObject.Find("MapCamera").transform.Find("MovePad").Find("Pad").Find("tipPad").position
+                            );
+        srcPadPos = Pad.localPosition;
+    }
     private void Start() {
         // 载入行走图图像集，并初始化相关设置
         Animation = Resources.LoadAll<Sprite>("Players\\" + Character);
@@ -117,11 +124,8 @@ public class Chara : MonoBehaviour
         if(Controller) {
             MapCamera.Player = this;
             MapCamera.PlayerCollider = this.transform.Find("Pathfinding").gameObject;
-            Pad = GameObject.Find("MapCamera").transform.Find("MovePad").Find("ball");
-            srcClickPos = MapCamera.mcamera.GetComponent<Camera>().WorldToScreenPoint(
-                            GameObject.Find("MapCamera").transform.Find("MovePad").Find("tipPad").position
-                            );
-            srcPadPos = Pad.localPosition;
+            Pad = GameObject.Find("MapCamera").transform.Find("MovePad").Find("Pad").Find("ball");
+            ApplyMovePadSettings();
         }
         if(Controller) // only controller can havve a pathfinding movement
             bridgeTaskbuilderOMP = new _OutMousePositionBuilder(dataBridge.defaultRayMapPathFindingScript);
@@ -174,7 +178,7 @@ public class Chara : MonoBehaviour
     {
         if (!padMode) return;
 
-        Animator padAni = Pad.transform.parent.GetComponent<Animator>();
+        Animator padAni = Pad.transform.parent.parent.GetComponent<Animator>();
         padAni.SetFloat("speed", -0.5f);
         padAni.Play("MovePad", 0, 1f);
         Pad.eulerAngles = new Vector3(0, 0, targetRotation);
@@ -297,7 +301,7 @@ public class Chara : MonoBehaviour
                         mpos = MapCamera.mcamera.GetComponent<Camera>().ScreenToWorldPoint(cp);
                         foreach(RaycastHit2D hit in Physics2D.RaycastAll(new Vector2(mpos.x,mpos.y),new Vector2(0,0))){
                             if(hit.collider.gameObject.name == "MovePad"){
-                                Animator padAni = Pad.transform.parent.GetComponent<Animator>();
+                                Animator padAni = Pad.transform.parent.parent.GetComponent<Animator>();
                                 padAni.SetFloat("speed",1.0f);
                                 padAni.Play("MovePad",0,0f);
                                 padMode = true;
