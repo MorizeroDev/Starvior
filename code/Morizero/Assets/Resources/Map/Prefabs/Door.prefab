@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5724599245858169070}
   - component: {fileID: 7464114063205522586}
   - component: {fileID: 4992103213834858758}
+  - component: {fileID: 6161022510721490955}
   m_Layer: 3
   m_Name: DoorController
   m_TagString: Untagged
@@ -176,6 +177,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &6161022510721490955
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7801548499766651705}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c770c6a123c3a94193e1bbabffea03a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioType: 2
 --- !u!1 &9221026782038236609
 GameObject:
   m_ObjectHideFlags: 0

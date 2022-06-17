@@ -421,7 +421,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 744261115924620039, guid: b43b1c85a0b81e14c978fc1f7fcf779c, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -835
+      value: -834.99994
+      objectReference: {fileID: 0}
+    - target: {fileID: 1010630953208200731, guid: b43b1c85a0b81e14c978fc1f7fcf779c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1053562336502302565, guid: b43b1c85a0b81e14c978fc1f7fcf779c, type: 3}
       propertyPath: m_IsActive
@@ -429,7 +433,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3147903939126394955, guid: b43b1c85a0b81e14c978fc1f7fcf779c, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -815
+      value: -814.99994
       objectReference: {fileID: 0}
     - target: {fileID: 4949780511537345390, guid: b43b1c85a0b81e14c978fc1f7fcf779c, type: 3}
       propertyPath: m_Enabled
@@ -440,9 +444,13 @@ PrefabInstance:
       value: MapCamera
       objectReference: {fileID: 0}
     - target: {fileID: 7293165566190216852, guid: b43b1c85a0b81e14c978fc1f7fcf779c, type: 3}
-      propertyPath: BGS
+      propertyPath: BGM
       value: 
       objectReference: {fileID: 8300000, guid: 4a3639f950e32ac49b9dfaeb658f63f4, type: 3}
+    - target: {fileID: 7293165566190216852, guid: b43b1c85a0b81e14c978fc1f7fcf779c, type: 3}
+      propertyPath: BGS
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 7293165566190216852, guid: b43b1c85a0b81e14c978fc1f7fcf779c, type: 3}
       propertyPath: endDot
       value: 
@@ -509,7 +517,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7505675983946626096, guid: b43b1c85a0b81e14c978fc1f7fcf779c, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -835
+      value: -834.99994
       objectReference: {fileID: 0}
     - target: {fileID: 7507236930450634604, guid: b43b1c85a0b81e14c978fc1f7fcf779c, type: 3}
       propertyPath: m_Enabled

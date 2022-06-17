@@ -277,6 +277,7 @@ public class DramaScript
             GameObject player = GameObject.Instantiate(fab,new Vector3(0,0,-1),Quaternion.identity);
             AudioSource source = player.GetComponent<AudioSource>();
             source.clip = (AudioClip)Resources.Load("Snd\\" + p[0]);
+            source.volume = PlayerPrefs.GetFloat("Settings.SEVolume", 0.5f);
             player.SetActive(true);
             source.Play();
             GameObject.Destroy(player,source.clip.length);

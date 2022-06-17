@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class Settings : MonoBehaviour
 {
+    public static List<VolumeSet> VolumeSets = new List<VolumeSet>();
     public static bool Active = false;
     public static bool Loading = false;
     public static bool LastSuspensionDrama;
@@ -51,5 +52,12 @@ public class Settings : MonoBehaviour
         Active = false; Loading = true;
         ActiveSetAnimator.SetFloat("Speed", -2.0f);
         ActiveSetAnimator.Play("SettingEnter", 0, 1.0f);
+    }
+
+    public static void BroadcastVolumeChange()
+    {
+        if (MapCamera.mcamera != null) MapCamera.mcamera.ApplyVolumeSettings();
+        foreach (VolumeSet vs in VolumeSets)
+            vs.ApplyVolumeSettings();
     }
 }

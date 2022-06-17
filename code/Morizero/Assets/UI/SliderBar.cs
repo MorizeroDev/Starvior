@@ -16,7 +16,11 @@ public class SliderBar : MonoBehaviour
         {
             v = value;
             UpdateDisplay();
-            if(LinkDataName != "") PlayerPrefs.SetFloat(LinkDataName, value);
+            if (LinkDataName != "")
+            {
+                if (LinkDataName.EndsWith("Volume")) Settings.BroadcastVolumeChange();
+                PlayerPrefs.SetFloat(LinkDataName, value);
+            }
         }
     }
     private float v;
@@ -29,6 +33,7 @@ public class SliderBar : MonoBehaviour
     }
     public void MouseUp()
     {
+        MouseDrag();
         ScrollController.UIUsing = false;
     }
     public void MouseDrag()
@@ -41,6 +46,11 @@ public class SliderBar : MonoBehaviour
         if(f > 1f) f = 1f;
         v = f;
         UpdateDisplay();
+        if (LinkDataName != "")
+        {
+            if (LinkDataName.EndsWith("Volume")) Settings.BroadcastVolumeChange();
+            PlayerPrefs.SetFloat(LinkDataName, v);
+        }
     }
     public void UpdateDisplay()
     {

@@ -20,6 +20,7 @@ public class Dramas : MonoBehaviour
     public GameObject WordChild;                    // 对话框文本母体
     public Animator Motion;                         // 立绘动画
     private float Speed;                            // 等待计数
+    private float OrSpeed;
     private int DialogState;                        // 对话框状态（-1=未就绪，0=等待显示，1=等待确认，2=完毕）
     public Sprite Dialog1,Dialog2;
     public Image DialogBox;
@@ -113,7 +114,10 @@ public class Dramas : MonoBehaviour
 
         DialogState = 0;
         character = Drama[DramaIndex].Character;
-        Speed = Drama[DramaIndex].Speed;
+        Speed = Drama[DramaIndex].Speed; OrSpeed = Speed;
+        int SpeedSet = PlayerPrefs.GetInt("Settings.DramaTextSpeed", 1);
+        if (SpeedSet == 0) Speed /= 2;
+        if (SpeedSet == 2) Speed *= 2;
         DisplayText = Drama[DramaIndex].content;
         Effect = Drama[DramaIndex].Effect;
 
@@ -151,7 +155,9 @@ public class Dramas : MonoBehaviour
     void Update()
     {
         if(DramaIndex >= Drama.Count) return;
-        if(!DisableInput){
+        int AutoContinue = PlayerPrefs.GetInt("Settings.AutoContinueDrama", 1);
+        if(!DisableInput && !Settings.Active && !Settings.Loading)
+        {
             bool Touched = Input.GetMouseButtonUp(0);
             if (Input.touchSupported)
             {
@@ -177,7 +183,14 @@ public class Dramas : MonoBehaviour
             if (Touched || Input.GetKeyUp(KeyCode.X)){
                 if(DialogState == 0) Speed = 0;
             }
-            if(Touched || Input.GetKeyUp(KeyCode.Z)){
+            if (AutoContinue == 0)
+            {
+                //Debug.Log("Auto Continue Detected, continue after " + delTime + "/" + DisplayText.Length * 0.1f + " s...");
+                delTime += Time.deltaTime;
+                if (delTime > DisplayText.Length * 0.15f) AutoContinue = 2;
+            }
+            if (Touched || Input.GetKeyUp(KeyCode.Z) || AutoContinue == 2)
+            {
                 if(DialogState == 1) DialogState = 2;
             }
         }
@@ -191,6 +204,7 @@ public class Dramas : MonoBehaviour
             }
             ReadDrama();
         }
+        if (DialogState == 1) return;
         delTime += Time.deltaTime;
         if(delTime >= Speed){
             delTime = 0;

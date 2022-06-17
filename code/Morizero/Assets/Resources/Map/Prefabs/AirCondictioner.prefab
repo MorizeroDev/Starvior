@@ -87,6 +87,7 @@ GameObject:
   - component: {fileID: 3481999736451204036}
   - component: {fileID: 3481999736451204039}
   - component: {fileID: 8077919984521122996}
+  - component: {fileID: 3071366818813820805}
   m_Layer: 3
   m_Name: AirCondictioner
   m_TagString: Untagged
@@ -258,3 +259,16 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &3071366818813820805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3481999736451204038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c770c6a123c3a94193e1bbabffea03a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioType: 1

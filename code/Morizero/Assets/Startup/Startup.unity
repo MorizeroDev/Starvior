@@ -476,6 +476,7 @@ GameObject:
   - component: {fileID: 400466804}
   - component: {fileID: 400466803}
   - component: {fileID: 400466805}
+  - component: {fileID: 400466806}
   m_Layer: 0
   m_Name: AnimationGroup
   m_TagString: Untagged
@@ -634,6 +635,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   StartAnimation: {fileID: 400466804}
   WaitFor: {fileID: 424554667}
+--- !u!114 &400466806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 400466801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c770c6a123c3a94193e1bbabffea03a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioType: 0
 --- !u!1 &424554667
 GameObject:
   m_ObjectHideFlags: 0
