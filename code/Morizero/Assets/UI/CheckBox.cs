@@ -3,6 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public class CheckBoxEvent : MonoBehaviour
+{
+    public int Value;
+    public virtual void ValueChanged()
+    {
+
+    }
+}
 public class CheckBox : MonoBehaviour
 {
     [Tooltip("仅当isController开启时有效。")]
@@ -18,8 +26,10 @@ public class CheckBox : MonoBehaviour
     public List<string> Items;
     [HideInInspector]
     public int id;
+    public int style = 0;
     public string LinkDataName = "";
     public int DefaultValue;
+    private CheckBoxEvent UIEvent = null;
     private List<CheckBox> CheckBoxes = new List<CheckBox>();
     private int v;
     public int Value {
@@ -33,6 +43,11 @@ public class CheckBox : MonoBehaviour
             v = value;
             CheckBoxes[v].image.sprite = YesSprite;
             if (LinkDataName != "") PlayerPrefs.SetInt(LinkDataName, v);
+            if (UIEvent != null)
+            {
+                UIEvent.Value = v;
+                UIEvent.ValueChanged();
+            }
         } 
     }
     [HideInInspector]
@@ -40,6 +55,7 @@ public class CheckBox : MonoBehaviour
     private void Awake()
     {
         if (!isController) return;
+        TryGetComponent<CheckBoxEvent>(out UIEvent);
         RectTransform r = CheckBoxPrefab.GetComponent<RectTransform>();
         float x = r.localPosition.x,y = r.localPosition.y;
         for(int i = 0;i < Items.Count;i++)
@@ -54,7 +70,10 @@ public class CheckBox : MonoBehaviour
             RectTransform rect = check.text.GetComponent<RectTransform>();
             LayoutRebuilder.ForceRebuildLayoutImmediate(rect);
             r.localPosition = new Vector3(x, y, 0);
-            x += (rect.sizeDelta.x / 2 + 200);
+            if (style == 0)
+                x += (rect.sizeDelta.x / 2 + 200);
+            else
+                y -= (rect.sizeDelta.y / 2 + 30);
             CheckBoxes.Add(check);
         }
         CheckBoxPrefab.SetActive(false);

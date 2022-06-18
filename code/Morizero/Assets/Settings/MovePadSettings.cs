@@ -14,6 +14,10 @@ public class MovePadSettings : SliderBarEvent
         example.SetActive(true);
         MapCamera.Player.ApplyMovePadSettings();
     }
+    private void Start()
+    {
+        example.SetActive(false);
+    }
     public override void MouseDrag()
     {
         //Debug.Log("MouseDrag");
