@@ -32,7 +32,8 @@ public class LaunchGame : MonoBehaviour
         //Debuger.InstantMessage(Input.gyro.gravity.x + "," + Input.gyro.gravity.y + "," + Input.gyro.gravity.z,new Vector3(0,0,0));
         if (isLaunched) return;
         if(!WaitFor.activeSelf) return;
-        if(Input.GetMouseButtonUp(0)){
+        if (Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.Return) || Input.GetKeyUp(KeyCode.Z))
+        {
             isLaunched = true;
             StartAnimation.Play("StarFly", 0);
         }

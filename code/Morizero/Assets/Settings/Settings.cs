@@ -5,12 +5,55 @@ using UnityEngine.SceneManagement;
 
 public class Settings : MonoBehaviour
 {
+    public List<GameObject> MenuItems;
+    public GameObject LinkTab;
+    public ScrollController scrollController;
+    [HideInInspector]    
+    public int MenuIndex = 0;
     public static List<VolumeSet> VolumeSets = new List<VolumeSet>();
     public static bool Active = false;
     public static bool Loading = false;
     private static int stage = 0;
     public static bool LastSuspensionDrama;
     public static Animator ActiveSetAnimator;
+    [HideInInspector]
+    public int Index;
+    [HideInInspector]
+    public Settings Parent;
+    public void OnClick()
+    {
+        if (Parent.MenuIndex == Index) return;
+        if (Index == 2)
+        {
+            //  ±ø’ÀÈ∆¨
+            return;
+        }
+        if (Index == 4)
+        {
+            // ÕÀ≥ˆ”Œœ∑
+            return;
+        }
+        GameObject oldTab = Parent.MenuItems[Parent.MenuIndex].GetComponent<Settings>().LinkTab, 
+                   newTab = Parent.MenuItems[Index].GetComponent<Settings>().LinkTab;
+        oldTab.SetActive(false);
+        oldTab.SetActive(true);
+        oldTab.GetComponent<Animator>().Play("TabHide", 0, 0.0f);
+        Parent.MenuItems[Parent.MenuIndex].GetComponent<Animator>().Play("MenuItemHide", 0, 0.0f);
+        newTab.SetActive(true);
+        newTab.GetComponent<Animator>().Play("TabShow", 0, 0.0f);
+        Parent.scrollController.ScrollContainer = newTab.transform;
+        Parent.scrollController.UpdateContainer();
+        Parent.MenuItems[Index].GetComponent<Animator>().Play("MenuItemShow", 0, 0.0f);
+        Parent.MenuIndex = Index;
+    }
+    private void Awake()
+    {
+        for(int i = 0;i < MenuItems.Count;i++)
+        {
+            MenuItems[i].GetComponent<Settings>().Index = i;
+            MenuItems[i].GetComponent<Settings>().Parent = this;
+        }
+    }
     static Settings()
     {
         SceneManager.sceneLoaded += SceneManager_sceneLoaded;

@@ -794,7 +794,6 @@ GameObject:
   - component: {fileID: 4091394098101628243}
   - component: {fileID: 8831744934024061795}
   - component: {fileID: 1726314396323000020}
-  - component: {fileID: 7507236930450634604}
   - component: {fileID: 4949780511537345390}
   m_Layer: 5
   m_Name: MovePad
@@ -886,22 +885,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 0
---- !u!58 &7507236930450634604
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1053562336502302565}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: -923.0088, y: -375.8312}
-  serializedVersion: 2
-  m_Radius: 219.38837
 --- !u!95 &4949780511537345390
 Animator:
   serializedVersion: 4
@@ -1007,8 +990,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5632261714343072543}
+  - component: {fileID: 7842816458463080374}
   m_Layer: 5
-  m_Name: Pad
+  m_Name: PadCore
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1037,6 +1021,22 @@ RectTransform:
   m_AnchoredPosition: {x: 333, y: 333}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!58 &7842816458463080374
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5024924109155900539}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 1.254673, y: 6.347072}
+  serializedVersion: 2
+  m_Radius: 198.74763
 --- !u!1 &6537341795069650204
 GameObject:
   m_ObjectHideFlags: 0

@@ -49,7 +49,7 @@ case:1
 	distribute_choices:
 	case:0
 		immersion:
-		非常抱歉，您很幸运地进入了我们的与游戏本体交互的测试环节。
+		您很幸运地进入了我们的与游戏本体交互的测试环节。
 		接下来我将测试：关闭这个游戏。
 		exit:
 	case:1

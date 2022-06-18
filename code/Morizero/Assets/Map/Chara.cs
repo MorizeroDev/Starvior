@@ -105,13 +105,13 @@ public class Chara : MonoBehaviour
     public void ApplyMovePadSettings()
     {
         srcClickPos = MapCamera.mcamera.GetComponent<Camera>().WorldToScreenPoint(
-                            GameObject.Find("MapCamera").transform.Find("MovePad").Find("Pad").Find("tipPad").position
+                            GameObject.Find("MapCamera").transform.Find("MovePad").Find("PadCore").Find("tipPad").position
                             );
         srcPadPos = Pad.localPosition;
         float rate = PlayerPrefs.GetFloat("Settings.MovePad", 0.5f);
         float x = -1084 + rate * (-947 + 1084) * 2;
         float y = -523.9f + rate * (-386.9f + 523.9f) * 2;
-        MovePad = GameObject.Find("MapCamera").transform.Find("MovePad").Find("Pad").gameObject;
+        MovePad = GameObject.Find("MapCamera").transform.Find("MovePad").Find("PadCore").gameObject;
         MovePad.transform.localPosition = new Vector3(x, y, 0);
     }
     private void Start() {
@@ -130,7 +130,7 @@ public class Chara : MonoBehaviour
         if(Controller) {
             MapCamera.Player = this;
             MapCamera.PlayerCollider = this.transform.Find("Pathfinding").gameObject;
-            Pad = GameObject.Find("MapCamera").transform.Find("MovePad").Find("Pad").Find("ball");
+            Pad = GameObject.Find("MapCamera").transform.Find("MovePad").Find("PadCore").Find("ball");
             ApplyMovePadSettings();
         }
         if(Controller) // only controller can havve a pathfinding movement
@@ -306,7 +306,8 @@ public class Chara : MonoBehaviour
                         mpos.z = 0;
                         mpos = MapCamera.mcamera.GetComponent<Camera>().ScreenToWorldPoint(cp);
                         foreach(RaycastHit2D hit in Physics2D.RaycastAll(new Vector2(mpos.x,mpos.y),new Vector2(0,0))){
-                            if(hit.collider.gameObject.name == "MovePad"){
+                            if(hit.collider.gameObject.name == "PadCore")
+                            {
                                 Animator padAni = Pad.transform.parent.parent.GetComponent<Animator>();
                                 padAni.SetFloat("speed",1.0f);
                                 padAni.Play("MovePad",0,0f);

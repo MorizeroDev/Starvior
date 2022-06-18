@@ -304,7 +304,7 @@ public class AspectRatioController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyUp(KeyCode.F11))
+        if (Input.GetKeyUp(KeyCode.F11) || ((Input.GetKeyUp(KeyCode.LeftAlt) || Input.GetKeyUp(KeyCode.RightAlt)) && Input.GetKeyUp(KeyCode.Return)))
         {
             Screen.fullScreen = !Screen.fullScreen;
         }
