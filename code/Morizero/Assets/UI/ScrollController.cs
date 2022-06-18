@@ -78,21 +78,6 @@ public class ScrollController : MonoBehaviour
         // 限定滑动区间
         if (del != 0)
         {
-            if (ScrollContainer.GetChild(0).localPosition.y - del < FY)
-            {
-                //Debug.Log("Top Resist by " + ScrollContainer.GetChild(0).name);
-                if (!UpPlayed)
-                {
-                    UpAni.Play("ScrollLight", 0, 0.0f);
-                    UpPlayed = true;
-                    if (DownPlayed)
-                    {
-                        DownPlayed = false;
-                        DownAni.Play("ScrollUnLight", 0, 0.0f);
-                    }
-                }
-                del = ScrollContainer.GetChild(0).localPosition.y - FY;
-            }
             RectTransform rect = ScrollContainer.GetChild(ScrollContainer.childCount - 1).GetComponent<RectTransform>();
             if (ScrollContainer.GetChild(ScrollContainer.childCount - 1).localPosition.y - del > LY)
             {
@@ -108,6 +93,21 @@ public class ScrollController : MonoBehaviour
                     }
                 }
                 del = ScrollContainer.GetChild(ScrollContainer.childCount - 1).localPosition.y - LY;
+            }
+            if (ScrollContainer.GetChild(0).localPosition.y - del < FY)
+            {
+                //Debug.Log("Top Resist by " + ScrollContainer.GetChild(0).name);
+                if (!UpPlayed)
+                {
+                    UpAni.Play("ScrollLight", 0, 0.0f);
+                    UpPlayed = true;
+                    if (DownPlayed)
+                    {
+                        DownPlayed = false;
+                        DownAni.Play("ScrollUnLight", 0, 0.0f);
+                    }
+                }
+                del = ScrollContainer.GetChild(0).localPosition.y - FY;
             }
 
             if (Input.GetAxis("Mouse ScrollWheel") != 0)

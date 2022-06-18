@@ -48,6 +48,7 @@ public class DramaScript
     public int currentLine;
     public DramaCallback callback;
     public Dramas lastDrama;
+    public bool DramaAvaliable = false;
     public CheckObj parent;
 
     public void Done(){
@@ -129,6 +130,11 @@ public class DramaScript
         // 调查任务
         // spy:调查内容
         if(cmd == "spy"){
+            if (DramaAvaliable)
+            {
+                lastDrama.ExitDrama();
+                DramaAvaliable = false;
+            }
             Dramas.LaunchCheck(p[0],carryTask);
             handler = true;
         }
@@ -331,8 +337,27 @@ public class DramaScript
                 if(p[1] == "true") dinput = true;
                 Debug.Log("DramaScript: say's third param detected:" + dinput);
             }
-            Dramas drama = Dramas.LaunchScript(cmd == "say" ? "DialogFrameSrc" : "Immersion", carryTask);
-            drama.Drama.Clear();
+            Dramas drama = null;
+            if (DramaAvaliable)
+            {
+                string DialogTyle = (cmd == "say" ? "Dialog" : "Immersion");
+                if (lastDrama.DialogTyle == DialogTyle)
+                {
+                    drama = lastDrama;
+                    drama.Suspense = false;
+                }
+                else
+                {
+                    lastDrama.ExitDrama();
+                    DramaAvaliable = false;
+                }
+            }
+            if (!DramaAvaliable)
+            {
+                drama = Dramas.LaunchScript(cmd == "say" ? "DialogFrameSrc" : "Immersion", carryTask);
+                drama.DialogTyle = (cmd == "say" ? "Dialog" : "Immersion");
+                drama.Drama.Clear();
+            }
             string role = p[0];
             // 读取直至对话结束
             while(currentLine + 1 < code.Length){
@@ -381,11 +406,40 @@ public class DramaScript
                 }
                 currentLine++;
             }
-            // 刷新剧本
+            
+            if (DramaAvaliable)
+            {
+                drama.DramaIndex++;
+                DramaAvaliable = false;
+            }
+            // 刷新剧本            
             drama.ReadDrama();
             drama.DisableInput = dinput;
             drama.gameObject.SetActive(true);
             lastDrama = drama;
+            int line = currentLine;
+            while (line + 1 < code.Length)
+            {
+                string lt = code[line].TrimStart();
+                Debug.Log("Scanning:" + lt);
+                if (lt.StartsWith("say:") || lt.StartsWith("immersion:"))
+                    break;
+                if (lt.StartsWith("choice:"))
+                {
+                    Debug.Log("Detected!");
+                    DramaAvaliable = true;
+                    drama.Drama.Add(new Dramas.DramaData
+                    {
+                        Character = role,
+                        motion = "Leap",
+                        Effect = WordEffect.Effect.None,
+                        content = "<Starvior.Drama.Suspension>",
+                        Speed = 1
+                    });
+                    break;
+                }
+                line++;
+            }
             handler = true;
             if(dinput) carryTask();
         }

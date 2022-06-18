@@ -31,6 +31,10 @@ public class Settings : MonoBehaviour
         if (Index == 4)
         {
             // 退出游戏
+            MakeChoice.Create(() =>
+            {
+                if (MakeChoice.choiceId == 0) Application.Quit();
+            }, "在您已确认存档保存的情况下，确定要退出游戏吗？", new string[] { "退出游戏", "取消" });
             return;
         }
         GameObject oldTab = Parent.MenuItems[Parent.MenuIndex].GetComponent<Settings>().LinkTab, 

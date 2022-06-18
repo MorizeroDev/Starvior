@@ -23,6 +23,7 @@ public class Dramas : MonoBehaviour
     private float OrSpeed;
     private int DialogState;                        // 对话框状态（-1=未就绪，0=等待显示，1=等待确认，2=完毕）
     public Sprite Dialog1,Dialog2;
+    public string DialogTyle;
     public Image DialogBox;
     private string motion;
     public GameObject Continue;
@@ -41,10 +42,11 @@ public class Dramas : MonoBehaviour
         public WordEffect.Effect Effect;
         public string motion;
     }
-    private int DramaIndex = 0,WordIndex = 0;
+    public int DramaIndex = 0,WordIndex = 0;
     private float delTime = 0;
     public List<DramaData> Drama;
     public bool DisableInput = false;
+    public bool Suspense = false;
     private static List<int> existingFingers = new List<int>();
 
     private float x = 0,y = 0,step = 0;
@@ -109,6 +111,13 @@ public class Dramas : MonoBehaviour
         foreach(GameObject word in DisWords) Destroy(word);
     }
     public void ReadDrama(){
+        if(Drama[DramaIndex].content == "<Starvior.Drama.Suspension>")
+        {
+            Debug.Log("AheadExit");
+            Suspense = true;
+            DramaDone();
+            return;
+        }
         DisposeWords();
         if(Continue != null) Continue.SetActive(false);
 
@@ -152,9 +161,15 @@ public class Dramas : MonoBehaviour
     public void Resume(){
         DialogState = 2;
     }
+    public void ExitDrama()
+    {
+        DisposeWords();
+        this.transform.parent.GetComponent<Animator>().Play("ExitDrama", 0);
+    }
     void Update()
     {
-        if(DramaIndex >= Drama.Count) return;
+        if (Suspense) return;
+        if (DramaIndex >= Drama.Count) return;
         int AutoContinue = PlayerPrefs.GetInt("Settings.AutoContinueDrama", 1);
         if(!DisableInput && !Settings.Active && !Settings.Loading)
         {
@@ -198,8 +213,7 @@ public class Dramas : MonoBehaviour
             DialogState = 0;
             DramaIndex++;
             if(DramaIndex >= Drama.Count){
-                DisposeWords();
-                this.transform.parent.GetComponent<Animator>().Play("ExitDrama",0);
+                ExitDrama();
                 return;
             }
             ReadDrama();
