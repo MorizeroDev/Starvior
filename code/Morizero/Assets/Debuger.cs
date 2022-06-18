@@ -7,9 +7,8 @@ public class Debuger : MonoBehaviour
 {
     public Text text;
     private static GameObject InstantMsg = null;
-    float sTime = 0, dTime = 0;
+    float dTime = 0;
     int FPSCount = 0, FPS = 0;
-    bool show = true;
 
     public static void InstantMessage(string s, Vector3 position, Transform parent = null)
     {
@@ -36,7 +35,36 @@ public class Debuger : MonoBehaviour
         {
             dTime = 0;
             FPS = FPSCount;
-            text.text = $"{FPS}";
+            if (FPS < 10)
+            {
+                if (text.color != Color.red) text.color = Color.red;
+                text.text = $"£¨£¡£¡£¡¼«µÍ£©{FPS}";
+            }
+            else if (FPS < 20)
+            {
+                if (text.color != Color.red) text.color = Color.red;
+                text.text = $"£¨£¡£¡ºÜµÍ£©{FPS}";
+            }
+            else if (FPS < 30)
+            {
+                if (text.color != Color.red) text.color = Color.red;
+                text.text = $"£¨£¡µÍ£©{FPS}";
+            }
+            else if (FPS < 45)
+            {
+                if (text.color != Color.yellow) text.color = Color.yellow;
+                text.text = "£¨£¡½ÏµÍ£©" + FPS;
+            }
+            else if (FPS < 55)
+            {
+                if(text.color != Color.yellow) text.color = Color.yellow;
+                text.text = "£¡" + FPS;
+            }
+            else
+            {
+                if (text.color != Color.white) text.color = Color.white;
+                text.text = FPS.ToString();
+            }
             FPSCount = 0;
         }
 

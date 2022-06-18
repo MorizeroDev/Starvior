@@ -13,6 +13,7 @@ public delegate void WalkTaskCallback();
 // 角色控制器
 public class Chara : MonoBehaviour
 {
+    public static GameObject MovePad;
     private class _OutMousePositionBuilder : DefaultBridgeTaskBuilder
     {
         public _OutMousePositionBuilder(Component component)
@@ -107,6 +108,11 @@ public class Chara : MonoBehaviour
                             GameObject.Find("MapCamera").transform.Find("MovePad").Find("Pad").Find("tipPad").position
                             );
         srcPadPos = Pad.localPosition;
+        float rate = PlayerPrefs.GetFloat("Settings.MovePad", 0.5f);
+        float x = -1084 + rate * (-947 + 1084) * 2;
+        float y = -523.9f + rate * (-386.9f + 523.9f) * 2;
+        MovePad = GameObject.Find("MapCamera").transform.Find("MovePad").Find("Pad").gameObject;
+        MovePad.transform.localPosition = new Vector3(x, y, 0);
     }
     private void Start() {
         // 载入行走图图像集，并初始化相关设置
@@ -265,7 +271,7 @@ public class Chara : MonoBehaviour
         }
         // 如果不是玩家
         if(!Controller) return;
-
+        //Debug.Log(GameObject.Find("MapCamera").transform.Find("MovePad").Find("Pad").transform.localPosition.y);
         // 判定调查
         Vector2 spyRay = new Vector2(pos.x,pos.y);
         if(dir == walkDir.Left){
