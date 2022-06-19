@@ -14,19 +14,30 @@ public class ScrollController : MonoBehaviour
     private float inertiaDuration = 0.5f;
     private bool mouseWheeling = false;
     private float FY = 0,LY = 0;
-    private List<float> targetMouseY = new List<float>();
+    private List<float> targetMouseY = new List<float>(), orY = new List<float>();
     private bool UpPlayed = false, DownPlayed = false;
 
     private Vector2 lastDeltaPos;
 
+    public void ResetPosition()
+    {
+        for (int i = 0; i < ScrollContainer.childCount; i++)
+        {
+            Vector3 pos = ScrollContainer.GetChild(i).transform.localPosition;
+            pos.y = orY[i];
+            ScrollContainer.GetChild(i).transform.localPosition = pos;
+        }
+    }
     public void UpdateContainer()
     {
         targetMouseY.Clear();
+        orY.Clear();
         FY = ScrollContainer.GetChild(0).localPosition.y;
         LY = -(CanvasHeight / 2) + 20f;
         for (int i = 0; i < ScrollContainer.childCount; i++)
         {
             targetMouseY.Add(0);
+            orY.Add(ScrollContainer.GetChild(i).transform.localPosition.y);
         }
     }
     private void Start()

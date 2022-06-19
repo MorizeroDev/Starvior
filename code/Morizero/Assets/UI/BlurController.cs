@@ -35,8 +35,8 @@ public class BlurController : MonoBehaviour
         outputTexture.Apply();
         Displayer.GetComponent<RawImage>().texture = outputTexture;
         RenderTexture.active = null;
-        blurTexture.Release();
         Destroy(cam);
+        blurTexture.Release();
         for (int i = 0; i < Container.transform.childCount; i++)
         {
             Container.transform.GetChild(i).gameObject.SetActive(active[i]);
@@ -48,6 +48,6 @@ public class BlurController : MonoBehaviour
     }
     private void OnDestroy()
     {
-        Destroy(outputTexture);
+        //Destroy(outputTexture);
     }
 }

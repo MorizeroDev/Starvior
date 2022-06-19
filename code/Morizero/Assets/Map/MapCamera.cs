@@ -56,7 +56,7 @@ public class MapCamera : MonoBehaviour
         {
             if (BGM == null)
             {
-                bgm.Stop();
+                bgm.Stop(); bgm.clip = null;
             }
             else
             {
@@ -67,7 +67,7 @@ public class MapCamera : MonoBehaviour
         {
             if (BGS == null)
             {
-                bgs.Stop();
+                bgs.Stop(); bgs.clip = null;
             }
             else
             {

@@ -13,7 +13,6 @@ public class Settings : MonoBehaviour
     public static List<VolumeSet> VolumeSets = new List<VolumeSet>();
     public static bool Active = false;
     public static bool Loading = false;
-    private static int stage = 0;
     public static bool LastSuspensionDrama;
     public static Animator ActiveSetAnimator;
     [HideInInspector]
@@ -45,23 +44,30 @@ public class Settings : MonoBehaviour
         Parent.MenuItems[Parent.MenuIndex].GetComponent<Animator>().Play("MenuItemHide", 0, 0.0f);
         newTab.SetActive(true);
         newTab.GetComponent<Animator>().Play("TabShow", 0, 0.0f);
-        Parent.scrollController.ScrollContainer = newTab.transform;
-        Parent.scrollController.UpdateContainer();
         Parent.MenuItems[Index].GetComponent<Animator>().Play("MenuItemShow", 0, 0.0f);
         Parent.MenuIndex = Index;
     }
+    public void MenuItemHideCallback()
+    {
+        GameObject newTab = Parent.MenuItems[Parent.MenuIndex].GetComponent<Settings>().LinkTab;
+        if (newTab == null) return;
+        Parent.scrollController.ResetPosition();
+        Parent.scrollController.ScrollContainer = newTab.transform;
+        Parent.scrollController.UpdateContainer();
+    }
     private void Awake()
     {
+        if (MenuItems.Count == 0)
+        {
+            // ÊÂMenuItem~
+            return;
+        }
         for(int i = 0;i < MenuItems.Count;i++)
         {
             MenuItems[i].GetComponent<Settings>().Index = i;
             MenuItems[i].GetComponent<Settings>().Parent = this;
         }
-    }
-    static Settings()
-    {
-        SceneManager.sceneLoaded += SceneManager_sceneLoaded;
-        SceneManager.sceneUnloaded += SceneManager_sceneUnloaded;
+        Settings.ActiveSetAnimator = GetComponent<Animator>();
     }
 
     public static void Show()
@@ -70,35 +76,33 @@ public class Settings : MonoBehaviour
         Active = true; Loading = true;
         LastSuspensionDrama = MapCamera.SuspensionDrama;
         MapCamera.SuspensionDrama = true;
-        stage = 1;
         SettingsBtn.ActiveSettingsBtn.GetComponent<Animator>().Play("SetBtnHide", 0, 0.0f);
+        SceneManager.sceneLoaded += SceneManager_sceneLoaded;
         SceneManager.LoadSceneAsync("Settings", LoadSceneMode.Additive);
-    }
-    private void Start()
-    {
-        ActiveSetAnimator = GetComponent<Animator>();
     }
     private static void SceneManager_sceneLoaded(Scene arg0, LoadSceneMode arg1)
     {
-        if (stage == 0) return;
+        SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
         Loading = false;
     }
 
     private static void SceneManager_sceneUnloaded(Scene arg0)
     {
-        if (stage == 0) return;
-        Loading = false; stage = 0;
+        Loading = false; 
+        SceneManager.sceneUnloaded -= SceneManager_sceneUnloaded;
         SettingsBtn.ActiveSettingsBtn.GetComponent<Animator>().Play("SetBtnShow", 0, 0.0f);
     }
     public void AnimationCallback()
     {
         if (this.GetComponent<Animator>().GetFloat("Speed") == 1.0f) return;
         SettingsBtn.ActiveSettingsBtn.SetActive(true);
+        SceneManager.sceneUnloaded += SceneManager_sceneUnloaded;
         SceneManager.UnloadSceneAsync("Settings");
         MapCamera.SuspensionDrama = LastSuspensionDrama;
     }
     public static void Hide()
     {
+        //Debuger.InstantMessage(Active.ToString() + "/" + Loading.ToString(), Camera.main.ScreenToWorldPoint(Input.mousePosition));
         if (!Active || Loading) return;
         Active = false; Loading = true;
         ActiveSetAnimator.SetFloat("Speed", -2.0f);

@@ -46,6 +46,7 @@ public class Dramas : MonoBehaviour
     private float delTime = 0;
     public List<DramaData> Drama;
     public bool DisableInput = false;
+    public bool NoCallback = false;
     public bool Suspense = false;
     private static List<int> existingFingers = new List<int>();
 
@@ -111,13 +112,6 @@ public class Dramas : MonoBehaviour
         foreach(GameObject word in DisWords) Destroy(word);
     }
     public void ReadDrama(){
-        if(Drama[DramaIndex].content == "<Starvior.Drama.Suspension>")
-        {
-            Debug.Log("AheadExit");
-            Suspense = true;
-            DramaDone();
-            return;
-        }
         DisposeWords();
         if(Continue != null) Continue.SetActive(false);
 
@@ -153,13 +147,21 @@ public class Dramas : MonoBehaviour
     }
     public void DramaDone(){
         Debug.Log("Done!");
-        callback();
+        if(!NoCallback) callback();
     }
     private void Awake() {
         Character.gameObject.SetActive(false);
     }
     public void Resume(){
-        DialogState = 2;
+        if (DramaIndex >= Drama.Count)
+        {
+            Suspense = true;
+            DramaDone();
+        }
+        else
+        {
+            DialogState = 2;
+        } 
     }
     public void ExitDrama()
     {
@@ -213,7 +215,8 @@ public class Dramas : MonoBehaviour
             DialogState = 0;
             DramaIndex++;
             if(DramaIndex >= Drama.Count){
-                ExitDrama();
+                Suspense = true;
+                DramaDone();
                 return;
             }
             ReadDrama();

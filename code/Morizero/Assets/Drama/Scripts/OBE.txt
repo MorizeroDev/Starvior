@@ -36,13 +36,17 @@ case:0
 		choice:您想进入已被遗弃的旧剧本的哪个地图作为测试？,后院,雪兰的病房
 		distribute_choices:
 		case:0
-			say:雪兰:true
+			say:雪兰:,true
 			(shake)(0.3)请...请等一下！
+			resume:
+			say:雪兰
 			(Leap)可以请你...关注我们吗？
 			tp:Yard,1,up
 		case:1
-			say:雪兰:true
+			say:雪兰:,true
 			(shake)(0.3)请...请等一下！
+			resume:
+			say:雪兰
 			(Leap)可以请你...关注我们吗？
 			tp:ROOM_XUELAN,1,up
 		endchoice:

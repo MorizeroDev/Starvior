@@ -52,8 +52,20 @@ public class DramaScript
     public CheckObj parent;
 
     public void Done(){
+        KillLastDrama();
         MapCamera.SuspensionDrama = false;
         if(callback != null) callback();
+    }
+    public bool KillLastDrama()
+    {
+        if (DramaAvaliable)
+        {
+            lastDrama.NoCallback = true;
+            lastDrama.ExitDrama();
+            DramaAvaliable = false;
+            return true;
+        }
+        return false;
     }
     public void carryTask(){
         if(currentLine >= code.Length) {Done(); return;} 
@@ -130,11 +142,7 @@ public class DramaScript
         // 调查任务
         // spy:调查内容
         if(cmd == "spy"){
-            if (DramaAvaliable)
-            {
-                lastDrama.ExitDrama();
-                DramaAvaliable = false;
-            }
+            KillLastDrama();
             Dramas.LaunchCheck(p[0],carryTask);
             handler = true;
         }
@@ -319,7 +327,14 @@ public class DramaScript
         if(cmd == "plot"){
             if(p[0] == "clear"){
                 PlotCreator.Clear(carryTask);
-            }else{
+                if (DramaAvaliable)
+                {
+                    lastDrama.NoCallback = true;
+                    lastDrama.ExitDrama();
+                    DramaAvaliable = false;
+                }
+            }
+            else{
                 Loading.Start(() => {
                     PlotCreator.LoadPlot(p[0]);
                     Loading.Finish();
@@ -348,8 +363,7 @@ public class DramaScript
                 }
                 else
                 {
-                    lastDrama.ExitDrama();
-                    DramaAvaliable = false;
+                    KillLastDrama();
                 }
             }
             if (!DramaAvaliable)
@@ -406,40 +420,12 @@ public class DramaScript
                 }
                 currentLine++;
             }
-            
-            if (DramaAvaliable)
-            {
-                drama.DramaIndex++;
-                DramaAvaliable = false;
-            }
             // 刷新剧本            
             drama.ReadDrama();
             drama.DisableInput = dinput;
             drama.gameObject.SetActive(true);
             lastDrama = drama;
-            int line = currentLine;
-            while (line + 1 < code.Length)
-            {
-                string lt = code[line].TrimStart();
-                Debug.Log("Scanning:" + lt);
-                if (lt.StartsWith("say:") || lt.StartsWith("immersion:"))
-                    break;
-                if (lt.StartsWith("choice:"))
-                {
-                    Debug.Log("Detected!");
-                    DramaAvaliable = true;
-                    drama.Drama.Add(new Dramas.DramaData
-                    {
-                        Character = role,
-                        motion = "Leap",
-                        Effect = WordEffect.Effect.None,
-                        content = "<Starvior.Drama.Suspension>",
-                        Speed = 1
-                    });
-                    break;
-                }
-                line++;
-            }
+            DramaAvaliable = true;
             handler = true;
             if(dinput) carryTask();
         }
@@ -447,9 +433,17 @@ public class DramaScript
         if(cmd == "resume"){
             lastDrama.Resume();
             handler = true;
-        } 
+        }
+        // 销毁对话框
+        if (cmd == "killdialog")
+        {
+            if (!KillLastDrama())
+                Debug.LogWarning("该脚本在尝试销毁不存在的对话框。");
+            carryTask();
+            handler = true;
+        }
         // 未处理的脚本
-        if(!handler){
+        if (!handler){
             Debug.LogWarning("'" + cmd + $"'（行 {currentLine - 1}）未被处理。");
             carryTask(); return;
         }
