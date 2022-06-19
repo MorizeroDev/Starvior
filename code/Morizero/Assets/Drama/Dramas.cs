@@ -42,12 +42,17 @@ public class Dramas : MonoBehaviour
         public WordEffect.Effect Effect;
         public string motion;
     }
+    public enum DramaLifeTime
+    {
+        NeverDie, DieWhenReadToEnd
+    }
     public int DramaIndex = 0,WordIndex = 0;
     private float delTime = 0;
     public List<DramaData> Drama;
     public bool DisableInput = false;
     public bool NoCallback = false;
     public bool Suspense = false;
+    public DramaLifeTime LifeTime = DramaLifeTime.NeverDie;
     private static List<int> existingFingers = new List<int>();
 
     private float x = 0,y = 0,step = 0;
@@ -215,8 +220,15 @@ public class Dramas : MonoBehaviour
             DialogState = 0;
             DramaIndex++;
             if(DramaIndex >= Drama.Count){
-                Suspense = true;
-                DramaDone();
+                if(LifeTime == DramaLifeTime.NeverDie)
+                {
+                    Suspense = true;
+                    DramaDone();
+                }
+                if (LifeTime == DramaLifeTime.DieWhenReadToEnd)
+                {
+                    ExitDrama();
+                }
                 return;
             }
             ReadDrama();

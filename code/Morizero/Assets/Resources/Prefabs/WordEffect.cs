@@ -12,6 +12,7 @@ public class WordEffect : MonoBehaviour
     public Effect effect;
     public RectTransform rect;
     public Text text;
+    public float time = 0f;
 
     void Start()
     {
@@ -20,15 +21,36 @@ public class WordEffect : MonoBehaviour
     }
     void Update()
     {
-        if(effect == Effect.HeavyShake)
-            rect.localPosition = new Vector3(basex + Random.Range(-20,20),basey + Random.Range(-20,20),0);
-        if(effect == Effect.Shake)
-            rect.localPosition = new Vector3(basex + Random.Range(-10,10),basey + Random.Range(-10,10),0);
-        if(effect == Effect.Rainbow)
-            text.color = new Color(Random.Range(0f,1f),Random.Range(0f,1f),Random.Range(0f,1f),text.color.a);
-        if(effect == Effect.Rotation)
-            rect.localRotation = new Quaternion(0,0,Random.Range(-0.15f,0.15f),rect.localRotation.w);
-        if(effect == Effect.Shine)
-            text.color = new Color(text.color.r,text.color.g,text.color.b,(Time.realtimeSinceStartup - Mathf.Floor(Time.realtimeSinceStartup)));
+        time += Time.deltaTime;
+        bool resetTime = false;
+        if(effect == Effect.HeavyShake && time > 0.03f)
+        {
+            rect.localPosition = new Vector3(basex + Random.Range(-20, 20), basey + Random.Range(-20, 20), 0);
+            resetTime = true;
+        }  
+        if(effect == Effect.Shake && time > 0.06f)
+        {
+            rect.localPosition = new Vector3(basex + Random.Range(-10, 10), basey + Random.Range(-10, 10), 0);
+            resetTime = true;
+        }
+        if(effect == Effect.Rainbow && time > 0.3f)
+        {
+            text.color = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f), text.color.a);
+            resetTime = true;
+        } 
+        if(effect == Effect.Rotation && time > 0.06f)
+        {
+            rect.localRotation = new Quaternion(0, 0, Random.Range(-0.15f, 0.15f), rect.localRotation.w);
+            resetTime = true;
+        }
+        if(effect == Effect.Shine && time > 0.3f)
+        {
+            text.color = new Color(text.color.r, text.color.g, text.color.b, (Time.realtimeSinceStartup - Mathf.Floor(Time.realtimeSinceStartup)));
+            resetTime = true;
+        }
+        if (resetTime)
+        {
+            time = 0f;
+        }
     }
 }

@@ -143,7 +143,7 @@ public class DramaScript
         // spy:调查内容
         if(cmd == "spy"){
             KillLastDrama();
-            Dramas.LaunchCheck(p[0],carryTask);
+            Dramas.LaunchCheck(p[0],carryTask).LifeTime = Dramas.DramaLifeTime.DieWhenReadToEnd;
             handler = true;
         }
         // 退出脚本（如果最后一项任务是需要等待的，则需要加入此行缓冲）

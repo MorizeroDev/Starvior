@@ -223,7 +223,7 @@ public class Chara : MonoBehaviour
         return pos;
     }
 
-    void FixedUpdate()
+    void Update()
     {
         // 如果剧本正在进行则退出
         if (MapCamera.SuspensionDrama && walkTasks.Count == 0 && Controller)

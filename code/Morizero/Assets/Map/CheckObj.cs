@@ -80,7 +80,7 @@ public class CheckObj : MonoBehaviour
         }else{
             Dramas.LaunchCheck(Content,() => {
                 MapCamera.SuspensionDrama = false;
-            });
+            }).LifeTime = Dramas.DramaLifeTime.DieWhenReadToEnd;
         }
     }
 }
