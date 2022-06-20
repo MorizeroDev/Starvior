@@ -129,19 +129,47 @@ public class DramaScript
         // 显示和隐藏
         // show:物体
         if(cmd == "show"){
-            GameObject.Find(p[0]).SetActive(true);
+            if (p[0] == "self")
+            {
+                parent.gameObject.SetActive(true);
+            }
+            else
+            {
+                GameObject.Find(p[0]).SetActive(true);
+            }
             handler = true;
             carryTask();
         }
         // hide:物体
         if(cmd == "hide"){
-            GameObject.Find(p[0]).SetActive(false);
+            if (p[0] == "self")
+            {
+                parent.gameObject.SetActive(false);
+            }
+            else
+            {
+                GameObject.Find(p[0]).SetActive(false);
+            }
+            handler = true;
+            carryTask();
+        }
+        // showchild:物体
+        if (cmd == "showchild")
+        {
+            parent.transform.Find(p[0]).gameObject.SetActive(true);
+            handler = true;
+            carryTask();
+        }
+        // hidechild:物体
+        if (cmd == "hidechild")
+        {
+            parent.transform.Find(p[0]).gameObject.SetActive(false);
             handler = true;
             carryTask();
         }
         // 调查任务
         // spy:调查内容
-        if(cmd == "spy"){
+        if (cmd == "spy"){
             KillLastDrama();
             Dramas.LaunchCheck(p[0],carryTask).LifeTime = Dramas.DramaLifeTime.DieWhenReadToEnd;
             handler = true;
@@ -264,12 +292,14 @@ public class DramaScript
         // 恢复BGM
         // rebgm
         if(cmd == "rebgm"){
+            MapCamera.bgm.clip = MapCamera.mcamera.BGM;
             MapCamera.bgm.Play();
             carryTask();
             handler = true;
         }
         // rebgs
         if(cmd == "rebgs"){
+            MapCamera.bgs.clip = MapCamera.mcamera.BGS;
             MapCamera.bgs.Play();
             carryTask();
             handler = true;
@@ -389,13 +419,36 @@ public class DramaScript
                     // 处理附加参数
                     for(int i = 1;i < p.Length;i+=2){
                         if(i == p.Length - 1) break;
-                        if(p[i] == "shake") {
+                        if(p[i] == "shake") 
+                        {
                             effect = WordEffect.Effect.Shake;
-                        }else if(p[i] == "rainbow") {
+                        }
+                        else if(p[i] == "rainbow") 
+                        {
                             effect = WordEffect.Effect.Rainbow;
-                        }else if(p[i] == "Leap" || p[i] == "Focus"){
+                        }
+                        else if (p[i] == "rotation")
+                        {
+                            effect = WordEffect.Effect.Rotation;
+                        }
+                        else if (p[i] == "shine")
+                        {
+                            effect = WordEffect.Effect.Shine;
+                        }
+                        else if (p[i] == "heavyshake")
+                        {
+                            effect = WordEffect.Effect.HeavyShake;
+                        }
+                        else if (p[i] == "ultrashake")
+                        {
+                            effect = WordEffect.Effect.UltraShake;
+                        }
+                        else if(p[i] == "Leap" || p[i] == "Focus")
+                        {
                             motion = p[i];
-                        }else{
+                        }
+                        else
+                        {
                             speed = float.Parse(p[i]);
                         }
                     }

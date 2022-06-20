@@ -1,0 +1,17 @@
+spy:看起来是一副普通的画。
+spy:但是仔细一看好像有个奇怪的通道...
+bgm:Module Production Element Title Imaging Alien Suspense 01
+wait:7
+showchild:PaintLight
+wait:5
+choice:是否从通道进入？,是,否
+distribute_choices:
+case:0
+snd:Module Production Element Title Imaging Distortion Musical Tones 01,nowait
+tp:ShitSpace,1,down
+case:1
+spy:这幅画有些蹊跷地仿佛告诉你下次再来。 
+rebgm:
+hidechild:PaintLight
+endchoice:
+break

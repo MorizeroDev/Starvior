@@ -251,6 +251,7 @@ public class Dramas : MonoBehaviour
             rect.localPosition = new Vector3(x, y, 0);
             word.GetComponent<WordEffect>().basex = x;
             word.GetComponent<WordEffect>().basey = y;
+            word.GetComponent<WordEffect>().Index = i;
             word.GetComponent<WordEffect>().effect = Effect;
             word.SetActive(true);
             DisWords.Add(word);
