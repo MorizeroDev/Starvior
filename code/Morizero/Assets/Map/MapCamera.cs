@@ -84,7 +84,7 @@ public class MapCamera : MonoBehaviour
         pos = endDot.transform.localPosition;
         ex = pos.x - size.x; ey = pos.y + size.y * 1f; 
     }
-    private void Update() {
+    private void FixedUpdate() {
         if (Disabled) return;
         Vector3 p = bindObj.transform.localPosition;
         float cs = (HitCheck != null && !MapCamera.SuspensionDrama ? 1.8f : 2f);

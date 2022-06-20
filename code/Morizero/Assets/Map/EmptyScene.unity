@@ -439,6 +439,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6823350522219018420, guid: b43b1c85a0b81e14c978fc1f7fcf779c, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -825
+      objectReference: {fileID: 0}
     - target: {fileID: 7293165566190216848, guid: b43b1c85a0b81e14c978fc1f7fcf779c, type: 3}
       propertyPath: m_Name
       value: MapCamera

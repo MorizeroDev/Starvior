@@ -97,7 +97,7 @@ public class Chara : MonoBehaviour
     private int walkBuff = 1;                   // 行走图系列帧序数
     private float walkspan;                     // 行走图动画间隔控制缓冲
     private float sx,sy,ex,ey;                  // 地图边界x,y - x,y
-    private Vector2 lpos;
+    private float xAccumulate = 0, yAccumulate = 0;
     public WalkTaskCallback walkTaskCallback;   // 行走人物回调
 
     private _OutMousePositionBuilder bridgeTaskbuilderOMP;
@@ -166,17 +166,40 @@ public class Chara : MonoBehaviour
     // ⚠警告：x和y的取值只能为-1，0，1
     float Move(int x,int y){
         Vector3 pos = transform.localPosition;
-        float buff = speed * Time.deltaTime * 60f * (Input.GetKey(KeyCode.X) ? 2 : 1);
+        Vector3 opos = pos;
+        float buff = speed * Time.fixedDeltaTime * 60f * (Input.GetKey(KeyCode.X) ? 2 : 1);
         pos.x += buff * x ;
         pos.y += buff * y ;
         if(pos.x < sx) pos.x = sx;
         if(pos.x > ex) pos.x = ex;
         if(pos.y > sy) pos.y = sy;
         if(pos.y < ey) pos.y = ey;
-        transform.localPosition = pos;
+        transform.Translate(new Vector3(pos.x - opos.x, pos.y - opos.y, 0), Space.World);
+        //transform.localPosition = pos;
         walking = true;
         if(x != 0) dir = x < 0 ? walkDir.Left : walkDir.Right;
         if(y != 0) dir = y < 0 ? walkDir.Down : walkDir.Up;
+        return y == 0 ? buff * x : buff * y;
+    }
+    void MoveAccumulate()
+    {
+        Vector3 pos = transform.localPosition;
+        pos.x += xAccumulate;
+        pos.y += yAccumulate;
+        if (pos.x < sx) pos.x = sx;
+        if (pos.x > ex) pos.x = ex;
+        if (pos.y > sy) pos.y = sy;
+        if (pos.y < ey) pos.y = ey;
+        transform.localPosition = pos;
+        walking = true;
+        if (xAccumulate != 0) dir = xAccumulate < 0 ? walkDir.Left : walkDir.Right;
+        if (yAccumulate != 0) dir = yAccumulate < 0 ? walkDir.Down : walkDir.Up;
+        xAccumulate = 0; yAccumulate = 0;
+    }
+    float GetMove(int x, int y)
+    {
+        float buff = speed * Time.fixedDeltaTime * 60f * (Input.GetKey(KeyCode.X) ? 2 : 1);
+        walking = true;
         return y == 0 ? buff * x : buff * y;
     }
 
@@ -223,7 +246,7 @@ public class Chara : MonoBehaviour
         return pos;
     }
 
-    void Update()
+    void FixedUpdate()
     {
         // 如果剧本正在进行则退出
         if (MapCamera.SuspensionDrama && walkTasks.Count == 0 && Controller)
@@ -297,20 +320,25 @@ public class Chara : MonoBehaviour
         }
 
         // 如果屏幕被点击
-        if (Input.GetMouseButton(0)){
+        if (Input.GetMouseButton(0))
+        {
             List<Vector3> cpos = GetClickPos(freemoveFinger);
-            if(!padMode){
-                if(!isWalkTask){
-                    foreach(Vector3 cp in cpos){
+            if (!padMode)
+            {
+                if (!isWalkTask)
+                {
+                    foreach (Vector3 cp in cpos)
+                    {
                         Vector3 mpos = cp; int fId = (int)cp.z;
                         mpos.z = 0;
                         mpos = MapCamera.mcamera.GetComponent<Camera>().ScreenToWorldPoint(cp);
-                        foreach(RaycastHit2D hit in Physics2D.RaycastAll(new Vector2(mpos.x,mpos.y),new Vector2(0,0))){
-                            if(hit.collider.gameObject.name == "PadCore")
+                        foreach (RaycastHit2D hit in Physics2D.RaycastAll(new Vector2(mpos.x, mpos.y), new Vector2(0, 0)))
+                        {
+                            if (hit.collider.gameObject.name == "PadCore")
                             {
                                 Animator padAni = Pad.transform.parent.parent.GetComponent<Animator>();
-                                padAni.SetFloat("speed",1.0f);
-                                padAni.Play("MovePad",0,0f);
+                                padAni.SetFloat("speed", 1.0f);
+                                padAni.Play("MovePad", 0, 0f);
                                 padMode = true;
                                 freemoveFinger = fId;
                                 break;
@@ -318,47 +346,63 @@ public class Chara : MonoBehaviour
                         }
                     }
                 }
-            } else {
+            }
+            else
+            {
                 // 从屏幕坐标换算到世界坐标
                 Vector3 mpos = cpos[0];
                 mpos.z = 0;
                 // 测算
-                float xp = mpos.x - srcClickPos.x,yp = mpos.y - srcClickPos.y;
-                float xpro = Mathf.Abs(xp) / 30,ypro = Mathf.Abs(yp) / 30;
-                if(xpro > 1) xpro = 1;
-                if(ypro > 1) ypro = 1;
-                if(xpro == 1 || ypro == 1){
-                    if(Mathf.Abs(xp) > Mathf.Abs(yp)){
+                float xp = mpos.x - srcClickPos.x, yp = mpos.y - srcClickPos.y;
+                float xpro = Mathf.Abs(xp) / 30, ypro = Mathf.Abs(yp) / 30;
+                if (xpro > 1) xpro = 1;
+                if (ypro > 1) ypro = 1;
+                if (xpro == 1 || ypro == 1)
+                {
+                    if (Mathf.Abs(xp) > Mathf.Abs(yp))
+                    {
                         Move(xp > 0 ? 1 : -1, 0);
                         targetRotation = (xp > 0 ? 270f : 90f);
-                    }else {
+                    }
+                    else
+                    {
                         Move(0, yp > 0 ? 1 : -1);
                         targetRotation = (yp > 0 ? 0f : 180f);
                     }
                 }
                 float ro = Pad.eulerAngles.z + (targetRotation - Pad.eulerAngles.z) / 5;
-                Pad.eulerAngles = new Vector3(0,0,ro);
+                Pad.eulerAngles = new Vector3(0, 0, ro);
             }
-        } else if (padMode){
+        }
+        else if (padMode)
+        {
             ClosePadAni();
         }
 
         // 检测键盘输入
-        if(!isWalkTask){
-            if(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)){
-                Move(-1, 0); 
-            }else if(Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)){
+        if (!isWalkTask)
+        {
+            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+            {
+                Move(-1, 0);
+            }
+            else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+            {
                 Move(1, 0);
-            }else if(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)){
+            }
+            else if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
+            {
                 Move(0, 1);
-            }else if(Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)){
+            }
+            else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
+            {
                 Move(0, -1);
             }
         }
 
-        lpos = pos;
-
         // 更新图片
         UpdateWalkImage();
     }
+
+
 }

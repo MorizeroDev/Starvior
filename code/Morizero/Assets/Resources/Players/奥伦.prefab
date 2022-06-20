@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8544068372687261226}
   - component: {fileID: 8544068372687261227}
   - component: {fileID: 8544068372687261224}
-  - component: {fileID: 884868787}
+  - component: {fileID: 3434027894246165677}
   m_Layer: 6
   m_Name: "\u5965\u4F26"
   m_TagString: Untagged
@@ -104,7 +104,7 @@ MonoBehaviour:
   Character: "\u4E16\u539F"
   Controller: 1
   dir: 0
---- !u!50 &884868787
+--- !u!50 &3434027894246165677
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0
@@ -117,8 +117,8 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 1
-  m_AngularDrag: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 0
@@ -134,7 +134,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8544068374234095404}
-  - component: {fileID: 918675457297244144}
+  - component: {fileID: 1836571393059874365}
   m_Layer: 6
   m_Name: Pathfinding
   m_TagString: Untagged
@@ -157,8 +157,8 @@ Transform:
   m_Father: {fileID: 8544068372687261226}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!70 &918675457297244144
-CapsuleCollider2D:
+--- !u!61 &1836571393059874365
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -170,6 +170,16 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.0064458847, y: -0.011585236}
-  m_Size: {x: 0.31403613, y: 0.47069788}
-  m_Direction: 0
+  m_Offset: {x: -0.007004589, y: -0.13869089}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.14544028, y: 0.20147687}
+  m_EdgeRadius: 0

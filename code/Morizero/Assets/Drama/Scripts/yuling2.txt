@@ -24,6 +24,7 @@ say:我
 say:域零
 不必了，你自己没有伞吧。
 我没关系的。
+killdialog:
 path:域零,down2,right2
 face:奥伦,right
 path:域零,right9
