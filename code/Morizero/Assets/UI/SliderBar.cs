@@ -52,9 +52,9 @@ public class SliderBar : MonoBehaviour
     private void Awake()
     {
         UpdateDisplay();
-        TryGetComponent<SliderBarEvent>(out UIEvent);
         //if (UIEvent != null) Debug.Log("Attached event detected.");
         if (LinkDataName != "") Value = PlayerPrefs.GetFloat(LinkDataName, DefaultValue);
+        TryGetComponent<SliderBarEvent>(out UIEvent);
     }
     public void MouseUp()
     {

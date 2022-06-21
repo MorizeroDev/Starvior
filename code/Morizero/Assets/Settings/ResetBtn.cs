@@ -13,7 +13,7 @@ public class ResetBtn : ButtonEvent
             if (MakeChoice.choiceId == 0)
             {
                 MovePad.Value = 0.5f; BGM.Value = 1f; BGS.Value = 0.1f; SE.Value = 0.5f;
-                MovePad.MouseUp();
+                MovePad.gameObject.GetComponent<MovePadSettings>().MouseUp();
                 FullScreen.Value = 1; DialogSpeed.Value = 1; AutoContinue.Value = 1;
             }
         }, "确定要重置所有设定吗？", new string[] { "确定", "取消" });

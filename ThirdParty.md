@@ -28,13 +28,17 @@
 
   Icon 'Info' designed by **Kushal Jain** from Flaticon
 
+  Icon 'Information' designed by **Muhammad Ali** from Flaticon
+
   Icon 'Setting' designed by **Freepik** from Flaticon
 
-  Icon 'Save' designed by **Freepik** from Flaticon
+  Icon 'Star' designed by **Freepik** from Flaticon
 
   Icon 'History' designed by **Pixelmeetup** from Flaticon
 
   Icon 'Back' designed by **Ilham Fitrotul Hayat** from Flaticon
+
+  Icon 'Sign out' by **alkhalifi design** from Flaticon
 
 * Starfield Skybox
 

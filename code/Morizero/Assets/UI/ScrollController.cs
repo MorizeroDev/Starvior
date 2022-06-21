@@ -90,7 +90,7 @@ public class ScrollController : MonoBehaviour
         if (del != 0)
         {
             RectTransform rect = ScrollContainer.GetChild(ScrollContainer.childCount - 1).GetComponent<RectTransform>();
-            if (ScrollContainer.GetChild(ScrollContainer.childCount - 1).localPosition.y - del > LY)
+            if (ScrollContainer.GetChild(ScrollContainer.childCount - 1).localPosition.y - del > LY - 1440)
             {
                 //Debug.Log("Bottom Resist by " + ScrollContainer.GetChild(ScrollContainer.childCount - 1).name);
                 if (!DownPlayed)
@@ -103,7 +103,7 @@ public class ScrollController : MonoBehaviour
                         UpAni.Play("ScrollUnLight", 0, 0.0f);
                     }
                 }
-                del = ScrollContainer.GetChild(ScrollContainer.childCount - 1).localPosition.y - LY;
+                del = ScrollContainer.GetChild(ScrollContainer.childCount - 1).localPosition.y - LY + 1440;
             }
             if (ScrollContainer.GetChild(0).localPosition.y - del < FY)
             {

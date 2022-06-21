@@ -21,7 +21,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 889498896890174310, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 126.44452
+      value: 127.85247
       objectReference: {fileID: 0}
     - target: {fileID: 889498896890174310, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -29,7 +29,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 889498896890174310, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 10.999989
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 889498896890174311, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
       propertyPath: m_IsActive
@@ -121,7 +121,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3311677961071670913, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 611.7012
+      value: 490
       objectReference: {fileID: 0}
     - target: {fileID: 3311677961071670913, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -249,7 +249,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3311677961768624149, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 126.44452
+      value: 127.85247
       objectReference: {fileID: 0}
     - target: {fileID: 3311677961768624149, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -257,7 +257,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3311677961768624149, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 11
+      value: 99.99996
       objectReference: {fileID: 0}
     - target: {fileID: 7847432225926440510, guid: 96e187aa85295814cba853bdce9a2daa, type: 3}
       propertyPath: m_LocalScale.x

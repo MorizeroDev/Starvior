@@ -33,13 +33,13 @@ public class WordEffect : MonoBehaviour
         bool resetTime = false;
         if (effect == Effect.UltraShake && time > 0.03f)
         {
-            rect.localPosition = new Vector3(basex + Random.Range(-20, 20), basey + Random.Range(-20, 20), 0);
-            if(Index == 0) box.localPosition = new Vector3(boxx + Random.Range(-40, 40), boxy + Random.Range(-40, 40), 0);
+            rect.localPosition = new Vector3(basex + Random.Range(-15, 15), basey + Random.Range(-15, 15), 0);
+            if(Index == 0) box.localPosition = new Vector3(boxx + Random.Range(-10, 10), boxy + Random.Range(-10, 10), 0);
             resetTime = true;
         }
         if (effect == Effect.HeavyShake && time > 0.03f)
         {
-            rect.localPosition = new Vector3(basex + Random.Range(-20, 20), basey + Random.Range(-20, 20), 0);
+            rect.localPosition = new Vector3(basex + Random.Range(-15, 15), basey + Random.Range(-15, 15), 0);
             resetTime = true;
         }  
         if(effect == Effect.Shake && time > 0.06f)

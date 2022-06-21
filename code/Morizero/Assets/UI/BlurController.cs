@@ -9,7 +9,7 @@ public class BlurController : MonoBehaviour
     public Canvas Container;
     public GameObject Displayer;
     private Texture2D outputTexture;
-    private void Awake()
+    private void Start()
     {
         outputTexture = new Texture2D(blurTexture.width, blurTexture.height);
         bool[] active = new bool[Container.transform.childCount];
