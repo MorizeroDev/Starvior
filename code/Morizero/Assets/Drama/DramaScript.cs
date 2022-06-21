@@ -307,11 +307,7 @@ public class DramaScript
         // 等待任务
         // wait:等待时间
         if(cmd == "wait"){
-            GameObject fab = (GameObject)Resources.Load("Prefabs\\WaitTicker");    // 载入母体
-            GameObject ticker = GameObject.Instantiate(fab,new Vector3(0,0,-1),Quaternion.identity);
-            WaitTicker wait = ticker.GetComponent<WaitTicker>();
-            wait.waitTime = float.Parse(p[0]);
-            wait.callback = carryTask;
+            WaitTicker.Create(float.Parse(p[0]), carryTask);
             handler = true;
         }
         // 音效任务

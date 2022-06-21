@@ -29,9 +29,11 @@ public class CheckBox : MonoBehaviour
     public int style = 0;
     public string LinkDataName = "";
     public int DefaultValue;
+    public Animator animator;
     private CheckBoxEvent UIEvent = null;
     private List<CheckBox> CheckBoxes = new List<CheckBox>();
     private int v;
+    private bool Initialized = false;
     public int Value {
         get
         {
@@ -42,6 +44,7 @@ public class CheckBox : MonoBehaviour
             CheckBoxes[v].image.sprite = NoSprite;
             v = value;
             CheckBoxes[v].image.sprite = YesSprite;
+            if (!Initialized) return;
             if (LinkDataName != "") PlayerPrefs.SetInt(LinkDataName, v);
             if (UIEvent != null)
             {
@@ -85,12 +88,13 @@ public class CheckBox : MonoBehaviour
         {
             Value = PlayerPrefs.GetInt(LinkDataName, DefaultValue);
         }
-        
+        Initialized = true;
     }
     public void MouseUpAsButton()
     {
         if (isController) return;
         if (Parent.Value == id) return;
         Parent.Value = id;
+        animator.Play("CheckBoxLit", 0, 0.0f);
     }
 }

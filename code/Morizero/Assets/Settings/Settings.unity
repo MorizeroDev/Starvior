@@ -984,7 +984,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 212658787}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 9df04c1b250f9b74fbe6e389410b0936, type: 2}
   m_CullingMode: 0
@@ -6341,6 +6341,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1495231144}
     m_Modifications:
+    - target: {fileID: 5879589086321448388, guid: 80d60cfabda45084bbf2ceb7991d5878, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5879589086321448389, guid: 80d60cfabda45084bbf2ceb7991d5878, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

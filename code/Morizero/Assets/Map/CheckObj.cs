@@ -4,14 +4,21 @@ using UnityEngine;
 
 public class CheckObj : MonoBehaviour
 {
+    [Tooltip("附加的剧本脚本。")]
     public TextAsset Script;
+    [Tooltip("与之联系的NPC，用于纠正坐标。")]
+    public Chara BindChara;
     private DramaScript scriptCarrier = new DramaScript();
     public static bool CheckBtnPressed;
     public static bool CheckAvaliable = false;
+    [Tooltip("是否当人物踩在碰撞箱上立即触发Script。")]
     public bool StartOnTrigger;
     private static float checkshowTime;
+    [Tooltip("允许人物调查时面朝的方向。")]
     public List<Chara.walkDir> AllowDirection = new List<Chara.walkDir>(3);
+    [Tooltip("调查人物的类型，0为Drama预制体，1为简单调查。\n当Script不为null时，此设定无效。")]
     public int CheckType = 0;
+    [Tooltip("在Script为空的情况下触发的调查内容。")]
     public string Content;
     public void CheckEncounter(){
         if(AllowDirection.Contains(MapCamera.Player.dir)){
@@ -70,7 +77,33 @@ public class CheckObj : MonoBehaviour
                 scriptCarrier.code[i] = scriptCarrier.code[i].TrimStart();
             }
             scriptCarrier.currentLine = 0;
-            scriptCarrier.carryTask();
+            // 修正人物坐标
+            if (BindChara != null)
+            {
+                Chara p = MapCamera.Player;
+                Chara.walkDir dir = p.dir;
+                if (p.dir == Chara.walkDir.Down || p.dir == Chara.walkDir.Up)
+                {
+                    p.walkTasks.Enqueue(Chara.walkTask.fromRaw(BindChara.transform.localPosition.x, p.transform.localPosition.y));
+                }
+                else
+                {
+                    p.walkTasks.Enqueue(Chara.walkTask.fromRaw(p.transform.localPosition.x, BindChara.transform.localPosition.y));
+                }
+                p.walkTaskCallback = () => {
+                    p.walkTaskCallback = null;
+                    WaitTicker.Create(0.5f, () =>
+                    {
+                        p.dir = dir;
+                        p.UpdateWalkImage();
+                        WaitTicker.Create(0.5f, scriptCarrier.carryTask);
+                    });
+                };
+            }
+            else
+            {
+                scriptCarrier.carryTask();
+            }
             return; 
         }
         if(CheckType == 1){

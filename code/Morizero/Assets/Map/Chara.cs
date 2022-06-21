@@ -281,8 +281,8 @@ public class Chara : MonoBehaviour
             // 修正坐标
             if(isFix){
                 Debug.Log("Walktask: " + (walkTasks.Count - 1) + " remaining...");
-                FixPos();
-                //transform.localPosition = new Vector3(wt.x,wt.y,pos.z);
+                //FixPos();
+                transform.localPosition = new Vector3(wt.x,wt.y,pos.z);
                 walkTasks.Dequeue();
                 if(walkTasks.Count == 0){
                     Debug.Log("Walktask: tasks for Drama Script is done.");

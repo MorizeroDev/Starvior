@@ -286,6 +286,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4813275788135723246}
   - component: {fileID: 4813275788135723247}
+  - component: {fileID: 4496718148648574121}
   m_Layer: 5
   m_Name: SliderBar
   m_TagString: Untagged
@@ -331,3 +332,23 @@ MonoBehaviour:
   Foreground: {fileID: 4813275787744737606}
   LinkDataName: 
   DefaultValue: 0
+--- !u!95 &4496718148648574121
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4813275788135723233}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 193f16d7875092945999df8d0bcf1a85, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

@@ -64,7 +64,7 @@ public class Settings : MonoBehaviour
                 tab.GetComponent<Animator>().enabled = false;
             }
         }
-
+        BackIcon.GetComponent<Animator>().enabled = false;
     }
     public void MenuItemHideCallback()
     {
@@ -72,6 +72,7 @@ public class Settings : MonoBehaviour
         Parent.BackIcon.SetActive(false);
         Parent.BackIcon.SetActive(true);
         Parent.BackIcon.GetComponent<Image>().sprite = Parent.MenuItems[Parent.MenuIndex].GetComponent<Settings>().BackIcon.GetComponent<Image>().sprite;
+        Parent.BackIcon.GetComponent<Animator>().enabled = true;
         Parent.BackIcon.GetComponent<Animator>().Play("BackIconShow", 0, 0.0f);
         if (newTab == null) return;
         Parent.scrollController.ResetPosition();

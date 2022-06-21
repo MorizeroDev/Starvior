@@ -33,6 +33,7 @@ public class SliderBar : MonoBehaviour
         {
             v = value;
             UpdateDisplay();
+            if (!Initialized) return;
             if (LinkDataName != "")
             {
                 if (LinkDataName.EndsWith("Volume")) Settings.BroadcastVolumeChange();
@@ -49,21 +50,36 @@ public class SliderBar : MonoBehaviour
     private SliderBarEvent UIEvent = null;
     public string LinkDataName = "";
     public float DefaultValue;
+    private Animator animator;
+    private bool Initialized = false;
+    private bool AniPlayed = false;
     private void Awake()
     {
         UpdateDisplay();
         //if (UIEvent != null) Debug.Log("Attached event detected.");
+        animator = GetComponent<Animator>();
         if (LinkDataName != "") Value = PlayerPrefs.GetFloat(LinkDataName, DefaultValue);
         TryGetComponent<SliderBarEvent>(out UIEvent);
+        Initialized = true;
     }
     public void MouseUp()
     {
         MouseDrag();
+        if (AniPlayed)
+        {
+            AniPlayed = false;
+            animator.Play("SliderHide", 0, 0.0f);
+        }
         ScrollController.UIUsing = false;
         if (UIEvent != null) UIEvent.MouseUp();
     }
     public void MouseDrag()
     {
+        if (!AniPlayed)
+        {
+            AniPlayed = true;
+            animator.Play("SliderShow", 0, 0.0f);
+        }
         ScrollController.UIUsing = true;
         Vector2 mouse = Vector2.zero;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(Background, Input.mousePosition, Camera.main, out mouse);
