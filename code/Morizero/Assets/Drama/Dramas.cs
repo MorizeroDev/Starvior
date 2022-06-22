@@ -208,7 +208,7 @@ public class Dramas : MonoBehaviour
         if (Suspense) return;
         if (DramaIndex >= Drama.Count) return;
         int AutoContinue = PlayerPrefs.GetInt("Settings.AutoContinueDrama", 1);
-        if(!DisableInput && !Settings.Active && !Settings.Loading)
+        if(!DisableInput && !Settings.Active && !Settings.Loading && !Debuger.DebugerOpening)
         {
             bool Touched = Input.GetMouseButtonUp(0);
             if (Input.touchSupported)

@@ -77,6 +77,7 @@ public class CheckObj : MonoBehaviour
                 scriptCarrier.code[i] = scriptCarrier.code[i].TrimStart();
             }
             scriptCarrier.currentLine = 0;
+            DramaScript.Active = scriptCarrier;
             // 修正人物坐标
             if (BindChara != null)
             {

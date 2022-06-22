@@ -44,6 +44,7 @@ public class PlotCreator : MonoBehaviour
 
 public class DramaScript
 {
+    public static DramaScript Active;
     public string[] code;
     public int currentLine;
     public DramaCallback callback;
@@ -75,7 +76,7 @@ public class DramaScript
         string[] p = t[1].Split(',');
         bool handler = false;
         currentLine++;
-
+        
         Debug.Log("Drama script: (Command) '" + cmd + "' (Param) " + t[1]);
         // 人物路径任务
         // path:人物,task1,task2,...

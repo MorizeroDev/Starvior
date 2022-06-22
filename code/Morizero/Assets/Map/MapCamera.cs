@@ -11,7 +11,7 @@ public class MapCamera : MonoBehaviour
     public static GameObject PlayerCollider;
     public static GameObject HitCheck = null;
     public static Transform HitCheckTransform;
-    public static bool SuspensionDrama;
+    public static bool SuspensionDrama = false;
     public static MapCamera mcamera = null;
     public static AudioSource bgm,bgs;
     public static Chara.walkDir initDir = Chara.walkDir.Down;
