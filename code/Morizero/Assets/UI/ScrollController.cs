@@ -5,6 +5,7 @@ using UnityEngine;
 public class ScrollController : MonoBehaviour
 {
     public Transform ScrollContainer;
+    private Transform OScrollContainer;
     public Animator UpAni, DownAni;
     public float CanvasHeight = 1440f;
     public static bool UIUsing = false;
@@ -19,25 +20,43 @@ public class ScrollController : MonoBehaviour
 
     private Vector2 lastDeltaPos;
 
-    public void ResetPosition()
+    public void ResetSavedPosition()
     {
-        for (int i = 0; i < ScrollContainer.childCount; i++)
+        for (int i = 0; i < OScrollContainer.childCount; i++)
         {
-            Vector3 pos = ScrollContainer.GetChild(i).transform.localPosition;
+            Vector3 pos = OScrollContainer.GetChild(i).transform.localPosition;
             pos.y = orY[i];
-            ScrollContainer.GetChild(i).transform.localPosition = pos;
+            OScrollContainer.GetChild(i).transform.localPosition = pos;
         }
     }
-    public void UpdateContainer()
+    public void SetOriginalPosition()
+    {
+        orY.Clear();
+        OScrollContainer = ScrollContainer;
+        for (int i = 0; i < OScrollContainer.childCount; i++)
+        {
+            orY.Add(OScrollContainer.GetChild(i).transform.localPosition.y);
+        }
+    }
+    public void UpdateContainer(bool SetOriginal = true)
     {
         targetMouseY.Clear();
-        orY.Clear();
         FY = ScrollContainer.GetChild(0).localPosition.y;
         LY = -(CanvasHeight / 2) + 20f;
         for (int i = 0; i < ScrollContainer.childCount; i++)
         {
             targetMouseY.Add(0);
-            orY.Add(ScrollContainer.GetChild(i).transform.localPosition.y);
+        }
+        if (SetOriginal) SetOriginalPosition();
+    }
+    public void ScrollToBottom()
+    {
+        RectTransform rect = ScrollContainer.GetChild(ScrollContainer.childCount - 1).GetComponent<RectTransform>();
+        float del = ScrollContainer.GetChild(ScrollContainer.childCount - 1).localPosition.y - LY + 1440;
+        for (int i = 0; i < ScrollContainer.childCount; i++)
+        {
+            Transform t = ScrollContainer.GetChild(i).transform;
+            t.localPosition = new Vector3(t.localPosition.x, t.localPosition.y - del, t.localPosition.z);
         }
     }
     private void Start()

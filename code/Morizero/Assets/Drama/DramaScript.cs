@@ -368,6 +368,13 @@ public class DramaScript
             }
             handler = true;
         }
+        // 设置对话人名
+        if(cmd == "speaking")
+        {
+            Dramas.ImmersionSpeaking = p[0];
+            carryTask();
+            handler = true;
+        }
         // 对话任务
         // say/immersion:人物,[是否禁止输入]
         // [(shake)/(rainbow)/...]对话内容
@@ -450,7 +457,7 @@ public class DramaScript
                     }
                     // 装入结构体
                     Dramas.DramaData data = new Dramas.DramaData{
-                        Character = role,
+                        Character = cmd == "immersion" ? Dramas.ImmersionSpeaking : role,
                         motion = motion,
                         Effect = effect,
                         content = p[p.Length - 1],

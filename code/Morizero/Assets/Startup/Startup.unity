@@ -651,6 +651,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioType: 0
+  RelativeOverride: 1
 --- !u!1 &424554667
 GameObject:
   m_ObjectHideFlags: 0
@@ -922,7 +923,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Alpha-621(\u5185\u6D4B)"
+  m_Text: "Alpha-622(\u5185\u6D4B)"
 --- !u!222 &557822796
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1275,6 +1276,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d793a057493671448454606f911aecb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  avaliable: 0
   resolutionChangedEvent:
     m_PersistentCalls:
       m_Calls: []

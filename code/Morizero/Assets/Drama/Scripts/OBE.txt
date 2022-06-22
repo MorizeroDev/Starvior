@@ -1,4 +1,5 @@
 plot:OBE_PLOT
+speaking:？？？
 immersion:
 欢迎来到《拾落星辰》-Alpha测试版。
 我是被遗弃的医院时代的最终大Boss。

@@ -33,7 +33,10 @@ public class MakeChoice : MonoBehaviour
         GameObject box = Instantiate(fab,new Vector3(0,0,-1),Quaternion.identity);
         MakeChoice mc = box.GetComponent<MakeChoice>();
         float y = (choices.Length - 1) * 100 - 140;
-        for(int i = 0;i < choices.Length;i++){
+        Dramas.lcharacter = "MakeChoice";
+        Dramas.AppendHistory("");
+        Dramas.AppendHistory("[" + explain + "]");
+        for (int i = 0;i < choices.Length;i++){
             GameObject Choice = Instantiate(mc.ChoicePrefab,
                                             new Vector3(mc.ChoicePrefab.transform.localPosition.x,y,-1),
                                             Quaternion.identity,
@@ -95,6 +98,8 @@ public class MakeChoice : MonoBehaviour
         }
         parent.gameObject.GetComponent<Animator>().Play("MakeChoiceExit", 0);
         parent.finishSnd.Play();
+        Dramas.AppendHistory("[我的选择：“" + parent.Choices[choiceId].GetComponent<MakeChoice>().Explaination.text + "”]");
+        Dramas.AppendHistory("");
         choiceFinished = true;
     }
     private void Update()

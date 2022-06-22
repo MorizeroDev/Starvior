@@ -9,6 +9,9 @@ public class Settings : MonoBehaviour
     public List<GameObject> MenuItems;
     public GameObject LinkTab;
     public GameObject BackIcon;
+    public Text HistoryText;
+    public Transform HistoryEndMark;
+    private static bool NeedScrollToBottom = false;
     public static Settings MainSettingUI;
     public ScrollController scrollController;
     [HideInInspector]    
@@ -58,6 +61,12 @@ public class Settings : MonoBehaviour
         Parent.MenuItems[Index].GetComponent<Animator>().Play("MenuItemShow", 0, 0.0f);
         Parent.MenuIndex = Index;
         Parent.BackIcon.GetComponent<Animator>().Play("BackIconHide", 0, 0.0f);
+        Parent.scrollController.ScrollContainer = newTab.transform;
+        Parent.scrollController.UpdateContainer(false);
+        if (Parent.MenuIndex == 1 && NeedScrollToBottom)
+        {
+            Parent.scrollController.ScrollToBottom();
+        }
     }
     public void DisableAllTabAnimations()
     {
@@ -80,9 +89,8 @@ public class Settings : MonoBehaviour
         Parent.BackIcon.GetComponent<Animator>().enabled = true;
         Parent.BackIcon.GetComponent<Animator>().Play("BackIconShow", 0, 0.0f);
         if (newTab == null) return;
-        Parent.scrollController.ResetPosition();
-        Parent.scrollController.ScrollContainer = newTab.transform;
-        Parent.scrollController.UpdateContainer();
+        Parent.scrollController.ResetSavedPosition();
+        Parent.scrollController.SetOriginalPosition();
     }
     private void Awake()
     {
@@ -97,6 +105,30 @@ public class Settings : MonoBehaviour
             MenuItems[i].GetComponent<Settings>().Parent = this;
         }
         Settings.ActiveSetAnimator = GetComponent<Animator>();
+        string his = "";
+        foreach (string s in Dramas.HistoryDrama)
+        {
+            if (s.EndsWith('£º'))
+            {
+                his += "\n<b>" + s + "</b>\n";
+            }
+            else
+            {
+                his += s + "\n";
+            }
+            
+        }
+        if (his == "") his = "ÔÝÎÞ¼ÇÂ¼¡£";
+        HistoryText.transform.parent.parent.gameObject.SetActive(true);
+        HistoryText.text = his;
+        LayoutRebuilder.ForceRebuildLayoutImmediate(HistoryText.gameObject.GetComponent<RectTransform>());
+        Vector3 pos = HistoryEndMark.transform.localPosition;
+        float height = HistoryText.gameObject.GetComponent<RectTransform>().sizeDelta.y * 0.858f;
+        //Debug.Log(height);
+        pos.y -= height;
+        NeedScrollToBottom = (height > 1200);
+        HistoryEndMark.transform.localPosition = pos;
+        HistoryText.transform.parent.parent.gameObject.SetActive(false);
         MainSettingUI = this;
     }
 

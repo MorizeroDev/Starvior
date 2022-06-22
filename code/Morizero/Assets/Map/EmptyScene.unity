@@ -415,6 +415,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1572829887, guid: b43b1c85a0b81e14c978fc1f7fcf779c, type: 3}
+      propertyPath: m_Text
+      value: "\u865A\u7A7A"
+      objectReference: {fileID: 0}
     - target: {fileID: 2024787932, guid: b43b1c85a0b81e14c978fc1f7fcf779c, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -778,6 +782,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Script: {fileID: 4900000, guid: 49f02429f007da443a236c22aed1a39d, type: 3}
+  BindChara: {fileID: 0}
   StartOnTrigger: 1
   AllowDirection: 00000000030000000100000002000000
   CheckType: 2

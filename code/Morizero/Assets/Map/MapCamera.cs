@@ -22,6 +22,7 @@ public class MapCamera : MonoBehaviour
     public Sprite CheckFore,TalkFore;
     public Sprite CheckBack,TalkBack;
     public Image CheckText,CheckImg;
+    public Text MapName;
     public Animator animator;
     public AudioClip BGM,BGS;
     public float BGMRelativeOverride = 1.0f;
@@ -40,7 +41,9 @@ public class MapCamera : MonoBehaviour
         //修改当前的FPS
         Application.targetFrameRate = targetFrameRate;
 
-        if(bgm == null){
+        Dramas.AppendHistory("");
+        Dramas.AppendHistory("<" + MapName.text + ">");
+        if (bgm == null){
             GameObject fab = (GameObject)Resources.Load("Prefabs\\MusicPlayer");    // 载入母体
             GameObject box = Instantiate(fab,new Vector3(0,0,-1),Quaternion.identity);
             bgm = box.GetComponent<AudioSource>();

@@ -1360,9 +1360,12 @@ MonoBehaviour:
   TalkBack: {fileID: 21300000, guid: f6a9d9a97df571f448cc1387211f4bea, type: 3}
   CheckText: {fileID: 7293165566797132191}
   CheckImg: {fileID: 7205031309229966930}
+  MapName: {fileID: 1572829887}
   animator: {fileID: 7293165566116530928}
   BGM: {fileID: 0}
   BGS: {fileID: 8300000, guid: f665553d470f4b449b4c41bbc5b8de6b, type: 3}
+  BGMRelativeOverride: 1
+  BGSRelativeOverride: 1
   Disabled: 0
   targetFrameRate: 60
 --- !u!1 &7293165566797132185

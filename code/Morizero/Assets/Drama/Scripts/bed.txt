@@ -1,4 +1,4 @@
-say:我
+say:旁白
 （看起来是一张很舒适的病床。）
 choice:在床上休息一下吗？,休息,算了
 distribute_choices:
@@ -7,12 +7,14 @@ case:0
 	stopbgs:
 	plot:BedPlots
 	snd:save,nowait
+	speaking:旁白
 	immersion:,true
 	你感到放松，视野渐渐地消失...
 	wait:8
 	resume:
 	rebgm:
 	rebgs:
+	speaking:旁白
 	immersion:
 	你的存档已经被保存了。
 	plot:clear

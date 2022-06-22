@@ -40,6 +40,8 @@
 
   Icon 'Sign out' by **alkhalifi design** from Flaticon
 
+  Icon 'Menu bar' by **Febrian Hidayat** from Flaticon
+
 * Starfield Skybox
 
   许可证： [Standard Unity Asset Store EULA](https://unity3d.com/legal/as_terms)

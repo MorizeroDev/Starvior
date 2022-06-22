@@ -13,7 +13,10 @@ public class Dramas : MonoBehaviour
 {
     public static bool DramaUnloading = false;
     // 剧本控制器
+    public static List<string> HistoryDrama = new List<string>();
     public static DramaCallback callback;
+    public static string ImmersionSpeaking = "";
+    public const int MaxHistoryCount = 500;
     public RectTransform sWord;                     // 起始对话框位置
     public RectTransform eWord;                     // 结束对话框位置
     public Text Title;                              // 对话框标题
@@ -21,15 +24,14 @@ public class Dramas : MonoBehaviour
     public GameObject WordChild;                    // 对话框文本母体
     public Animator Motion;                         // 立绘动画
     private float Speed;                            // 等待计数
-    private float OrSpeed;
     private int DialogState;                        // 对话框状态（-1=未就绪，0=等待显示，1=等待确认，2=完毕）
     public Sprite Dialog1,Dialog2;
     public string DialogTyle;
     public Image DialogBox;
-    private string motion;
     public GameObject Continue;
     private WordEffect.Effect Effect;
     private string character;
+    public static string lcharacter;
     private string DisplayText;
     // 记录的文本对象
     private static List<GameObject> DisWords = new List<GameObject>();
@@ -58,6 +60,11 @@ public class Dramas : MonoBehaviour
 
     private float x = 0,y = 0,step = 0;
 
+    public static void AppendHistory(string str)
+    {
+        HistoryDrama.Add("（" + str + "）");
+        if (HistoryDrama.Count > MaxHistoryCount) HistoryDrama.RemoveAt(0);
+    }
     private static void RecordExistingFingers()
     {
         // 记录进入对话框之前仍在屏幕上的手指，这样玩家便可以不放开轮盘，一边快速地对地图进行探索。
@@ -123,14 +130,34 @@ public class Dramas : MonoBehaviour
 
         DialogState = 0;
         character = Drama[DramaIndex].Character;
-        Speed = Drama[DramaIndex].Speed; OrSpeed = Speed;
+        Speed = Drama[DramaIndex].Speed; //OrSpeed = Speed;
         int SpeedSet = PlayerPrefs.GetInt("Settings.DramaTextSpeed", 1);
         if (SpeedSet == 0) Speed /= 2;
         if (SpeedSet == 2) Speed *= 2;
         DisplayText = Drama[DramaIndex].content;
         Effect = Drama[DramaIndex].Effect;
 
-        if(character != "旁白" && character != "我"){
+        if (lcharacter != character)
+        {
+            lcharacter = character;
+            if (character == "旁白")
+            {
+                AppendHistory("");
+            }
+            else
+            {
+                AppendHistory(character + "：");
+            }
+        }
+        if (character == "旁白")
+        {
+            AppendHistory("（" + DisplayText + "）");
+        }
+        else
+        {
+            AppendHistory("“" + DisplayText + "”");
+        }
+        if (character != "旁白" && character != "我"){
             Character.sprite = Resources.Load<Sprite>($"Characters\\{character}");
             Character.SetNativeSize();
             RectTransform rect = Character.GetComponent<RectTransform>();
