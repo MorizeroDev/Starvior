@@ -53,7 +53,7 @@ public class DramaScript
 
     public void Done(){
         KillLastDrama();
-        MapCamera.SuspensionDrama = false;
+        if (!Settings.Active && !Settings.Loading) MapCamera.SuspensionDrama = false;
         if(callback != null) callback();
     }
     public bool KillLastDrama()

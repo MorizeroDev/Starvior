@@ -24,6 +24,8 @@ public class MapCamera : MonoBehaviour
     public Image CheckText,CheckImg;
     public Animator animator;
     public AudioClip BGM,BGS;
+    public float BGMRelativeOverride = 1.0f;
+    public float BGSRelativeOverride = 1.0f;
     public bool Disabled = false;
     private float sx = float.MinValue,sy = float.MaxValue,ex = float.MaxValue,ey = float.MinValue;
     
@@ -31,8 +33,8 @@ public class MapCamera : MonoBehaviour
     public int targetFrameRate = 60;
     public void ApplyVolumeSettings()
     {
-        if (bgm != null) bgm.volume = PlayerPrefs.GetFloat("Settings.BGMVolume", 1f);
-        if (bgs != null) bgs.volume = PlayerPrefs.GetFloat("Settings.BGSVolume", 0.1f);
+        if (bgm != null) bgm.volume = PlayerPrefs.GetFloat("Settings.BGMVolume", 1f) * BGMRelativeOverride;
+        if (bgs != null) bgs.volume = PlayerPrefs.GetFloat("Settings.BGSVolume", 0.5f) * BGSRelativeOverride;
     }
     private void Awake() {
         //修改当前的FPS
@@ -42,16 +44,14 @@ public class MapCamera : MonoBehaviour
             GameObject fab = (GameObject)Resources.Load("Prefabs\\MusicPlayer");    // 载入母体
             GameObject box = Instantiate(fab,new Vector3(0,0,-1),Quaternion.identity);
             bgm = box.GetComponent<AudioSource>();
-            bgm.volume = PlayerPrefs.GetFloat("Settings.BGMVolume", 1f);
             box.SetActive(true);
             box = Instantiate(fab,new Vector3(0,0,-1),Quaternion.identity);
             bgs = box.GetComponent<AudioSource>();
-            bgs.volume = PlayerPrefs.GetFloat("Settings.BGSVolume", 0.1f);
             box.SetActive(true);
-            bgs.volume = 0.5f;
             DontDestroyOnLoad(bgm);
             DontDestroyOnLoad(bgs);
         }
+        ApplyVolumeSettings();
         if (bgm.clip != BGM)
         {
             if (BGM == null)

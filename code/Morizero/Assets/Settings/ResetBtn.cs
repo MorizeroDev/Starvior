@@ -12,7 +12,7 @@ public class ResetBtn : ButtonEvent
         {
             if (MakeChoice.choiceId == 0)
             {
-                MovePad.Value = 0.5f; BGM.Value = 1f; BGS.Value = 0.1f; SE.Value = 0.5f;
+                MovePad.Value = 0.5f; BGM.Value = 1f; BGS.Value = 0.5f; SE.Value = 0.5f;
                 MovePad.gameObject.GetComponent<MovePadSettings>().MouseUp();
                 FullScreen.Value = 1; DialogSpeed.Value = 1; AutoContinue.Value = 1;
             }

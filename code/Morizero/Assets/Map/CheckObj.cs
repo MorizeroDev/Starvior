@@ -82,23 +82,39 @@ public class CheckObj : MonoBehaviour
             {
                 Chara p = MapCamera.Player;
                 Chara.walkDir dir = p.dir;
+                bool needFix = false;
                 if (p.dir == Chara.walkDir.Down || p.dir == Chara.walkDir.Up)
                 {
-                    p.walkTasks.Enqueue(Chara.walkTask.fromRaw(BindChara.transform.localPosition.x, p.transform.localPosition.y));
+                    if(Mathf.Abs(p.transform.localPosition.x - BindChara.transform.localPosition.x) > 0.25f)
+                    {
+                        p.walkTasks.Enqueue(Chara.walkTask.fromRaw(BindChara.transform.localPosition.x, p.transform.localPosition.y));
+                        needFix = true;
+                    }
                 }
                 else
                 {
-                    p.walkTasks.Enqueue(Chara.walkTask.fromRaw(p.transform.localPosition.x, BindChara.transform.localPosition.y));
-                }
-                p.walkTaskCallback = () => {
-                    p.walkTaskCallback = null;
-                    WaitTicker.Create(0.5f, () =>
+                    if (Mathf.Abs(p.transform.localPosition.y - BindChara.transform.localPosition.y) > 0.25f)
                     {
-                        p.dir = dir;
-                        p.UpdateWalkImage();
-                        WaitTicker.Create(0.5f, scriptCarrier.carryTask);
-                    });
-                };
+                        p.walkTasks.Enqueue(Chara.walkTask.fromRaw(p.transform.localPosition.x, BindChara.transform.localPosition.y));
+                        needFix = true;
+                    }
+                }
+                if (needFix)
+                {
+                    p.walkTaskCallback = () => {
+                        p.walkTaskCallback = null;
+                        WaitTicker.Create(0.5f, () =>
+                        {
+                            p.dir = dir;
+                            p.UpdateWalkImage();
+                            WaitTicker.Create(0.5f, scriptCarrier.carryTask);
+                        });
+                    };
+                }
+                else
+                {
+                    scriptCarrier.carryTask();
+                }
             }
             else
             {
@@ -108,11 +124,11 @@ public class CheckObj : MonoBehaviour
         }
         if(CheckType == 1){
             Dramas.Launch(Content,() => {
-                MapCamera.SuspensionDrama = false;
+                if(!Settings.Active && !Settings.Loading) MapCamera.SuspensionDrama = false;
             });
         }else{
             Dramas.LaunchCheck(Content,() => {
-                MapCamera.SuspensionDrama = false;
+                if (!Settings.Active && !Settings.Loading) MapCamera.SuspensionDrama = false;
             }).LifeTime = Dramas.DramaLifeTime.DieWhenReadToEnd;
         }
     }

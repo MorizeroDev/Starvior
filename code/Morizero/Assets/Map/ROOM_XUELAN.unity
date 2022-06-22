@@ -299,7 +299,7 @@ GameObject:
   - component: {fileID: 334884558}
   - component: {fileID: 334884560}
   - component: {fileID: 334884559}
-  m_Layer: 3
+  m_Layer: 4
   m_Name: WallFence
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1305,6 +1305,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Script: {fileID: 4900000, guid: 70c2ab044951a7c48aeb812414249da8, type: 3}
+  BindChara: {fileID: 0}
   StartOnTrigger: 0
   AllowDirection: 03000000020000000100000000000000
   CheckType: 2
@@ -1446,6 +1447,10 @@ PrefabInstance:
       propertyPath: startDot
       value: 
       objectReference: {fileID: 1105658033}
+    - target: {fileID: 7293165566190216852, guid: b43b1c85a0b81e14c978fc1f7fcf779c, type: 3}
+      propertyPath: BGSRelativeOverride
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 7293165566190216855, guid: b43b1c85a0b81e14c978fc1f7fcf779c, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -2123,7 +2128,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3481999736451204036, guid: 0de57dbdea56aa949ac55c1ab3724eff, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6.61
+      value: 7.39
       objectReference: {fileID: 0}
     - target: {fileID: 3481999736451204036, guid: 0de57dbdea56aa949ac55c1ab3724eff, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2177,7 +2182,9 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8077919984521122996, guid: 0de57dbdea56aa949ac55c1ab3724eff, type: 3}
+    - {fileID: 3071366818813820805, guid: 0de57dbdea56aa949ac55c1ab3724eff, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 0de57dbdea56aa949ac55c1ab3724eff, type: 3}
 --- !u!4 &3481999735513193167 stripped
 Transform:
@@ -2600,6 +2607,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 324042214}
     m_Modifications:
+    - target: {fileID: 6161022510721490955, guid: 2087e204a15c91446b40aa53798af3be, type: 3}
+      propertyPath: RelativeOverride
+      value: 0.3
+      objectReference: {fileID: 0}
     - target: {fileID: 9221026782038236609, guid: 2087e204a15c91446b40aa53798af3be, type: 3}
       propertyPath: m_Name
       value: Door

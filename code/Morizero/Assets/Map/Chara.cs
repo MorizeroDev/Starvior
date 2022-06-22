@@ -298,13 +298,13 @@ public class Chara : MonoBehaviour
         // 判定调查
         Vector2 spyRay = new Vector2(pos.x,pos.y);
         if(dir == walkDir.Left){
-            spyRay.x -= 0.96f;
+            spyRay.x -= 0.48f;
         }else if(dir == walkDir.Right){
-            spyRay.x += 0.96f;
+            spyRay.x += 0.48f;
         }else if(dir == walkDir.Up){
-            spyRay.y += 0.96f;
+            spyRay.y += 0.48f;
         }else{
-            spyRay.y -= 0.96f;
+            spyRay.y -= 0.48f;
         }
         CheckObj checkObj = null;
         foreach(RaycastHit2D crash in Physics2D.RaycastAll(spyRay,new Vector2(0,0))){

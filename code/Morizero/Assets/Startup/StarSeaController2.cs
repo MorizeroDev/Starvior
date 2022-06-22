@@ -40,7 +40,7 @@ public class StarSeaController2 : MonoBehaviour
     }
     public void UpdateGame()
     {
-        result.text = "上次打击：" + LastPitch + " Combo：" + Combo + "，Perfect：" + Perfect + "，Good：" + Good + "，Bad：" + Bad + "，Miss：" + Miss;
+        result.text = "上次打击：" + LastPitch + "，Combo：" + Combo + "，Perfect：" + Perfect + "，Good：" + Good + "，Bad：" + Bad + "，Miss：" + Miss;
     }
     void Update()
     {

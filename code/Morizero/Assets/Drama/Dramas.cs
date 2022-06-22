@@ -11,6 +11,7 @@ using System.Text;
 public delegate void DramaCallback();
 public class Dramas : MonoBehaviour
 {
+    public static bool DramaUnloading = false;
     // 剧本控制器
     public static DramaCallback callback;
     public RectTransform sWord;                     // 起始对话框位置
@@ -152,7 +153,8 @@ public class Dramas : MonoBehaviour
     }
     public void DramaDone(){
         Debug.Log("Done!");
-        if(!NoCallback) callback();
+        DramaUnloading = false;
+        if (!NoCallback) callback();
     }
     private void Awake() {
         Character.gameObject.SetActive(false);
@@ -171,6 +173,7 @@ public class Dramas : MonoBehaviour
     public void ExitDrama()
     {
         DisposeWords();
+        DramaUnloading = true;
         this.transform.parent.GetComponent<Animator>().Play("ExitDrama", 0);
     }
     void Update()

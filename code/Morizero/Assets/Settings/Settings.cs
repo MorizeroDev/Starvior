@@ -36,7 +36,12 @@ public class Settings : MonoBehaviour
             MakeChoice.Create(() =>
             {
                 if (MakeChoice.choiceId == 0) Application.Quit();
-                if (MakeChoice.choiceId == 1) Switcher.Carry("Startup");
+                if (MakeChoice.choiceId == 1)
+                {
+                    MapCamera.SuspensionDrama = false;
+                    Active = false; Loading = false;
+                    Switcher.Carry("Startup");
+                }
             }, "您将丢失所有未保存的存档，确定吗？", new string[] { "退出游戏", "返回标题画面", "取消" });
             return;
         }
@@ -100,6 +105,7 @@ public class Settings : MonoBehaviour
         if (Active || Loading) return;
         Active = true; Loading = true;
         LastSuspensionDrama = MapCamera.SuspensionDrama;
+        if (Dramas.DramaUnloading) LastSuspensionDrama = false;
         MapCamera.SuspensionDrama = true;
         SettingsBtn.ActiveSettingsBtn.GetComponent<Animator>().Play("SetBtnHide", 0, 0.0f);
         SceneManager.sceneLoaded += SceneManager_sceneLoaded;

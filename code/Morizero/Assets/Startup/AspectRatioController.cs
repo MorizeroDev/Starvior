@@ -22,6 +22,8 @@ public class AspectRatioController : MonoBehaviour
     /// 每当窗口分辨率改变或用户切换全屏时，都会触发此事件
     ///  参数是新的宽度、高度和全屏状态(true表示全屏)
     /// </summary>
+    public static bool seted = false;
+    public bool avaliable = false;
     public ResolutionChangedEvent resolutionChangedEvent;
     [Serializable]
     public class ResolutionChangedEvent : UnityEvent<int, int, bool> { }
@@ -151,6 +153,7 @@ public class AspectRatioController : MonoBehaviour
 
     void Start()
     {
+        if (!avaliable) return;
         // 不要在Unity编辑器中注册WindowProc回调函数，它会指向Unity编辑器窗口，而不是Game视图
 #if !UNITY_EDITOR && UNITY_STANDALONE_WIN
         //注册回调，然后应用程序想要退出
@@ -190,6 +193,19 @@ public class AspectRatioController : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 #endif
 
+    }
+
+    private void Awake()
+    {
+        if (!seted)
+        {
+            seted = true;
+            avaliable = true;
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
     }
 
     /// <summary>
@@ -304,6 +320,7 @@ public class AspectRatioController : MonoBehaviour
 
     void Update()
     {
+        if (!avaliable) return;
         if (Input.GetKeyUp(KeyCode.F11) || ((Input.GetKeyUp(KeyCode.LeftAlt) || Input.GetKeyUp(KeyCode.RightAlt)) && Input.GetKeyUp(KeyCode.Return)))
         {
             Screen.fullScreen = !Screen.fullScreen;
