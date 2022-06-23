@@ -15,6 +15,7 @@ public class Dramas : MonoBehaviour
     // 剧本控制器
     public static List<string> HistoryDrama = new List<string>();
     public static DramaCallback callback;
+    public static Dramas ActiveDrama;
     public static string ImmersionSpeaking = "";
     public const int MaxHistoryCount = 500;
     public RectTransform sWord;                     // 起始对话框位置
@@ -62,7 +63,7 @@ public class Dramas : MonoBehaviour
 
     public static void AppendHistory(string str)
     {
-        HistoryDrama.Add("（" + str + "）");
+        HistoryDrama.Add(str);
         if (HistoryDrama.Count > MaxHistoryCount) HistoryDrama.RemoveAt(0);
     }
     private static void RecordExistingFingers()
@@ -91,6 +92,7 @@ public class Dramas : MonoBehaviour
         GameObject box = Instantiate(fab,new Vector3(0,0,-1),Quaternion.identity);
         Dramas drama = box.transform.Find("Dialog").GetComponent<Dramas>();
         drama.Drama = new List<DramaData>();
+        ActiveDrama = drama;
         box.GetComponent<Canvas>().worldCamera = Camera.main;
         RecordExistingFingers();
         return drama;
@@ -103,6 +105,7 @@ public class Dramas : MonoBehaviour
         Dramas drama = box.transform.Find("Dialog").GetComponent<Dramas>();
         box.GetComponent<Canvas>().worldCamera = Camera.main;
         drama.ReadDrama();
+        ActiveDrama = drama;
         box.SetActive(true);
         RecordExistingFingers();
         return drama;
@@ -117,6 +120,7 @@ public class Dramas : MonoBehaviour
         data.content = content;
         drama.Drama[0] = data;
         drama.ReadDrama();
+        ActiveDrama = drama;
         box.SetActive(true);
         RecordExistingFingers();
         return drama;
@@ -199,6 +203,7 @@ public class Dramas : MonoBehaviour
     }
     public void ExitDrama()
     {
+        ActiveDrama = null;
         DisposeWords();
         DramaUnloading = true;
         this.transform.parent.GetComponent<Animator>().Play("ExitDrama", 0);

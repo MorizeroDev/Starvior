@@ -5,7 +5,6 @@ using UnityEngine;
 public class ScrollController : MonoBehaviour
 {
     public Transform ScrollContainer;
-    private Transform OScrollContainer;
     public Animator UpAni, DownAni;
     public float CanvasHeight = 1440f;
     public static bool UIUsing = false;
@@ -15,39 +14,52 @@ public class ScrollController : MonoBehaviour
     private float inertiaDuration = 0.5f;
     private bool mouseWheeling = false;
     private float FY = 0,LY = 0;
-    private List<float> targetMouseY = new List<float>(), orY = new List<float>();
+    private List<float> targetMouseY = new List<float>();
+    private Dictionary<Transform,List<float>> orY = new();
     private bool UpPlayed = false, DownPlayed = false;
 
     private Vector2 lastDeltaPos;
 
-    public void ResetSavedPosition()
+    public void ResetSavedPosition(Transform transform)
     {
-        for (int i = 0; i < OScrollContainer.childCount; i++)
+        Debug.Log("Restore the position:" + transform.name);
+        if (!orY.ContainsKey(transform))
         {
-            Vector3 pos = OScrollContainer.GetChild(i).transform.localPosition;
-            pos.y = orY[i];
-            OScrollContainer.GetChild(i).transform.localPosition = pos;
+            Debug.LogWarning("指定要恢复的Transform不存在。");
+            return;
+        }
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            Vector3 pos = transform.GetChild(i).transform.localPosition;
+            pos.y = orY[transform][i];
+            transform.GetChild(i).transform.localPosition = pos;
         }
     }
-    public void SetOriginalPosition()
+    public void SetOriginalPosition(Transform transform)
     {
-        orY.Clear();
-        OScrollContainer = ScrollContainer;
-        for (int i = 0; i < OScrollContainer.childCount; i++)
+        if (!orY.ContainsKey(transform))
         {
-            orY.Add(OScrollContainer.GetChild(i).transform.localPosition.y);
+            Debug.Log("Positions saved:" + transform.name);
+            orY.Add(transform, new List<float>());
+            orY[transform].Clear();
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                orY[transform].Add(transform.GetChild(i).transform.localPosition.y);
+            }
         }
     }
     public void UpdateContainer(bool SetOriginal = true)
     {
         targetMouseY.Clear();
+        mouseWheeling = false;
+        scrollVelocity = 0.0f;
         FY = ScrollContainer.GetChild(0).localPosition.y;
         LY = -(CanvasHeight / 2) + 20f;
         for (int i = 0; i < ScrollContainer.childCount; i++)
         {
             targetMouseY.Add(0);
         }
-        if (SetOriginal) SetOriginalPosition();
+        if (SetOriginal) SetOriginalPosition(ScrollContainer);
     }
     public void ScrollToBottom()
     {

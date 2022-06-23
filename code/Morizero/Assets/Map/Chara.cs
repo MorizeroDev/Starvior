@@ -41,6 +41,7 @@ public class Chara : MonoBehaviour
     public TDataBridge dataBridge;
 
     // 行走参数
+    [Tooltip("行走速度，不建议更改。")]
     public float speed = 0.06f;
     public const float step = 0.48f;
     private int freemoveFinger = 0;
@@ -48,6 +49,13 @@ public class Chara : MonoBehaviour
     private bool padMode = false;
     private Vector2 srcPadPos,srcClickPos;
     private Transform Pad;
+
+    // NPC设置
+    [Tooltip("当玩家靠近时会看向玩家。")]
+    public bool AttractPlayer = false;
+    [Tooltip("玩家离自己多近时开始看向玩家。")]
+    public float AttractDistance = 2f;
+    private walkDir orDir;
 
     // 朝向枚举
     public enum walkDir{
@@ -89,15 +97,17 @@ public class Chara : MonoBehaviour
     public MyQueueWithIndex<walkTask> walkTasks = new MyQueueWithIndex<walkTask>();
 
     private Sprite[] Animation;                 // 行走图图像集
+    [Tooltip("对应的人物")]
     public string Character;                    // 对应的人物
+    [Tooltip("是否为玩家")]
     public bool Controller = false;             // 是否为玩家
     private SpriteRenderer image;               // 图形显示容器
+    [Tooltip("当前朝向")]
     public walkDir dir;                         // 当前朝向
     private bool walking;                       // 是否正在行走
     private int walkBuff = 1;                   // 行走图系列帧序数
     private float walkspan;                     // 行走图动画间隔控制缓冲
     private float sx,sy,ex,ey;                  // 地图边界x,y - x,y
-    private float xAccumulate = 0, yAccumulate = 0;
     public WalkTaskCallback walkTaskCallback;   // 行走人物回调
 
     private _OutMousePositionBuilder bridgeTaskbuilderOMP;
@@ -142,6 +152,7 @@ public class Chara : MonoBehaviour
             // 取得传送位置坐标
             this.transform.localPosition = GameObject.Find("tp" + MapCamera.initTp).transform.localPosition;
         }
+        orDir = dir;
     }
     // 更新行走图图形
     public void UpdateWalkImage(){
@@ -179,27 +190,6 @@ public class Chara : MonoBehaviour
         walking = true;
         if(x != 0) dir = x < 0 ? walkDir.Left : walkDir.Right;
         if(y != 0) dir = y < 0 ? walkDir.Down : walkDir.Up;
-        return y == 0 ? buff * x : buff * y;
-    }
-    void MoveAccumulate()
-    {
-        Vector3 pos = transform.localPosition;
-        pos.x += xAccumulate;
-        pos.y += yAccumulate;
-        if (pos.x < sx) pos.x = sx;
-        if (pos.x > ex) pos.x = ex;
-        if (pos.y > sy) pos.y = sy;
-        if (pos.y < ey) pos.y = ey;
-        transform.localPosition = pos;
-        walking = true;
-        if (xAccumulate != 0) dir = xAccumulate < 0 ? walkDir.Left : walkDir.Right;
-        if (yAccumulate != 0) dir = yAccumulate < 0 ? walkDir.Down : walkDir.Up;
-        xAccumulate = 0; yAccumulate = 0;
-    }
-    float GetMove(int x, int y)
-    {
-        float buff = speed * Time.fixedDeltaTime * 60f * (Input.GetKey(KeyCode.X) ? 2 : 1);
-        walking = true;
         return y == 0 ? buff * x : buff * y;
     }
 
@@ -245,9 +235,47 @@ public class Chara : MonoBehaviour
         }
         return pos;
     }
+    void NPCUpdate()
+    {
+        if (AttractPlayer && MapCamera.Player != null)
+        {
+            float dy = MapCamera.Player.transform.localPosition.y - transform.position.y;
+            float dx = MapCamera.Player.transform.localPosition.x - transform.position.x;
+            walkDir d = walkDir.Down;
+            if(Mathf.Abs(dy) <= AttractDistance && Mathf.Abs(dx) <= AttractDistance)
+            {
+                if(Mathf.Abs(dx) >= Mathf.Abs(dy))
+                {
+                    if (dx < 0) d = walkDir.Left; else d = walkDir.Right;
+                }
+                else
+                {
+                    if (dy < 0) d = walkDir.Down; else d = walkDir.Up;
+                }
+                if(d != dir)
+                {
+                    dir = d;
+                    UpdateWalkImage();
+                }
+            }
+            else
+            {
+                if(orDir != dir)
+                {
+                    dir = orDir;
+                    UpdateWalkImage();
+                }
+            }
+        }
+    }
 
     void FixedUpdate()
     {
+        // NPC
+        if (walkTasks.Count == 0 && !Controller)
+        {
+            NPCUpdate();
+        }
         // 如果剧本正在进行则退出
         if (MapCamera.SuspensionDrama && walkTasks.Count == 0 && Controller)
         {

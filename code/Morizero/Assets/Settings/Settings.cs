@@ -8,6 +8,7 @@ public class Settings : MonoBehaviour
 {
     public List<GameObject> MenuItems;
     public GameObject LinkTab;
+    private static Transform oldTabTransform;
     public GameObject BackIcon;
     public Text HistoryText;
     public Transform HistoryEndMark;
@@ -50,6 +51,7 @@ public class Settings : MonoBehaviour
         }
         GameObject oldTab = Parent.MenuItems[Parent.MenuIndex].GetComponent<Settings>().LinkTab, 
                    newTab = Parent.MenuItems[Index].GetComponent<Settings>().LinkTab;
+        oldTabTransform = oldTab.transform;
         oldTab.SetActive(false);
         oldTab.SetActive(true);
         oldTab.GetComponent<Animator>().enabled = true;
@@ -62,7 +64,7 @@ public class Settings : MonoBehaviour
         Parent.MenuIndex = Index;
         Parent.BackIcon.GetComponent<Animator>().Play("BackIconHide", 0, 0.0f);
         Parent.scrollController.ScrollContainer = newTab.transform;
-        Parent.scrollController.UpdateContainer(false);
+        Parent.scrollController.UpdateContainer();
         if (Parent.MenuIndex == 1 && NeedScrollToBottom)
         {
             Parent.scrollController.ScrollToBottom();
@@ -88,9 +90,8 @@ public class Settings : MonoBehaviour
         Parent.BackIcon.GetComponent<Image>().sprite = Parent.MenuItems[Parent.MenuIndex].GetComponent<Settings>().BackIcon.GetComponent<Image>().sprite;
         Parent.BackIcon.GetComponent<Animator>().enabled = true;
         Parent.BackIcon.GetComponent<Animator>().Play("BackIconShow", 0, 0.0f);
-        if (newTab == null) return;
-        Parent.scrollController.ResetSavedPosition();
-        Parent.scrollController.SetOriginalPosition();
+        if (oldTabTransform == null) return;
+        Parent.scrollController.ResetSavedPosition(oldTabTransform);
     }
     private void Awake()
     {
@@ -99,6 +100,7 @@ public class Settings : MonoBehaviour
             // ÊÂMenuItem~
             return;
         }
+        oldTabTransform = scrollController.ScrollContainer;
         for(int i = 0;i < MenuItems.Count;i++)
         {
             MenuItems[i].GetComponent<Settings>().Index = i;

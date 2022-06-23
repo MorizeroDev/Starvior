@@ -111,32 +111,52 @@ public class Debuger : MonoBehaviour
             line = s.currentLine;
             Detail.text = "行" + line + "：" + s.code[line];
         }
+        if (id == 7)
+        {
+            if (Dramas.ActiveDrama == null)
+            {
+                InstantMessage("没有正在运作的对话框。", Camera.main.ScreenToWorldPoint(Input.mousePosition));
+                return;
+            }
+            Dramas.ActiveDrama.DramaIndex = Dramas.ActiveDrama.Drama.Count;
+            if (Dramas.ActiveDrama.LifeTime == Dramas.DramaLifeTime.NeverDie)
+                Dramas.ActiveDrama.DramaDone();
+            else
+                Dramas.ActiveDrama.ExitDrama();
+        }
         if (id == 3)
         {
             MakeChoice.Create(() =>
             {
-                if(MakeChoice.choiceId == 0)
+                if (MakeChoice.choiceId != 5)
                 {
-                    Switcher.Carry("ROOM_XUELAN");
+                    if (MapCamera.SuspensionDrama && !Settings.Active)
+                    {
+                        DramaScript.Active.currentLine = DramaScript.Active.code.Length;
+                        DramaScript.Active.carryTask();
+                    }
+                    MapCamera.SuspensionDrama = true;
+                }
+                if (MakeChoice.choiceId == 0)
+                {
+                    Switcher.Carry("ROOM_XUELAN", callback: () => MapCamera.SuspensionDrama = false);
                 }
                 if (MakeChoice.choiceId == 1)
                 {
-                    Switcher.Carry("Corridor_3F");
+                    Switcher.Carry("Corridor_3F", callback: () => MapCamera.SuspensionDrama = false);
                 }
                 if (MakeChoice.choiceId == 2)
                 {
-                    Switcher.Carry("Yard");
+                    Switcher.Carry("Yard", callback: () => MapCamera.SuspensionDrama = false);
                 }
                 if (MakeChoice.choiceId == 3)
                 {
-                    Switcher.Carry("EmptyScene");
+                    Switcher.Carry("EmptyScene", callback: () => MapCamera.SuspensionDrama = false);
                 }
                 if (MakeChoice.choiceId == 4)
                 {
-                    Switcher.Carry("ShitSpace");
+                    Switcher.Carry("ShitSpace", callback: () => MapCamera.SuspensionDrama = false);
                 }
-                if (MakeChoice.choiceId != 5)
-                    MapCamera.SuspensionDrama = false;
             }, "传送到哪个地图？", new string[] { "雪狼的病房", "三楼走廊", "后院", "虚空", "画中世界", "取消" });
         }
     }
@@ -240,6 +260,10 @@ public class Debuger : MonoBehaviour
             if(DramaScript.Active.currentLine < DramaScript.Active.code.Length)
                 dstr += $"当前运行行的剧本脚本：{DramaScript.Active.code[DramaScript.Active.currentLine]}" + "\n";
             dstr += $"是否有可回收的对话框：{DramaScript.Active.DramaAvaliable.ToString()}";
+        }
+        if (Dramas.ActiveDrama != null)
+        {
+            dstr += $"当前对话框总对话数量：{Dramas.ActiveDrama.Drama.Count}，已阅读到：{Dramas.ActiveDrama.DramaIndex + 1}" + "\n";
         }
         Detail.text = dstr;
     }

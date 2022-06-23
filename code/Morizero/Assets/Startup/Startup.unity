@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.23083082, g: 0.23468912, b: 0.2702401, a: 1}
+  m_IndirectSpecularColor: {r: 0.23011449, g: 0.23275235, b: 0.27090362, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -388,7 +388,7 @@ GameObject:
   - component: {fileID: 373767749}
   m_Layer: 0
   m_Name: Sky Camera
-  m_TagString: MainCamera
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -746,11 +746,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3264080760490268723, guid: 347fa75e90e60fa47b10ed3c861410e7, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3264080760490268723, guid: 347fa75e90e60fa47b10ed3c861410e7, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3968489826187117621, guid: 347fa75e90e60fa47b10ed3c861410e7, type: 3}
+      propertyPath: m_RootOrder
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8486327737233835284, guid: 347fa75e90e60fa47b10ed3c861410e7, type: 3}
       propertyPath: m_Name
@@ -931,7 +935,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Alpha-622(\u5185\u6D4B)"
+  m_Text: "Alpha-623(\u5185\u6D4B)"
 --- !u!222 &557822796
 CanvasRenderer:
   m_ObjectHideFlags: 0
