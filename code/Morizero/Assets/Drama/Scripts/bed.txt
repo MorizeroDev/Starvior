@@ -16,7 +16,7 @@ case:0
 	rebgs:
 	speaking:旁白
 	immersion:
-	你的存档已经被保存了。
+	虽然但是不是在这里保存存档的呢。
 	plot:clear
 endchoice:
 break

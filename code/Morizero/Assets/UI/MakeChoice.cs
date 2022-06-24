@@ -8,7 +8,7 @@ public delegate void MakeChoiceCallback();
 public class MakeChoice : MonoBehaviour
 {
     public Text Explaination;
-    public GameObject ChoicePrefab;
+    public GameObject ChoicePrefab, RollArea, AreaScrollBar;
     public Animator Lit, UnLit, TextLit;
     public MakeChoiceCallback Callback;
     public int id;
@@ -32,15 +32,20 @@ public class MakeChoice : MonoBehaviour
         GameObject fab = (GameObject)Resources.Load("Prefabs\\MakeChoice");    // 载入母体
         GameObject box = Instantiate(fab,new Vector3(0,0,-1),Quaternion.identity);
         MakeChoice mc = box.GetComponent<MakeChoice>();
-        float y = (choices.Length - 1) * 100 - 140;
+        float y = (choices.Length - 1) * 100 - 40;
         Dramas.lcharacter = "MakeChoice";
         Dramas.AppendHistory("");
         Dramas.AppendHistory("[" + explain + "]");
+        if (choices.Length > 3)
+        {
+            y = 240;
+            mc.AreaScrollBar.SetActive(true);
+        }
         for (int i = 0;i < choices.Length;i++){
             GameObject Choice = Instantiate(mc.ChoicePrefab,
                                             new Vector3(mc.ChoicePrefab.transform.localPosition.x,y,-1),
                                             Quaternion.identity,
-                                            box.transform);
+                                            mc.RollArea.transform);
             Choice.transform.localPosition = new Vector3(mc.ChoicePrefab.transform.localPosition.x,y,0);
             MakeChoice choice = Choice.GetComponent<MakeChoice>();
             choice.Explaination.text = choices[i];

@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class ScrollController : MonoBehaviour
 {
+    public delegate void ScrollCallback(float value);
     public Transform ScrollContainer;
     public Animator UpAni, DownAni;
     public float CanvasHeight = 1440f;
     public static bool UIUsing = false;
+    public ScrollCallback Callback = null;
     private Vector2 scrollPosition = Vector2.zero;
     private float scrollVelocity = 0f;
     private float timeTouchPhaseEnded = 0f;
@@ -46,6 +48,7 @@ public class ScrollController : MonoBehaviour
             {
                 orY[transform].Add(transform.GetChild(i).transform.localPosition.y);
             }
+            if (transform == ScrollContainer) NotifyStatus();
         }
     }
     public void UpdateContainer(bool SetOriginal = true)
@@ -61,19 +64,52 @@ public class ScrollController : MonoBehaviour
         }
         if (SetOriginal) SetOriginalPosition(ScrollContainer);
     }
+    public void ScrollToTarget(float value)
+    {
+        if (!orY.ContainsKey(ScrollContainer))
+        {
+            Debug.LogWarning("未记录原始坐标数据之前，无法进行比例滚动。");
+            return;
+        }
+        float del = YLimitDelta(ScrollContainer);
+        del *= value;
+        for (int i = 0; i < ScrollContainer.childCount; i++)
+        {
+            Transform t = ScrollContainer.GetChild(i).transform;
+            t.localPosition = new Vector3(t.localPosition.x, orY[ScrollContainer][i] - del, t.localPosition.z);
+        }
+    }
+    public float YLimit()
+    {
+        return ScrollContainer.GetChild(ScrollContainer.childCount - 1).localPosition.y - LY + CanvasHeight;
+    }
+    public float YLimitDelta(Transform transform)
+    {
+        return orY[transform][orY[transform].Count - 1] - LY + CanvasHeight;
+    }
     public void ScrollToBottom()
     {
         RectTransform rect = ScrollContainer.GetChild(ScrollContainer.childCount - 1).GetComponent<RectTransform>();
-        float del = ScrollContainer.GetChild(ScrollContainer.childCount - 1).localPosition.y - LY + 1440;
+        float del = YLimit();
         for (int i = 0; i < ScrollContainer.childCount; i++)
         {
             Transform t = ScrollContainer.GetChild(i).transform;
             t.localPosition = new Vector3(t.localPosition.x, t.localPosition.y - del, t.localPosition.z);
         }
+        NotifyStatus();
     }
     private void Start()
     {
         UpdateContainer();
+    }
+    public void NotifyStatus()
+    {
+        if(Callback != null)
+        {
+            float del = YLimitDelta(ScrollContainer);
+            float d2 = orY[ScrollContainer][0] - ScrollContainer.GetChild(0).transform.localPosition.y;
+            Callback(d2 / del);
+        }
     }
     private void Update()
     {
@@ -86,6 +122,7 @@ public class ScrollController : MonoBehaviour
                 Transform t = ScrollContainer.GetChild(i).transform;
                 t.localPosition = new Vector3(t.localPosition.x, t.localPosition.y + (targetMouseY[i] - t.localPosition.y) / 5, t.localPosition.z);
             }
+            NotifyStatus();
             if (Mathf.Abs(ScrollContainer.GetChild(0).transform.localPosition.y - targetMouseY[0]) <= 0.01f) mouseWheeling = false;
         }
         if (Input.touchCount > 0)
@@ -99,7 +136,7 @@ public class ScrollController : MonoBehaviour
             {
                 //print("End:" + lastDeltaPos.y + "|" + Input.GetTouch(0).deltaTime);
                 if (Mathf.Abs(lastDeltaPos.y) > 20.0f)
-                {
+                { 
                     scrollVelocity = (int)(lastDeltaPos.y * 0.5 / Input.GetTouch(0).deltaTime);
                     //print(scrollVelocity);
                 }
@@ -121,9 +158,9 @@ public class ScrollController : MonoBehaviour
         if (del != 0)
         {
             RectTransform rect = ScrollContainer.GetChild(ScrollContainer.childCount - 1).GetComponent<RectTransform>();
-            if (ScrollContainer.GetChild(ScrollContainer.childCount - 1).localPosition.y - del > LY - 1440)
+            if (ScrollContainer.GetChild(ScrollContainer.childCount - 1).localPosition.y - del > LY - CanvasHeight)
             {
-                //Debug.Log("Bottom Resist by " + ScrollContainer.GetChild(ScrollContainer.childCount - 1).name);
+                Debug.Log("Bottom Resist by " + ScrollContainer.GetChild(ScrollContainer.childCount - 1).name + " to " + (LY - CanvasHeight));
                 if (!DownPlayed)
                 {
                     DownAni.Play("ScrollLight", 0, 0.0f);
@@ -134,7 +171,7 @@ public class ScrollController : MonoBehaviour
                         UpAni.Play("ScrollUnLight", 0, 0.0f);
                     }
                 }
-                del = ScrollContainer.GetChild(ScrollContainer.childCount - 1).localPosition.y - LY + 1440;
+                del = YLimit();
             }
             if (ScrollContainer.GetChild(0).localPosition.y - del < FY)
             {
@@ -176,6 +213,7 @@ public class ScrollController : MonoBehaviour
                     Transform t = ScrollContainer.GetChild(i).transform;
                     t.localPosition = new Vector3(t.localPosition.x, t.localPosition.y - del, t.localPosition.z);
                 }
+                NotifyStatus();
             }
         }
         else

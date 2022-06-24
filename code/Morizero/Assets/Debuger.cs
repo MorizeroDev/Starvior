@@ -157,7 +157,7 @@ public class Debuger : MonoBehaviour
                 {
                     Switcher.Carry("ShitSpace", callback: () => MapCamera.SuspensionDrama = false);
                 }
-            }, "传送到哪个地图？", new string[] { "雪狼的病房", "三楼走廊", "后院", "虚空", "画中世界", "取消" });
+            }, "传送到哪个地图？", new string[] { "雪兰的病房", "三楼走廊", "后院", "虚空", "画中世界", "取消" });
         }
     }
     public static void InstantMessage(string s, Vector3 position, Transform parent = null)
