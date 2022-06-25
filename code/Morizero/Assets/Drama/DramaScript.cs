@@ -25,12 +25,14 @@ public class DramaCrossScene : MonoBehaviour
 
 public class PlotCreator : MonoBehaviour
 {
+    public static List<string> PlotName = new List<string>();
     public static List<GameObject> Plots = new List<GameObject>();
     public static void Clear(Loading.LoadingCallback callback){
         Loading.Start(() => {
             foreach(GameObject go in Plots)
                 Destroy(go);
             Plots.Clear();
+            PlotName.Clear();
             Loading.Finish();
         },callback);
     }
@@ -39,17 +41,21 @@ public class PlotCreator : MonoBehaviour
         GameObject plot = Instantiate(fab,new Vector3(0,0,-1),Quaternion.identity);
         plot.SetActive(true);
         Plots.Add(plot);
+        PlotName.Add(plots);
     }
 }
-
+[Serializable]
 public class DramaScript
 {
     public static DramaScript Active;
     public string[] code;
     public int currentLine;
+    [NonSerialized]
     public DramaCallback callback;
+    [NonSerialized]
     public Dramas lastDrama;
     public bool DramaAvaliable = false;
+    [NonSerialized]
     public CheckObj parent;
 
     public void Done(){

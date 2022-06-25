@@ -192,6 +192,16 @@ public class Debuger : MonoBehaviour
     private void Update()
     {
         if (id != -1) return;
+
+        if (Input.GetKeyUp(KeyCode.V))
+        {
+            SaveController.SaveGame();
+        }
+        if (Input.GetKeyUp(KeyCode.B))
+        {
+            SaveController.RestoreGame(System.IO.File.ReadAllText("D:\\save.txt"));
+        }
+
         FPSCount++;
         dTime += Time.deltaTime;
         if (dTime > 1)

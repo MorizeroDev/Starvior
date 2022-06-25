@@ -9,6 +9,7 @@ using System;
 using System.Text;
 
 public delegate void DramaCallback();
+[Serializable]
 public class Dramas : MonoBehaviour
 {
     public static bool DramaUnloading = false;
@@ -25,7 +26,7 @@ public class Dramas : MonoBehaviour
     public GameObject WordChild;                    // 对话框文本母体
     public Animator Motion;                         // 立绘动画
     private float Speed;                            // 等待计数
-    private int DialogState;                        // 对话框状态（-1=未就绪，0=等待显示，1=等待确认，2=完毕）
+    public int DialogState;                        // 对话框状态（-1=未就绪，0=等待显示，1=等待确认，2=完毕）
     public Sprite Dialog1,Dialog2;
     public string DialogTyle;
     public Image DialogBox;
@@ -56,6 +57,7 @@ public class Dramas : MonoBehaviour
     public bool DisableInput = false;
     public bool NoCallback = false;
     public bool Suspense = false;
+    public static string PrefabName;
     public DramaLifeTime LifeTime = DramaLifeTime.NeverDie;
     private static List<int> existingFingers = new List<int>();
 
@@ -88,6 +90,7 @@ public class Dramas : MonoBehaviour
     public static Dramas LaunchScript(string frame,DramaCallback Callback){
         callback = Callback;
         Debug.Log("Dramas: launched at " + "Dramas\\" + frame);
+        PrefabName = frame;
         GameObject fab = (GameObject)Resources.Load("Dramas\\" + frame);    // 载入母体
         GameObject box = Instantiate(fab,new Vector3(0,0,-1),Quaternion.identity);
         Dramas drama = box.transform.Find("Dialog").GetComponent<Dramas>();
@@ -100,6 +103,7 @@ public class Dramas : MonoBehaviour
     public static Dramas Launch(string DramaName,DramaCallback Callback){
         callback = Callback;
         Debug.Log("Dramas: launched at " + "Dramas\\" + DramaName);
+        PrefabName = DramaName;
         GameObject fab = (GameObject)Resources.Load("Dramas\\" + DramaName);    // 载入母体
         GameObject box = Instantiate(fab,new Vector3(0,0,-1),Quaternion.identity);
         Dramas drama = box.transform.Find("Dialog").GetComponent<Dramas>();
@@ -112,6 +116,7 @@ public class Dramas : MonoBehaviour
     }
     public static Dramas LaunchCheck(string content,DramaCallback Callback){
         callback = Callback;
+        PrefabName = "Check";
         GameObject fab = (GameObject)Resources.Load("Dramas\\Check");    // 载入母体
         GameObject box = Instantiate(fab,new Vector3(0,0,-1),Quaternion.identity);
         box.GetComponent<Canvas>().worldCamera = Camera.main;

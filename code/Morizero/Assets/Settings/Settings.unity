@@ -3574,7 +3574,7 @@ SpriteRenderer:
   m_Size: {x: 8.64, y: 5.4}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!4 &1103494571
@@ -6615,7 +6615,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 160
 --- !u!114 &1908268387
 MonoBehaviour:
   m_ObjectHideFlags: 0

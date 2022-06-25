@@ -20,7 +20,8 @@ public class CheckObj : MonoBehaviour
     public TextAsset Script;
     [Tooltip("与之联系的NPC，用于纠正坐标。")]
     public Chara BindChara;
-    private DramaScript scriptCarrier = new DramaScript();
+    [HideInInspector]
+    public DramaScript scriptCarrier = new DramaScript();
     public static bool CheckBtnPressed;
     public static bool CheckAvaliable = false;
     [Tooltip("是否当人物踩在碰撞箱上立即触发Script。")]
