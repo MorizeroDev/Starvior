@@ -783,7 +783,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Script: {fileID: 4900000, guid: 49f02429f007da443a236c22aed1a39d, type: 3}
   BindChara: {fileID: 0}
-  StartOnTrigger: 1
+  triggerType: 3
   AllowDirection: 00000000030000000100000002000000
   CheckType: 2
   Content: 

@@ -4,6 +4,18 @@ using UnityEngine;
 
 public class CheckObj : MonoBehaviour
 {
+    public static bool TriggerRunning = false;
+    public enum TriggerType
+    {
+        [InspectorName("被动触发")]
+        Passive,
+        [InspectorName("踩入时立即触发")]
+        OnceTrigger,
+        [InspectorName("踩入后被动触发")]
+        PassiveTrigger,
+        [InspectorName("时时刻刻触发")]
+        Whenever
+    }
     [Tooltip("附加的剧本脚本。")]
     public TextAsset Script;
     [Tooltip("与之联系的NPC，用于纠正坐标。")]
@@ -12,16 +24,16 @@ public class CheckObj : MonoBehaviour
     public static bool CheckBtnPressed;
     public static bool CheckAvaliable = false;
     [Tooltip("是否当人物踩在碰撞箱上立即触发Script。")]
-    public bool StartOnTrigger;
+    public TriggerType triggerType = TriggerType.Passive;
     private static float checkshowTime;
     [Tooltip("允许人物调查时面朝的方向。")]
     public List<Chara.walkDir> AllowDirection = new List<Chara.walkDir>(3);
-    [Tooltip("调查人物的类型，0为Drama预制体，1为简单调查。\n当Script不为null时，此设定无效。")]
+    [Tooltip("调查人物的类型，0为简单调查，1为Drama预制体。\n当Script不为null时，此设定无效。")]
     public int CheckType = 0;
-    [Tooltip("在Script为空的情况下触发的调查内容。")]
+    [Tooltip("在Script为空的情况下触发的调查内容/预制体名称。")]
     public string Content;
     public void CheckEncounter(){
-        if(AllowDirection.Contains(MapCamera.Player.dir)){
+        if(AllowDirection.Contains(MapCamera.Player.dir) || triggerType != TriggerType.Passive){
             MapCamera.HitCheck = this.gameObject;
             MapCamera.HitCheckTransform = this.transform.parent;
             if(CheckType == 0) {
@@ -53,10 +65,30 @@ public class CheckObj : MonoBehaviour
         }
         CheckAvaliable = false;
     }
-
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (triggerType != TriggerType.PassiveTrigger && triggerType != TriggerType.OnceTrigger) return;
+        if (MapCamera.HitCheck == this.gameObject) return;
+        if (MapCamera.HitCheck != null) MapCamera.HitCheck.GetComponent<CheckObj>().CheckGoodbye();
+        CheckEncounter();
+        TriggerRunning = true;
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (triggerType != TriggerType.PassiveTrigger && triggerType != TriggerType.OnceTrigger) return;
+        if (MapCamera.HitCheck == this.gameObject)
+        {
+            TriggerRunning = false;
+            CheckGoodbye();
+        }
+    }
+    private void OnDestroy()
+    {
+        OnTriggerExit2D(null);
+    }
     public bool IsActive(){
-        if(MapCamera.HitCheck != this.gameObject) return false;
-        bool ret = (Input.GetKeyUp(KeyCode.Z) || CheckBtnPressed || StartOnTrigger);
+        if(MapCamera.HitCheck != this.gameObject && triggerType != TriggerType.Whenever) return false;
+        bool ret = (Input.GetKeyUp(KeyCode.Z) || CheckBtnPressed || triggerType == TriggerType.OnceTrigger || triggerType == TriggerType.Whenever);
         if(MapCamera.SuspensionDrama) ret = false;
         CheckBtnPressed = false;
         return ret;

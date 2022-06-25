@@ -335,16 +335,23 @@ public class Chara : MonoBehaviour
             spyRay.y -= 0.48f;
         }
         CheckObj checkObj = null;
-        foreach(RaycastHit2D crash in Physics2D.RaycastAll(spyRay,new Vector2(0,0))){
-            if(crash.collider.gameObject.TryGetComponent<CheckObj>(out checkObj)){
-                if(MapCamera.HitCheck != checkObj.gameObject){
-                    checkObj.CheckEncounter();
+        if (!CheckObj.TriggerRunning)
+        {
+            foreach (RaycastHit2D crash in Physics2D.RaycastAll(spyRay, new Vector2(0, 0)))
+            {
+                if (crash.collider.gameObject.TryGetComponent<CheckObj>(out checkObj))
+                {
+                    if (MapCamera.HitCheck != checkObj.gameObject && checkObj.triggerType == CheckObj.TriggerType.Passive)
+                    {
+                        checkObj.CheckEncounter();
+                    }
+                    break;
                 }
-                break;
             }
-        }
-        if((checkObj == null || !checkObj.AllowDirection.Contains(dir)) && MapCamera.HitCheck != null){
-            MapCamera.HitCheck.GetComponent<CheckObj>().CheckGoodbye();
+            if ((checkObj == null || !checkObj.AllowDirection.Contains(dir)) && MapCamera.HitCheck != null)
+            {
+                MapCamera.HitCheck.GetComponent<CheckObj>().CheckGoodbye();
+            }
         }
 
         // 如果屏幕被点击
