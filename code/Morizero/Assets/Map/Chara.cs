@@ -124,7 +124,7 @@ public class Chara : MonoBehaviour
         MovePad = GameObject.Find("MapCamera").transform.Find("MovePad").Find("PadCore").gameObject;
         MovePad.transform.localPosition = new Vector3(x, y, 0);
     }
-    private void Start() {
+    private void Awake() {
         // 载入行走图图像集，并初始化相关设置
         Animation = Resources.LoadAll<Sprite>("Players\\" + Character);
         image = this.GetComponent<SpriteRenderer>();
@@ -136,17 +136,22 @@ public class Chara : MonoBehaviour
         sx = pos.x + size.x; sy = pos.y - size.y; 
         pos = GameObject.Find("endDot").transform.localPosition;
         ex = pos.x - size.x; ey = pos.y + size.y * 1.7f; 
+    }
+    private void Start()
+    {
         // 如果是玩家则绑定至MapCamera
-        if(Controller) {
+        if (Controller)
+        {
             MapCamera.Player = this;
             MapCamera.PlayerCollider = this.transform.Find("Pathfinding").gameObject;
             Pad = GameObject.Find("MapCamera").transform.Find("MovePad").Find("PadCore").Find("ball");
             ApplyMovePadSettings();
         }
-        if(Controller) // only controller can havve a pathfinding movement
+        if (Controller) // only controller can havve a pathfinding movement
             bridgeTaskbuilderOMP = new _OutMousePositionBuilder(dataBridge.defaultRayMapPathFindingScript);
         // 如果是玩家并且传送数据不为空，则按照传送设置初始化
-        if(Controller && MapCamera.initTp != -1){
+        if (Controller && MapCamera.initTp != -1)
+        {
             dir = MapCamera.initDir;
             UpdateWalkImage();
             // 取得传送位置坐标

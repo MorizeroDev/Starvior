@@ -3,7 +3,34 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class SaveController : MonoBehaviour
+[System.Serializable]
+public class Save
+{
+    [System.Serializable]
+    public class KeyPair
+    {
+        public string Key;
+        public string Value;
+    }
+    public static List<KeyPair> KeyPairs = new List<KeyPair>();
+    public static string Get(string key, string defaultv)
+    {
+        int i = KeyPairs.FindIndex(m => m.Key == key);
+        if (i != -1)
+            return KeyPairs[i].Value;
+        else
+            return defaultv;
+    }
+    public static void Put(string key, string value)
+    {
+        int i = KeyPairs.FindIndex(m => m.Key == key);
+        if (i != -1)
+            KeyPairs[i].Value = value;
+        else
+            KeyPairs.Add(new KeyPair { Key = key, Value = value });
+    }
+}
+    public class SaveController : MonoBehaviour
 {
     [System.Serializable]
     public struct GameObjectState
@@ -29,6 +56,7 @@ public class SaveController : MonoBehaviour
         public string OBGSClip;
         public string SaveTime;
         public string ActiveScene;
+        public List<Save.KeyPair> KeyPairs;
         public List<GameObjectState> SceneObjects;
         public List<CharacterState> Characters;
         public List<string> History;
@@ -49,9 +77,13 @@ public class SaveController : MonoBehaviour
     public static void RestoreGame(string data)
     {
         SaveFile file = JsonUtility.FromJson<SaveFile>(data);
-        if (file.DramaData != null || file.DramaData != null) MapCamera.SuspensionDrama = true;
-        Switcher.Carry(file.ActiveScene, callback: () =>
+        Save.KeyPairs = file.KeyPairs;
+        if (file.DramaData != null || file.ActiveScript != null) 
+            if(file.DramaData.Count > 0 || file.ActiveScript.code.Length > 0)
+                MapCamera.SuspensionDrama = true;
+        Switcher.Carry(file.ActiveScene, loadingCallback: () =>
         {
+            Camera.main.Render();
             if(file.BGMClip != "")
             {
                 MapCamera.bgm.clip = (AudioClip)Resources.Load("BGM\\" + file.BGMClip);
@@ -98,67 +130,86 @@ public class SaveController : MonoBehaviour
             DramaScript s = null;
             Dramas.HistoryDrama = file.History;
             Dramas.HistoryDrama.RemoveAt(Dramas.HistoryDrama.Count - 1);
-            if (file.ActiveScript != null)
-            {
-                CheckObj check = GetObject(file.ScriptOwnerName).GetComponent<CheckObj>();
-                s = check.scriptCarrier;
-                s.currentLine = file.ActiveScript.currentLine;
-                s.code = file.ActiveScript.code;
-                s.DramaAvaliable = file.ActiveScript.DramaAvaliable;
-                DramaScript.Active = s;
+            if (file.ActiveScript != null) 
+            { 
+                if(file.ActiveScript.code.Length > 0)
+                {
+                    if(file.ScriptOwnerName != "")
+                    {
+                        CheckObj check = GetObject(file.ScriptOwnerName).GetComponent<CheckObj>();
+                        s = check.scriptCarrier;
+                    }
+                    if (s == null)
+                    {
+                        s = file.ActiveScript;
+                        DramaScript.Active = file.ActiveScript;
+                    }
+                    else
+                    {
+                        s.currentLine = file.ActiveScript.currentLine;
+                        s.code = file.ActiveScript.code;
+                        s.DramaAvaliable = file.ActiveScript.DramaAvaliable;
+                        DramaScript.Active = s;
+                    }
+                }
             }
             foreach (string plot in file.PlotName)
                 PlotCreator.LoadPlot(plot);
             if (file.DramaData != null)
             {
-                Dramas d = null;
-                if (file.DialogPrefab == "Check")
+                if(file.DramaData.Count > 0)
                 {
-                    if (s == null)
+                    Dramas d = null;
+                    if (file.DialogPrefab == "Check")
                     {
-                        d = Dramas.LaunchCheck("", () =>
+                        if (s == null)
                         {
-                            if (!Settings.Active && !Settings.Loading) MapCamera.SuspensionDrama = false;
-                        });
+                            d = Dramas.LaunchCheck("", () =>
+                            {
+                                if (!Settings.Active && !Settings.Loading) MapCamera.SuspensionDrama = false;
+                            });
+                        }
+                        else
+                        {
+                            d = Dramas.LaunchCheck("", s.carryTask);
+                        }
                     }
                     else
                     {
-                        d = Dramas.LaunchCheck("", s.carryTask);
-                    }
-                }
-                else
-                {
-                    if (s == null)
-                    {
-                        d = Dramas.Launch(file.DialogPrefab, () =>
+                        if (s == null)
                         {
-                            if (!Settings.Active && !Settings.Loading) MapCamera.SuspensionDrama = false;
-                        });
+                            d = Dramas.Launch(file.DialogPrefab, () =>
+                            {
+                                if (!Settings.Active && !Settings.Loading) MapCamera.SuspensionDrama = false;
+                            });
+                        }
+                        else
+                        {
+                            d = Dramas.LaunchScript(file.DialogPrefab, s.carryTask);
+                        }
                     }
-                    else
-                    {
-                        d = Dramas.LaunchScript(file.DialogPrefab, s.carryTask);
-                    }
+                    Dramas.ActiveDrama = d;
+                    if (s != null) s.lastDrama = d;
+                    d.Drama = file.DramaData;
+                    d.NoCallback = file.DramaNoCallback;
+                    d.DialogTyle = file.DramaDialogTyle;
+                    d.LifeTime = file.LifeTime;
+                    d.DisableInput = file.DramaDisableInput;
+                    d.Suspense = file.DramaSuspense;
+                    d.DramaIndex = file.DramaIndex;
+                    Dramas.ImmersionSpeaking = file.ImmersionName;
+                    Dramas.lcharacter = file.lCharacter;
+                    d.DialogState = 0;
+                    d.ReadDrama();
                 }
-                Dramas.ActiveDrama = d;
-                if (s != null) s.lastDrama = d;
-                d.Drama = file.DramaData;
-                d.NoCallback = file.DramaNoCallback;
-                d.DialogTyle = file.DramaDialogTyle;
-                d.LifeTime = file.LifeTime;
-                d.DisableInput = file.DramaDisableInput;
-                d.Suspense = file.DramaSuspense;
-                d.DramaIndex = file.DramaIndex;
-                Dramas.ImmersionSpeaking = file.ImmersionName;
-                Dramas.lcharacter = file.lCharacter;
-                d.DialogState = 0;
-                d.ReadDrama();
             }
+            Loading.Finish();
         });
     }
     public static GameObject GetObject(string path)
     {
         string[] p = path.Split('\\');
+        if(p.Length < 2) return null;
         Transform t = null;
         foreach(GameObject go in SceneManager.GetActiveScene().GetRootGameObjects())
         {
@@ -181,6 +232,7 @@ public class SaveController : MonoBehaviour
         SaveFile file = new SaveFile();
         file.SceneObjects = new List<GameObjectState>();
         file.Characters = new List<CharacterState>();
+        file.KeyPairs = Save.KeyPairs;
         file.ActiveScene = SceneManager.GetActiveScene().name;
         if(MapCamera.bgm.clip != null)
         {
@@ -235,7 +287,10 @@ public class SaveController : MonoBehaviour
         {
             if(DramaScript.Active.currentLine < DramaScript.Active.code.Length)
             {
-                file.ScriptOwnerName = GetGameObjectFullPath(DramaScript.Active.parent.gameObject);
+                if (DramaScript.Active.parent != null)
+                    file.ScriptOwnerName = GetGameObjectFullPath(DramaScript.Active.parent.gameObject);
+                else
+                    file.ScriptOwnerName = "";
                 file.ActiveScript = DramaScript.Active;
             }
         }

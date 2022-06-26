@@ -23,7 +23,7 @@ public class MapCamera : MonoBehaviour
     public Sprite CheckBack,TalkBack;
     public Image CheckText,CheckImg;
     public Text MapName;
-    public Animator animator;
+    public Animator animator, PadAni;
     public AudioClip BGM,BGS;
     public float BGMRelativeOverride = 1.0f;
     public float BGSRelativeOverride = 1.0f;
@@ -43,6 +43,7 @@ public class MapCamera : MonoBehaviour
 
         Dramas.AppendHistory("");
         Dramas.AppendHistory("<" + MapName.text + ">");
+        if (SuspensionDrama) PadAni.Play("MoveTip", 0, 1.0f);
         if (bgm == null){
             GameObject fab = (GameObject)Resources.Load("Prefabs\\MusicPlayer");    // 载入母体
             GameObject box = Instantiate(fab,new Vector3(0,0,-1),Quaternion.identity);

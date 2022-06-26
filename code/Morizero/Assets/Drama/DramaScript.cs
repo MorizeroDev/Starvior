@@ -17,6 +17,8 @@ public class DramaCrossScene : MonoBehaviour
         ds.code = ods.code;
         ds.currentLine = ods.currentLine;
         ds.callback = () => {Destroy(go);};
+        DramaScript.Active = ds;
+        ds.parent = null;
         DontDestroyOnLoad(go);
         Debug.Log("DramaCrossScene: success.");
         return ds;
@@ -192,7 +194,7 @@ public class DramaScript
             string key = "";
             if(p[1] == "global") key = p[0];
             if(p[1] == "personal") key = parent.gameObject.scene + "." + parent.gameObject.name + "." + p[0];
-            PlayerPrefs.SetString(key,p[2]);
+            Save.Put(key,p[2]);
             handler = true;
             carryTask();
         }
@@ -239,7 +241,7 @@ public class DramaScript
             string key = "";
             if(p[1] == "global") key = p[0];
             if(p[1] == "personal") key = parent.gameObject.scene + "." + parent.gameObject.name + "." + p[0];
-            string data = PlayerPrefs.GetString(key);
+            string data = Save.Get(key, "");
             if(p[2] != data){
                 int buff = 0;
                 while(true){

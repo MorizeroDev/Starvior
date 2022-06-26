@@ -29,14 +29,14 @@ public class MakeChoice : MonoBehaviour
             mc.UnLit.enabled = false;
         }
     }
-    public static void Create(MakeChoiceCallback callback, string explain,string[] choices,bool NoRecord = false){
+    public static void Create(MakeChoiceCallback callback, string explain,string[] choices,bool NoRecords = false){
         GameObject fab = (GameObject)Resources.Load("Prefabs\\MakeChoice");    // 载入母体
         GameObject box = Instantiate(fab,new Vector3(0,0,-1),Quaternion.identity);
         MakeChoice mc = box.GetComponent<MakeChoice>();
-        mc.NoRecord = NoRecord;
+        mc.NoRecord = NoRecords;
         float y = (choices.Length - 1) * 100 - 40;
         Dramas.lcharacter = "MakeChoice";
-        if (!NoRecord)
+        if (!mc.NoRecord)
         {
             Dramas.AppendHistory("");
             Dramas.AppendHistory("[" + explain + "]");
@@ -108,7 +108,7 @@ public class MakeChoice : MonoBehaviour
         }
         parent.gameObject.GetComponent<Animator>().Play("MakeChoiceExit", 0);
         parent.finishSnd.Play();
-        if (!NoRecord)
+        if (!parent.NoRecord)
         {
             Dramas.AppendHistory("[我的选择：“" + parent.Choices[choiceId].GetComponent<MakeChoice>().Explaination.text + "”]");
             Dramas.AppendHistory("");

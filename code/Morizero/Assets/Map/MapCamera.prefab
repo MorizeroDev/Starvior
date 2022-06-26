@@ -1419,6 +1419,7 @@ MonoBehaviour:
   CheckImg: {fileID: 7205031309229966930}
   MapName: {fileID: 1572829887}
   animator: {fileID: 7293165566116530928}
+  PadAni: {fileID: 4949780511537345390}
   BGM: {fileID: 0}
   BGS: {fileID: 8300000, guid: f665553d470f4b449b4c41bbc5b8de6b, type: 3}
   BGMRelativeOverride: 1
