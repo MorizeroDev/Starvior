@@ -21,6 +21,12 @@ public class SaveController : MonoBehaviour
     [System.Serializable]
     public struct SaveFile
     {
+        public string BGMClip;
+        public string BGSClip;
+        public float BGMTime;
+        public float BGSTime;
+        public string OBGMClip;
+        public string OBGSClip;
         public string SaveTime;
         public string ActiveScene;
         public List<GameObjectState> SceneObjects;
@@ -43,9 +49,34 @@ public class SaveController : MonoBehaviour
     public static void RestoreGame(string data)
     {
         SaveFile file = JsonUtility.FromJson<SaveFile>(data);
+        if (file.DramaData != null || file.DramaData != null) MapCamera.SuspensionDrama = true;
         Switcher.Carry(file.ActiveScene, callback: () =>
         {
-            foreach(GameObjectState state in file.SceneObjects)
+            if(file.BGMClip != "")
+            {
+                MapCamera.bgm.clip = (AudioClip)Resources.Load("BGM\\" + file.BGMClip);
+                MapCamera.bgm.Play();
+                MapCamera.bgm.time = file.BGMTime;
+            }
+            else
+            {
+                MapCamera.bgm.Stop();
+                MapCamera.bgm.clip = null;
+            }
+            if (file.BGSClip != "")
+            {
+                MapCamera.bgs.clip = (AudioClip)Resources.Load("BGM\\" + file.BGSClip);
+                MapCamera.bgs.Play();
+                MapCamera.bgs.time = file.BGSTime;
+            }
+            else
+            {
+                MapCamera.bgs.Stop();
+                MapCamera.bgs.clip = null;
+            }
+            if (file.OBGMClip != "") MapCamera.mcamera.BGM = (AudioClip)Resources.Load("BGM\\" + file.OBGMClip);
+            if (file.OBGSClip != "") MapCamera.mcamera.BGS = (AudioClip)Resources.Load("BGM\\" + file.OBGSClip);
+            foreach (GameObjectState state in file.SceneObjects)
             {
                 GameObject go = GetObject(state.Name);
                 if(go != null)
@@ -66,9 +97,9 @@ public class SaveController : MonoBehaviour
             }
             DramaScript s = null;
             Dramas.HistoryDrama = file.History;
+            Dramas.HistoryDrama.RemoveAt(Dramas.HistoryDrama.Count - 1);
             if (file.ActiveScript != null)
             {
-                MapCamera.SuspensionDrama = true;
                 CheckObj check = GetObject(file.ScriptOwnerName).GetComponent<CheckObj>();
                 s = check.scriptCarrier;
                 s.currentLine = file.ActiveScript.currentLine;
@@ -80,7 +111,6 @@ public class SaveController : MonoBehaviour
                 PlotCreator.LoadPlot(plot);
             if (file.DramaData != null)
             {
-                MapCamera.SuspensionDrama = true;
                 Dramas d = null;
                 if (file.DialogPrefab == "Check")
                 {
@@ -152,7 +182,41 @@ public class SaveController : MonoBehaviour
         file.SceneObjects = new List<GameObjectState>();
         file.Characters = new List<CharacterState>();
         file.ActiveScene = SceneManager.GetActiveScene().name;
-        foreach(GameObject go in SceneManager.GetActiveScene().GetRootGameObjects())
+        if(MapCamera.bgm.clip != null)
+        {
+            file.BGMClip = MapCamera.bgm.clip.name;
+            file.BGMTime = MapCamera.bgm.time;
+        }
+        else
+        {
+            file.BGMClip = "";
+        }
+        if (MapCamera.bgs.clip != null)
+        {
+            file.BGSClip = MapCamera.bgs.clip.name;
+            file.BGSTime = MapCamera.bgs.time;
+        }
+        else
+        {
+            file.BGSClip = "";
+        }
+        if (MapCamera.mcamera.BGM != null)
+        {
+            file.OBGMClip = MapCamera.mcamera.BGM.name;
+        }
+        else
+        {
+            file.OBGMClip = "";
+        }
+        if (MapCamera.mcamera.BGS != null)
+        {
+            file.OBGSClip = MapCamera.mcamera.BGS.name;
+        }
+        else
+        {
+            file.OBGSClip = "";
+        }
+        foreach (GameObject go in SceneManager.GetActiveScene().GetRootGameObjects())
         {
             AddGameObjectState(go, "", ref file.SceneObjects);
             AddCharacterState(go, "", ref file.Characters);

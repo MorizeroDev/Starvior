@@ -46,7 +46,7 @@ public class Settings : MonoBehaviour
                     Active = false; Loading = false;
                     Switcher.Carry("Startup");
                 }
-            }, "您将丢失所有未保存的存档，确定吗？", new string[] { "退出游戏", "返回标题画面", "取消" });
+            }, "您将丢失所有未保存的存档，确定吗？", new string[] { "退出游戏", "返回标题画面", "取消" }, true);
             return;
         }
         GameObject oldTab = Parent.MenuItems[Parent.MenuIndex].GetComponent<Settings>().LinkTab, 
@@ -136,6 +136,7 @@ public class Settings : MonoBehaviour
 
     public static void Show()
     {
+        if (MapCamera.SuspensionDrama && Dramas.ActiveDrama == null) return;
         if (Active || Loading) return;
         Active = true; Loading = true;
         LastSuspensionDrama = MapCamera.SuspensionDrama;

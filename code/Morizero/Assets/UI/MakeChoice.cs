@@ -13,6 +13,7 @@ public class MakeChoice : MonoBehaviour
     public MakeChoiceCallback Callback;
     public int id;
     private int lastid = 0;
+    public bool NoRecord = false;
     public MakeChoice parent;
     public static int choiceId = -1, choiceMax = 0;
     public static bool choiceFinished = false;
@@ -28,14 +29,18 @@ public class MakeChoice : MonoBehaviour
             mc.UnLit.enabled = false;
         }
     }
-    public static void Create(MakeChoiceCallback callback, string explain,string[] choices){
+    public static void Create(MakeChoiceCallback callback, string explain,string[] choices,bool NoRecord = false){
         GameObject fab = (GameObject)Resources.Load("Prefabs\\MakeChoice");    // 载入母体
         GameObject box = Instantiate(fab,new Vector3(0,0,-1),Quaternion.identity);
         MakeChoice mc = box.GetComponent<MakeChoice>();
+        mc.NoRecord = NoRecord;
         float y = (choices.Length - 1) * 100 - 40;
         Dramas.lcharacter = "MakeChoice";
-        Dramas.AppendHistory("");
-        Dramas.AppendHistory("[" + explain + "]");
+        if (!NoRecord)
+        {
+            Dramas.AppendHistory("");
+            Dramas.AppendHistory("[" + explain + "]");
+        }
         if (choices.Length > 3)
         {
             y = 240;
@@ -103,8 +108,11 @@ public class MakeChoice : MonoBehaviour
         }
         parent.gameObject.GetComponent<Animator>().Play("MakeChoiceExit", 0);
         parent.finishSnd.Play();
-        Dramas.AppendHistory("[我的选择：“" + parent.Choices[choiceId].GetComponent<MakeChoice>().Explaination.text + "”]");
-        Dramas.AppendHistory("");
+        if (!NoRecord)
+        {
+            Dramas.AppendHistory("[我的选择：“" + parent.Choices[choiceId].GetComponent<MakeChoice>().Explaination.text + "”]");
+            Dramas.AppendHistory("");
+        }
         choiceFinished = true;
     }
     private void Update()
