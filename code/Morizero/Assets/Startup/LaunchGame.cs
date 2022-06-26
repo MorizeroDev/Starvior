@@ -30,12 +30,30 @@ public class LaunchGame : MonoBehaviour
     private void Update() {
         //Camera.main.transform.eulerAngles = new Vector3(0, 0, Input.gyro.gravity.y);
         //Debuger.InstantMessage(Input.gyro.gravity.x + "," + Input.gyro.gravity.y + "," + Input.gyro.gravity.z,new Vector3(0,0,0));
-        if (isLaunched) return;
-        if(!WaitFor.activeSelf) return;
-        if (Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.Return) || Input.GetKeyUp(KeyCode.Z))
+        if (!WaitFor.activeSelf) return;
+        bool hasSave = false;
+        for(int i = 0; i < 4; i++)
         {
-            isLaunched = true;
-            StartAnimation.Play("StarFly", 0);
+            if(PlayerPrefs.GetString("file" + i, "") != "") hasSave = true;
         }
+        if (hasSave)
+        {
+            if (SaveController.SaveShowed) return;
+            if (Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.Return) || Input.GetKeyUp(KeyCode.Z))
+            {
+                SaveController.SaveMode = false;
+                SaveController.ShowSave();
+            }
+        }
+        else
+        {
+            if (isLaunched) return;
+            if (Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.Return) || Input.GetKeyUp(KeyCode.Z))
+            {
+                isLaunched = true;
+                StartAnimation.Play("StarFly", 0);
+            }
+        }
+
     }
 }

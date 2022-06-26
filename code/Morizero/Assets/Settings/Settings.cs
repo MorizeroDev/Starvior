@@ -32,6 +32,8 @@ public class Settings : MonoBehaviour
         if (Index == 2)
         {
             //  ±ø’ÀÈ∆¨
+            SaveController.SaveMode = true;
+            SaveController.ShowSave();
             return;
         }
         if (Index == 4)

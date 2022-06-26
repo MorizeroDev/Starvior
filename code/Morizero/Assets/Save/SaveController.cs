@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 [System.Serializable]
@@ -48,6 +49,7 @@ public class Save
     [System.Serializable]
     public struct SaveFile
     {
+        public string MapName;
         public string BGMClip;
         public string BGSClip;
         public float BGMTime;
@@ -227,7 +229,7 @@ public class Save
         }
         return t.gameObject;
     }
-    public static void SaveGame()
+    public static string SaveGame()
     {
         SaveFile file = new SaveFile();
         file.SceneObjects = new List<GameObjectState>();
@@ -300,8 +302,9 @@ public class Save
         file.DialogPrefab = Dramas.PrefabName;
         file.PlotName = PlotCreator.PlotName;
         file.SaveTime = System.DateTime.Now.ToString("yy.MM.dd\nHH:mm");
+        file.MapName = MapCamera.mcamera.MapName.text;
         string savedata = JsonUtility.ToJson(file);
-        System.IO.File.WriteAllText("D:\\save.txt", savedata);
+        return savedata;
     }
     public static string GetGameObjectFullPath(GameObject go)
     {
@@ -336,6 +339,113 @@ public class Save
         for (int i = 0; i < go.transform.childCount; i++)
         {
             AddCharacterState(go.transform.GetChild(i).gameObject, path + "\\" + go.name, ref gos);
+        }
+    }
+
+    public Sprite SaveSprite, NoSaveSprite, NoData;
+    public Image Character, Back;
+    public RawImage Screenhost;
+    public RenderTexture renderTexture;
+    private Texture2D mapPreview;
+    public Text DateText, MapText;
+    public GameObject CoverImage;
+    public SaveFile File;
+    private Animator UIAni;
+    public string FileCode;
+    public int Id;
+    public static bool SaveMode;
+    public static bool SaveShowed = false;
+    private void Awake()
+    {
+        UIAni = GameObject.Find("SaveUI").GetComponent<Animator>();
+        if (Id == -1 || Id == 4) return;
+        mapPreview = new Texture2D(renderTexture.width, renderTexture.height);
+        UpdateAppearance();
+    }
+    private void Start()
+    {
+        if (Id != -1) return;
+        UIAni.SetFloat("Speed", 0.8f);
+        UIAni.Play("SaveUI", 0, 0.0f);
+    }
+    private void OnDestroy()
+    {
+        if (Id == -1 || Id == 4) return;
+        Destroy(mapPreview);
+    }
+    public void UpdateAppearance()
+    {
+        FileCode = PlayerPrefs.GetString("file" + Id, "");
+        if (FileCode == "")
+        {
+            Character.gameObject.SetActive(false);
+            DateText.gameObject.SetActive(false);
+            MapText.gameObject.SetActive(false);
+            Screenhost.gameObject.SetActive(false);
+            CoverImage.SetActive(false);
+            Back.sprite = SaveMode ? NoSaveSprite : NoData;
+        }
+        else
+        {
+            File = JsonUtility.FromJson<SaveFile>(FileCode);
+            Character.gameObject.SetActive(true);
+            DateText.gameObject.SetActive(true);
+            MapText.gameObject.SetActive(true);
+            Screenhost.gameObject.SetActive(true);
+            mapPreview.LoadImage(System.IO.File.ReadAllBytes(Application.persistentDataPath + "\\file" + Id + ".jpg"));
+            Screenhost.texture = mapPreview;
+            CoverImage.SetActive(true);
+            MapText.text = File.MapName;
+            DateText.text = File.SaveTime;
+            Back.sprite = SaveSprite;
+            Sprite CharaSprite = Resources.Load<Sprite> ("Characters\\" + File.lCharacter);
+            if (CharaSprite == null) CharaSprite = Resources.Load<Sprite>("Characters\\ ¿‘≠");
+            Character.sprite = CharaSprite;
+            Character.SetNativeSize();
+            RectTransform rect = Character.GetComponent<RectTransform>();
+            rect.sizeDelta = new Vector2(1024f, 1024f / rect.sizeDelta.x * rect.sizeDelta.y);
+        }
+    }
+    public static void ShowSave()
+    {
+        if (SaveShowed) return;
+        SaveShowed = true;
+        SceneManager.LoadSceneAsync("Save", LoadSceneMode.Additive);
+        //GameObject.Find("SaveUI").GetComponent<Animator>().SetFloat("Speed", 1.0f);
+    }
+    public void AnimationCallback()
+    {
+        if (UIAni.GetFloat("Speed") > 0) return;
+        SceneManager.UnloadSceneAsync("Save");
+    }
+    public void OnMouseUp()
+    {
+        if (!SaveShowed) return;
+        if (Id == 4)
+        {
+            UIAni.SetFloat("Speed", -2f);
+            UIAni.Play("SaveUI", 0, 1.0f);
+            SaveShowed = false;
+            return;
+        }
+        if (SaveMode)
+        {
+            RenderTexture.active = renderTexture;
+            mapPreview.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
+            RenderTexture.active = null;
+            mapPreview.Apply();
+            System.IO.File.WriteAllBytes(Application.persistentDataPath + "\\file" + Id + ".jpg", mapPreview.EncodeToJPG());
+            PlayerPrefs.SetString("file" + Id, SaveGame());
+            UpdateAppearance();
+        }
+        else
+        {
+            if(FileCode == "")
+            {
+                return;
+            }
+            SaveShowed = false;
+            RestoreGame(FileCode);
         }
     }
 }

@@ -195,7 +195,7 @@ public class Debuger : MonoBehaviour
 
         if (Input.GetKeyUp(KeyCode.V))
         {
-            SaveController.SaveGame();
+            System.IO.File.WriteAllText("D:\\save.txt", SaveController.SaveGame());
         }
         if (Input.GetKeyUp(KeyCode.B))
         {
