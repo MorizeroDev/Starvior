@@ -49,6 +49,7 @@ public class Save
     [System.Serializable]
     public struct SaveFile
     {
+        public string SaveVersion;
         public string MapName;
         public string BGMClip;
         public string BGSClip;
@@ -76,6 +77,7 @@ public class Save
         public Dramas.DramaLifeTime LifeTime;
         public string DramaDialogTyle;
     }
+    public const string LatestVersion = "22.627";
     public static void RestoreGame(string data)
     {
         SaveFile file = JsonUtility.FromJson<SaveFile>(data);
@@ -284,6 +286,7 @@ public class Save
             file.DramaIndex = d.DramaIndex;
             file.DramaNoCallback = d.NoCallback;
             file.DramaSuspense = d.Suspense;
+            file.LifeTime = d.LifeTime;
         }
         if(DramaScript.Active != null)
         {
@@ -302,6 +305,7 @@ public class Save
         file.DialogPrefab = Dramas.PrefabName;
         file.PlotName = PlotCreator.PlotName;
         file.SaveTime = System.DateTime.Now.ToString("yy.MM.dd\nHH:mm");
+        file.SaveVersion = LatestVersion;
         file.MapName = MapCamera.mcamera.MapName.text;
         string savedata = JsonUtility.ToJson(file);
         return savedata;
@@ -321,7 +325,10 @@ public class Save
     public static void AddGameObjectState(GameObject go,string path,ref List<GameObjectState> gos)
     {
         if (go.layer == 5 || go.layer == 7) return;
-        gos.Add(new GameObjectState { Name = path + "\\" + go.name, Position = go.transform.position, IsActive = go.activeSelf });
+        Chara chara = null;
+        go.TryGetComponent<Chara>(out chara);
+        if (chara != null)
+            gos.Add(new GameObjectState { Name = path + "\\" + go.name, Position = go.transform.position, IsActive = go.activeSelf });
         for(int i = 0;i < go.transform.childCount; i++) 
         {
             AddGameObjectState(go.transform.GetChild(i).gameObject, path + "\\" + go.name, ref gos);
@@ -350,7 +357,10 @@ public class Save
     public Text DateText, MapText;
     public GameObject CoverImage;
     public SaveFile File;
+    public Camera CatchCamera;
+    public Animator LightAni;
     private Animator UIAni;
+    private bool Pressed = false;
     public string FileCode;
     public int Id;
     public static bool SaveMode;
@@ -358,7 +368,8 @@ public class Save
     private void Awake()
     {
         UIAni = GameObject.Find("SaveUI").GetComponent<Animator>();
-        if (Id == -1 || Id == 4) return;
+        if (Id == 5) this.gameObject.SetActive(!SaveMode);
+        if (Id == -1 || Id == 4 || Id == 5) return;
         mapPreview = new Texture2D(renderTexture.width, renderTexture.height);
         UpdateAppearance();
     }
@@ -399,6 +410,15 @@ public class Save
             DateText.text = File.SaveTime;
             Back.sprite = SaveSprite;
             Sprite CharaSprite = Resources.Load<Sprite> ("Characters\\" + File.lCharacter);
+            if(File.SaveVersion != LatestVersion)
+            {
+                DateText.text = "旧版本存档，可能存在严重问题。";
+                DateText.color = Color.red;
+            }
+            else
+            {
+                DateText.color = Color.white;
+            }
             if (CharaSprite == null) CharaSprite = Resources.Load<Sprite>("Characters\\世原");
             Character.sprite = CharaSprite;
             Character.SetNativeSize();
@@ -417,10 +437,50 @@ public class Save
     {
         if (UIAni.GetFloat("Speed") > 0) return;
         SceneManager.UnloadSceneAsync("Save");
+        LaunchGame.isLaunched = false;
+    }
+    public void SaveLightDone()
+    {
+        Pressed = false;
+    }
+    public void ApplyOverwriteSave()
+    {
+        CatchCamera.gameObject.SetActive(true);
+        CatchCamera.GetComponent<CameraPlayerFollow>().Update();
+        CatchCamera.Render();
+        RenderTexture.active = renderTexture;
+        mapPreview.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
+        RenderTexture.active = null;
+        mapPreview.Apply();
+        CatchCamera.gameObject.SetActive(false);
+        System.IO.File.WriteAllBytes(Application.persistentDataPath + "\\file" + Id + ".jpg", mapPreview.EncodeToJPG());
+        PlayerPrefs.SetString("file" + Id, SaveGame());
+        UpdateAppearance();
+    }
+    public void OverwriteSave()
+    {
+        if (Pressed) return;
+        Pressed = true;
+        LightAni.Play("SaveLight", 0, 0.0f);
     }
     public void OnMouseUp()
     {
         if (!SaveShowed) return;
+        if (!MakeChoice.choiceFinished) return;
+        Vector3 p = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        bool hasMe = false;
+        foreach(RaycastHit2D h in Physics2D.RaycastAll(new Vector2(p.x,p.y), new Vector2(0, 0)))
+        {
+            SaveController s;
+            if(h.collider.gameObject.TryGetComponent<SaveController>(out s))
+            {
+                if(s.Id == this.Id)
+                {
+                    hasMe = true; break;
+                }
+            }
+        }
+        if (!hasMe) return;
         if (Id == 4)
         {
             UIAni.SetFloat("Speed", -2f);
@@ -428,15 +488,26 @@ public class Save
             SaveShowed = false;
             return;
         }
+        if(Id == 5)
+        {
+            SaveShowed = false;
+            Switcher.Carry("EmptyScene");
+            return;
+        }
         if (SaveMode)
         {
-            RenderTexture.active = renderTexture;
-            mapPreview.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
-            RenderTexture.active = null;
-            mapPreview.Apply();
-            System.IO.File.WriteAllBytes(Application.persistentDataPath + "\\file" + Id + ".jpg", mapPreview.EncodeToJPG());
-            PlayerPrefs.SetString("file" + Id, SaveGame());
-            UpdateAppearance();
+            if(FileCode != "")
+            {
+                MakeChoice.Create(() =>
+                {
+                    if (MakeChoice.choiceId == 0) OverwriteSave();
+                    if (MakeChoice.choiceId == 1) return;
+                }, "您确定要覆盖这个游戏存档吗？", new string[] { "确定", "取消" }, true);
+            }
+            else
+            {
+                OverwriteSave();
+            }
         }
         else
         {
@@ -444,8 +515,22 @@ public class Save
             {
                 return;
             }
-            SaveShowed = false;
-            RestoreGame(FileCode);
+            if (File.SaveVersion != LatestVersion)
+            {
+                MakeChoice.Create(() =>
+                {
+                    if (MakeChoice.choiceId == 0)
+                    {
+                        SaveShowed = false;
+                        RestoreGame(FileCode);
+                    }
+                }, "存档属于旧版本并被标记有故障，尝试载入可能出现意外。\n无论如何也要载入此存档吗？", new string[] { "确定", "取消" }, true);
+            }
+            else
+            {
+                SaveShowed = false;
+                RestoreGame(FileCode);
+            }
         }
     }
 }

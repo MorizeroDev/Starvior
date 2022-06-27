@@ -11,6 +11,7 @@ public class SettingsBtn : MonoBehaviour
     }
     void Update()
     {
+        if (Loading.isUsing) return;
         if (Input.GetKeyDown(KeyCode.Q) || Input.GetKeyDown(KeyCode.Escape))
         {
             Settings.Show();

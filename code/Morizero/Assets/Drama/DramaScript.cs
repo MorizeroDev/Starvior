@@ -30,13 +30,23 @@ public class PlotCreator : MonoBehaviour
     public static List<string> PlotName = new List<string>();
     public static List<GameObject> Plots = new List<GameObject>();
     public static void Clear(Loading.LoadingCallback callback){
-        Loading.Start(() => {
-            foreach(GameObject go in Plots)
+        if(callback == null)
+        {
+            foreach (GameObject go in Plots)
                 Destroy(go);
             Plots.Clear();
             PlotName.Clear();
-            Loading.Finish();
-        },callback);
+        }
+        else
+        {
+            Loading.Start(() => {
+                foreach (GameObject go in Plots)
+                    Destroy(go);
+                Plots.Clear();
+                PlotName.Clear();
+                Loading.Finish();
+            }, callback);
+        }
     }
     public static void LoadPlot(string plots){
         GameObject fab = (GameObject)Resources.Load("Plot\\" + plots);    // 载入母体
@@ -62,6 +72,7 @@ public class DramaScript
 
     public void Done(){
         KillLastDrama();
+        if (PlotCreator.Plots.Count > 0) PlotCreator.Clear(null);
         if (!Settings.Active && !Settings.Loading) MapCamera.SuspensionDrama = false;
         if(callback != null) callback();
     }

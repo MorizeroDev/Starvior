@@ -193,13 +193,17 @@ public class Debuger : MonoBehaviour
     {
         if (id != -1) return;
 
-        if (Input.GetKeyUp(KeyCode.V))
+        if (Input.GetKeyUp(KeyCode.O))
         {
             System.IO.File.WriteAllText("D:\\save.txt", SaveController.SaveGame());
         }
-        if (Input.GetKeyUp(KeyCode.B))
+        if (Input.GetKeyUp(KeyCode.P))
         {
             SaveController.RestoreGame(System.IO.File.ReadAllText("D:\\save.txt"));
+        }
+        if (Input.GetKeyUp(KeyCode.I))
+        {
+            PlayerPrefs.SetString("file3", "");
         }
 
         FPSCount++;

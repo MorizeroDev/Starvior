@@ -16,7 +16,7 @@ public class MakeChoice : MonoBehaviour
     public bool NoRecord = false;
     public MakeChoice parent;
     public static int choiceId = -1, choiceMax = 0;
-    public static bool choiceFinished = false;
+    public static bool choiceFinished = true;
     public AudioSource switchSnd,finishSnd;
     private List<GameObject> Choices = new List<GameObject>();
 

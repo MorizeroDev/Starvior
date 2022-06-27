@@ -6,8 +6,8 @@ public class LaunchGame : MonoBehaviour
 {
     public Animator StartAnimation;
     public GameObject WaitFor;
-    bool isLaunched = false;
-
+    public static bool isLaunched = false;
+    public static bool StartupAniPlayed = false;
     public void PlayBGM()
     {
         this.GetComponent<AudioSource>().Play();
@@ -20,6 +20,16 @@ public class LaunchGame : MonoBehaviour
     {
         // ¿ØÖÆÒÆ¶¯¶ËÆÁÄ»³£ÁÁ
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
+        isLaunched = false;
+        if (!StartupAniPlayed)
+        {
+            StartupAniPlayed = true;
+        }
+        else
+        {
+            StartAnimation.Play("StartupPerform", 0, 1.0f);
+            StartAnimation.gameObject.GetComponent<AudioSource>().Play();
+        }
         //Input.gyro.enabled = true;
     }
     public void AnimationCallback(){
@@ -38,9 +48,10 @@ public class LaunchGame : MonoBehaviour
         }
         if (hasSave)
         {
-            if (SaveController.SaveShowed) return;
+            if (isLaunched) return;
             if (Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.Return) || Input.GetKeyUp(KeyCode.Z))
             {
+                isLaunched = true;
                 SaveController.SaveMode = false;
                 SaveController.ShowSave();
             }

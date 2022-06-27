@@ -46,6 +46,10 @@ public class Settings : MonoBehaviour
                 {
                     MapCamera.SuspensionDrama = false;
                     Active = false; Loading = false;
+                    Destroy(MapCamera.bgm);
+                    Destroy(MapCamera.bgs);
+                    MapCamera.initTp = -1;
+                    MapCamera.bgm = null; MapCamera.bgs = null;
                     Switcher.Carry("Startup");
                 }
             }, "您将丢失所有未保存的存档，确定吗？", new string[] { "退出游戏", "返回标题画面", "取消" }, true);

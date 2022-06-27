@@ -47,6 +47,7 @@ public class Dramas : MonoBehaviour
         public WordEffect.Effect Effect;
         public string motion;
     }
+    [System.Serializable]
     public enum DramaLifeTime
     {
         NeverDie, DieWhenReadToEnd
@@ -209,6 +210,7 @@ public class Dramas : MonoBehaviour
     public void ExitDrama()
     {
         ActiveDrama = null;
+        lcharacter = "";
         DisposeWords();
         DramaUnloading = true;
         this.transform.parent.GetComponent<Animator>().Play("ExitDrama", 0);

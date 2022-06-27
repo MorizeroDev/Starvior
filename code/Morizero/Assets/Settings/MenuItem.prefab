@@ -26,7 +26,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5225869370598271914}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 86.50052}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.55, y: 0.55, z: 0.00695}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -242,6 +242,8 @@ MonoBehaviour:
   MenuItems: []
   LinkTab: {fileID: 0}
   BackIcon: {fileID: 7494184786425611519}
+  HistoryText: {fileID: 0}
+  HistoryEndMark: {fileID: 0}
   scrollController: {fileID: 0}
   MenuIndex: 0
   Index: 0
