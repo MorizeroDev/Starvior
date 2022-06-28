@@ -25,7 +25,8 @@ public class Dramas : MonoBehaviour
     public Image Character;                         // 立绘
     public GameObject WordChild;                    // 对话框文本母体
     public Animator Motion;                         // 立绘动画
-    private float Speed;                            // 等待计数
+    [HideInInspector]
+    public float Speed;                            // 等待计数
     public int DialogState;                        // 对话框状态（-1=未就绪，0=等待显示，1=等待确认，2=完毕）
     public Sprite Dialog1,Dialog2;
     public string DialogTyle;
@@ -215,7 +216,7 @@ public class Dramas : MonoBehaviour
         DramaUnloading = true;
         this.transform.parent.GetComponent<Animator>().Play("ExitDrama", 0);
     }
-    void Update()
+    public void Update()
     {
         if (Suspense) return;
         if (DramaIndex >= Drama.Count) return;
@@ -277,6 +278,7 @@ public class Dramas : MonoBehaviour
         }
         if (DialogState == 1) return;
         delTime += Time.deltaTime;
+        wordagain:
         if(delTime >= Speed){
             delTime = 0;
             int i = WordIndex;
@@ -294,7 +296,7 @@ public class Dramas : MonoBehaviour
             word.GetComponent<WordEffect>().basex = x;
             word.GetComponent<WordEffect>().basey = y;
             word.GetComponent<WordEffect>().Index = i;
-            word.GetComponent<WordEffect>().effect = Effect;
+            word.GetComponent<WordEffect>().effect = Effect; 
             word.SetActive(true);
             DisWords.Add(word);
             x += ((rect.sizeDelta.x + 10) / 2); //step;
@@ -302,7 +304,17 @@ public class Dramas : MonoBehaviour
                 x = sWord.localPosition.x - ((rect.sizeDelta.x + 10) / 2);
                 y -= step*1.2f;
             }
+            if (WordIndex + 1 < DisplayText.Length)
+            {
+                if (DisplayText[WordIndex + 1] == '|')
+                {
+                    x = sWord.localPosition.x - ((rect.sizeDelta.x + 10) / 2);
+                    y -= step * 1.2f;
+                    WordIndex++;
+                }
+            }
             WordIndex++;
+            if (Speed == 0) goto wordagain;
         }
     }
 

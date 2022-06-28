@@ -1306,7 +1306,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Script: {fileID: 4900000, guid: 70c2ab044951a7c48aeb812414249da8, type: 3}
   BindChara: {fileID: 0}
-  StartOnTrigger: 0
+  scriptCarrier:
+    code: []
+    currentLine: 0
+    DramaAvaliable: 0
+  triggerType: 0
   AllowDirection: 03000000020000000100000000000000
   CheckType: 2
   Content: 
@@ -2354,6 +2358,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 190744047}
     m_Modifications:
+    - target: {fileID: 6326673598183785547, guid: 96856b5bde95da347a5e1c01cbf90cdf, type: 3}
+      propertyPath: Script
+      value: 
+      objectReference: {fileID: 4900000, guid: f93d4124c43f4844d837e1fef32fd820, type: 3}
+    - target: {fileID: 6326673598183785547, guid: 96856b5bde95da347a5e1c01cbf90cdf, type: 3}
+      propertyPath: Content
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 6326673598764879196, guid: 96856b5bde95da347a5e1c01cbf90cdf, type: 3}
       propertyPath: m_Name
       value: Board2

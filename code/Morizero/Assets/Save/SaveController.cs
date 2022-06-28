@@ -131,6 +131,7 @@ public class Save
                     chara.UpdateWalkImage();
                 }
             }
+            MapCamera.mcamera.FixPos();
             DramaScript s = null;
             Dramas.HistoryDrama = file.History;
             Dramas.HistoryDrama.RemoveAt(Dramas.HistoryDrama.Count - 1);
@@ -204,7 +205,23 @@ public class Save
                     Dramas.ImmersionSpeaking = file.ImmersionName;
                     Dramas.lcharacter = file.lCharacter;
                     d.DialogState = 0;
-                    d.ReadDrama();
+                    if(d.DramaIndex < d.Drama.Count) d.ReadDrama();
+                }
+            }
+            if (file.ActiveScript.code.Length > 0 && file.ActiveScript.currentLine < file.ActiveScript.code.Length)
+            {
+                if (file.ActiveScript.code[file.ActiveScript.currentLine].TrimStart() == "distribute_choices:")
+                {
+                    Dramas.ActiveDrama.DramaIndex--;
+                    Dramas.ActiveDrama.ReadDrama();
+                    Dramas.ActiveDrama.Suspense = false;
+                    Dramas.ActiveDrama.DialogState = 0;
+                    Dramas.ActiveDrama.Speed = 0;
+                    Dramas.ActiveDrama.Update();
+                    Dramas.ActiveDrama.Suspense = true;
+                    Dramas.ActiveDrama.DramaIndex++;
+                    DramaScript.Active.currentLine--;
+                    DramaScript.Active.carryTask();
                 }
             }
             Loading.Finish();
@@ -466,7 +483,7 @@ public class Save
     public void OnMouseUp()
     {
         if (!SaveShowed) return;
-        if (!MakeChoice.choiceFinished) return;
+        if (MakeChoice.choiceFinished > 0 && MakeChoice.UI.FindIndex(m => m.NoRecord) != -1) return;
         Vector3 p = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         bool hasMe = false;
         foreach(RaycastHit2D h in Physics2D.RaycastAll(new Vector2(p.x,p.y), new Vector2(0, 0)))

@@ -88,6 +88,12 @@ public class MapCamera : MonoBehaviour
         pos = endDot.transform.localPosition;
         ex = pos.x - size.x; ey = pos.y + size.y * 1f; 
     }
+    public void FixPos()
+    {
+        Vector3 pos = Player.gameObject.transform.localPosition;
+        pos.z = -10;
+        transform.localPosition = pos;
+    }
     private void FixedUpdate() {
         if (Disabled) return;
         Vector3 p = bindObj.transform.localPosition;

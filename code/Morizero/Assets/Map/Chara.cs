@@ -135,14 +135,15 @@ public class Chara : MonoBehaviour
         Vector3 pos = GameObject.Find("startDot").transform.localPosition;
         sx = pos.x + size.x; sy = pos.y - size.y; 
         pos = GameObject.Find("endDot").transform.localPosition;
-        ex = pos.x - size.x; ey = pos.y + size.y * 1.7f; 
+        ex = pos.x - size.x; ey = pos.y + size.y * 1.7f;
+        if (Controller) MapCamera.Player = this;
+
     }
     private void Start()
     {
         // 如果是玩家则绑定至MapCamera
         if (Controller)
         {
-            MapCamera.Player = this;
             MapCamera.PlayerCollider = this.transform.Find("Pathfinding").gameObject;
             Pad = GameObject.Find("MapCamera").transform.Find("MovePad").Find("PadCore").Find("ball");
             ApplyMovePadSettings();

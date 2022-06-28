@@ -189,9 +189,27 @@ public class DramaScript
         }
         // 调查任务
         // spy:调查内容
-        if (cmd == "spy"){
+        if (cmd == "spy")
+        {
             KillLastDrama();
-            Dramas.LaunchCheck(p[0],carryTask).LifeTime = Dramas.DramaLifeTime.DieWhenReadToEnd;
+            Dramas.LaunchCheck(p[0], carryTask).LifeTime = Dramas.DramaLifeTime.DieWhenReadToEnd;
+            handler = true;
+        }
+        // 大对话框任务
+        // bigdialog:对话框内容
+        if (cmd == "bigdialog"){
+            KillLastDrama();
+            Dramas d =  Dramas.LaunchScript("BigDialog",carryTask);
+            d.LifeTime = Dramas.DramaLifeTime.DieWhenReadToEnd;
+            d.Drama.Add(new Dramas.DramaData
+            {
+                Character = p[0],
+                motion = "",
+                Effect = WordEffect.Effect.None,
+                content = p[1],
+                Speed = 0
+            });
+            d.ReadDrama();
             handler = true;
         }
         // 退出脚本（如果最后一项任务是需要等待的，则需要加入此行缓冲）

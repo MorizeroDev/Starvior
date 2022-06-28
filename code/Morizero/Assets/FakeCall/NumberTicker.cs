@@ -24,6 +24,11 @@ public class NumberTicker : MonoBehaviour
         if(CallMode){
             if(Called) return;
             if (sTick > 5){
+                if (Random.Range(0, 5) > 2)
+                {
+                    sTick = 0;
+                    return;
+                }
                 SceneManager.LoadSceneAsync("FakeCall", LoadSceneMode.Additive);
                 Called = true;
             }

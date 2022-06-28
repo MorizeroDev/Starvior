@@ -10,13 +10,15 @@ public class MakeChoice : MonoBehaviour
     public Text Explaination;
     public GameObject ChoicePrefab, RollArea, AreaScrollBar;
     public Animator Lit, UnLit, TextLit;
+    public static List<MakeChoice> UI = new List<MakeChoice>();
     public MakeChoiceCallback Callback;
     public int id;
     private int lastid = 0;
     public bool NoRecord = false;
     public MakeChoice parent;
     public static int choiceId = -1, choiceMax = 0;
-    public static bool choiceFinished = true;
+    public int choiceLayer = 0;
+    public static int choiceFinished = 0;
     public AudioSource switchSnd,finishSnd;
     private List<GameObject> Choices = new List<GameObject>();
 
@@ -33,6 +35,8 @@ public class MakeChoice : MonoBehaviour
         GameObject fab = (GameObject)Resources.Load("Prefabs\\MakeChoice");    // 载入母体
         GameObject box = Instantiate(fab,new Vector3(0,0,-1),Quaternion.identity);
         MakeChoice mc = box.GetComponent<MakeChoice>();
+        mc.choiceLayer = choiceFinished + 1;
+        UI.Add(mc);
         mc.NoRecord = NoRecords;
         float y = (choices.Length - 1) * 100 - 40;
         Dramas.lcharacter = "MakeChoice";
@@ -40,6 +44,7 @@ public class MakeChoice : MonoBehaviour
         {
             Dramas.AppendHistory("");
             Dramas.AppendHistory("[" + explain + "]");
+            mc.gameObject.GetComponent<Canvas>().sortingOrder = 51;
         }
         if (choices.Length > 3)
         {
@@ -76,7 +81,7 @@ public class MakeChoice : MonoBehaviour
         mc.Callback = callback;
         choiceId = 0;
         choiceMax = choices.Length - 1;
-        choiceFinished = false;
+        choiceFinished++;
         box.SetActive(true);
     }
 
@@ -92,7 +97,7 @@ public class MakeChoice : MonoBehaviour
 
     void ChoiceClick(int Id)
     {
-        if (choiceFinished) return;
+        if (choiceFinished != parent.choiceLayer) return;
         if (choiceId != Id)
         {
             parent.switchSnd.Play();
@@ -113,7 +118,8 @@ public class MakeChoice : MonoBehaviour
             Dramas.AppendHistory("[我的选择：“" + parent.Choices[choiceId].GetComponent<MakeChoice>().Explaination.text + "”]");
             Dramas.AppendHistory("");
         }
-        choiceFinished = true;
+        choiceFinished--;
+        UI.Remove(parent);
     }
     private void Update()
     {

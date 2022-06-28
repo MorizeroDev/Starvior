@@ -2027,6 +2027,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1285822165}
+  - component: {fileID: 1285822166}
   m_Layer: 0
   m_Name: Characters
   m_TagString: Untagged
@@ -2053,6 +2054,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1285822166
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1285822164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a54740d685d31c240aa250fef90bb0ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CallMode: 1
+  text: {fileID: 0}
 --- !u!1001 &1331702422
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2861,7 +2876,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Script: {fileID: 4900000, guid: da69a727322ca73419e250966eafaebf, type: 3}
   BindChara: {fileID: 0}
-  StartOnTrigger: 1
+  scriptCarrier:
+    code: []
+    currentLine: 0
+    DramaAvaliable: 0
+  triggerType: 0
   AllowDirection: 02000000
   CheckType: 0
   Content: 
