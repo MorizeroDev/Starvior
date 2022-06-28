@@ -47,6 +47,10 @@ PrefabInstance:
       propertyPath: m_LocalScale.y
       value: 0.6
       objectReference: {fileID: 0}
+    - target: {fileID: 3958339064558737363, guid: 9cb73cf06bbfc4f4bb652a923fe3e097, type: 3}
+      propertyPath: m_SortingOrder
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 3958339064558737364, guid: 9cb73cf06bbfc4f4bb652a923fe3e097, type: 3}
       propertyPath: m_Pivot.x
       value: 0

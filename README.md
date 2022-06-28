@@ -70,7 +70,7 @@ Q版人物/地图美术：Diffileft（勒勒）
 
 # 材料
 
-* 游戏漏洞和建议跟踪：**BUG.md**/**Issue**
+* 游戏漏洞和建议跟踪：**Issue**
 * 仓库目录结构：**Guidance.md**
 
 * 第三方资源引用参见：**ThirdParty.md**。

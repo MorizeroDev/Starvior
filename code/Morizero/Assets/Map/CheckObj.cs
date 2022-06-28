@@ -22,8 +22,12 @@ public class CheckObj : MonoBehaviour
     public Chara BindChara;
     [HideInInspector]
     public DramaScript scriptCarrier = new DramaScript();
+    [HideInInspector]
+    public bool Sleep = false;
     public static bool CheckBtnPressed;
     public static bool CheckAvaliable = false;
+    [Tooltip("是否在主动触发的脚本中判定方向。")]
+    public bool JudgeDirection = false;
     [Tooltip("是否当人物踩在碰撞箱上立即触发Script。")]
     public TriggerType triggerType = TriggerType.Passive;
     private static float checkshowTime;
@@ -66,9 +70,21 @@ public class CheckObj : MonoBehaviour
         }
         CheckAvaliable = false;
     }
-    private void OnTriggerStay2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if (triggerType != TriggerType.PassiveTrigger && triggerType != TriggerType.OnceTrigger) return;
+        if (MapCamera.Player == null) return;
+        Chara c = null;
+        if (collision.gameObject.transform.parent == null) return;
+        if (collision.gameObject.transform.parent.TryGetComponent<Chara>(out c))
+        {
+            if (!c.Controller) return;
+        }
+        else
+        {
+            return;
+        }
+        if (triggerType != TriggerType.Passive && !AllowDirection.Contains(MapCamera.Player.dir) && JudgeDirection) return;
         if (MapCamera.HitCheck == this.gameObject) return;
         if (MapCamera.HitCheck != null) MapCamera.HitCheck.GetComponent<CheckObj>().CheckGoodbye();
         CheckEncounter();
@@ -76,9 +92,28 @@ public class CheckObj : MonoBehaviour
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
+        if (collision == null)
+        {
+            Sleep = false;
+            TriggerRunning = false;
+            CheckGoodbye();
+            return;
+        }
         if (triggerType != TriggerType.PassiveTrigger && triggerType != TriggerType.OnceTrigger) return;
+        if (MapCamera.Player == null) return;
+        Chara c = null;
+        if (collision.gameObject.transform.parent == null) return;
+        if (collision.gameObject.transform.parent.TryGetComponent<Chara>(out c))
+        {
+            if (!c.Controller) return;
+        }
+        else
+        {
+            return;
+        }
         if (MapCamera.HitCheck == this.gameObject)
         {
+            Sleep = false;
             TriggerRunning = false;
             CheckGoodbye();
         }
@@ -88,6 +123,7 @@ public class CheckObj : MonoBehaviour
         OnTriggerExit2D(null);
     }
     public bool IsActive(){
+        if (Sleep) return false;
         if(MapCamera.HitCheck != this.gameObject && triggerType != TriggerType.Whenever) return false;
         bool ret = (Input.GetKeyUp(KeyCode.Z) || CheckBtnPressed || triggerType == TriggerType.OnceTrigger || triggerType == TriggerType.Whenever);
         if(MapCamera.SuspensionDrama) ret = false;

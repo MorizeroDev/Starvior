@@ -74,7 +74,7 @@ Original Music Authorization Provider & Music Producer：Noveky（如雨）
 
 # Material
 
-* Bugs and suggestions：**BUG.md**/**Issue**
+* Bugs and suggestions：**Issue**
 * The directory structure guidence：**Guidance.md**
 
 * Third party references：**ThirdParty.md**。

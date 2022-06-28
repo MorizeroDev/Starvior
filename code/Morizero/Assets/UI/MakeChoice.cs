@@ -19,6 +19,7 @@ public class MakeChoice : MonoBehaviour
     public static int choiceId = -1, choiceMax = 0;
     public int choiceLayer = 0;
     public static int choiceFinished = 0;
+    private bool finished = false;
     public AudioSource switchSnd,finishSnd;
     private List<GameObject> Choices = new List<GameObject>();
 
@@ -88,6 +89,8 @@ public class MakeChoice : MonoBehaviour
     void UnloadMakeChoice(){
         if(choiceId != id) return;
         parent.Callback();
+        choiceFinished--;
+        UI.Remove(parent);
         Destroy(parent.gameObject);
     }
 
@@ -97,7 +100,7 @@ public class MakeChoice : MonoBehaviour
 
     void ChoiceClick(int Id)
     {
-        if (choiceFinished != parent.choiceLayer) return;
+        if (finished) return;
         if (choiceId != Id)
         {
             parent.switchSnd.Play();
@@ -118,8 +121,7 @@ public class MakeChoice : MonoBehaviour
             Dramas.AppendHistory("[我的选择：“" + parent.Choices[choiceId].GetComponent<MakeChoice>().Explaination.text + "”]");
             Dramas.AppendHistory("");
         }
-        choiceFinished--;
-        UI.Remove(parent);
+        finished = true;
     }
     private void Update()
     {

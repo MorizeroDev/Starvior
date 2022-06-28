@@ -484,6 +484,7 @@ public class Save
     {
         if (!SaveShowed) return;
         if (MakeChoice.choiceFinished > 0 && MakeChoice.UI.FindIndex(m => m.NoRecord) != -1) return;
+        //Debug.Log("Here:" + gameObject.name);
         Vector3 p = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         bool hasMe = false;
         foreach(RaycastHit2D h in Physics2D.RaycastAll(new Vector2(p.x,p.y), new Vector2(0, 0)))
@@ -507,6 +508,7 @@ public class Save
         }
         if(Id == 5)
         {
+            SndPlayer.Play("loadfile");
             SaveShowed = false;
             Switcher.Carry("EmptyScene");
             return;
@@ -517,12 +519,14 @@ public class Save
             {
                 MakeChoice.Create(() =>
                 {
-                    if (MakeChoice.choiceId == 0) OverwriteSave();
                     if (MakeChoice.choiceId == 1) return;
+                    SndPlayer.Play("savefile");
+                    OverwriteSave();
                 }, "您确定要覆盖这个游戏存档吗？", new string[] { "确定", "取消" }, true);
             }
             else
             {
+                SndPlayer.Play("savefile");
                 OverwriteSave();
             }
         }
@@ -538,6 +542,7 @@ public class Save
                 {
                     if (MakeChoice.choiceId == 0)
                     {
+                        SndPlayer.Play("loadfile");
                         SaveShowed = false;
                         RestoreGame(FileCode);
                     }
@@ -545,6 +550,7 @@ public class Save
             }
             else
             {
+                SndPlayer.Play("loadfile");
                 SaveShowed = false;
                 RestoreGame(FileCode);
             }

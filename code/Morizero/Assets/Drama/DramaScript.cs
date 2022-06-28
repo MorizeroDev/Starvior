@@ -187,6 +187,10 @@ public class DramaScript
             handler = true;
             carryTask();
         }
+        if (cmd == "sleep")
+        {
+            parent.Sleep = true;
+        }
         // 调查任务
         // spy:调查内容
         if (cmd == "spy")

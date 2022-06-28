@@ -204,6 +204,7 @@ GameObject:
   - component: {fileID: 2949544765108113616}
   - component: {fileID: 3984846398135937027}
   - component: {fileID: 6225211484233384074}
+  - component: {fileID: 2282956300314340619}
   m_Layer: 5
   m_Name: File
   m_TagString: Untagged
@@ -325,6 +326,20 @@ PolygonCollider2D:
       - {x: -82.85646, y: 525.0645}
       - {x: 350.63245, y: 523.4515}
       - {x: 83.219734, y: -473.94513}
+--- !u!114 &2282956300314340619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2949544765108113619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c770c6a123c3a94193e1bbabffea03a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioType: 2
+  RelativeOverride: 1
 --- !u!1 &2949544765666249330
 GameObject:
   m_ObjectHideFlags: 0
