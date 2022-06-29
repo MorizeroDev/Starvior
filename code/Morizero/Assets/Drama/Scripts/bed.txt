@@ -8,7 +8,7 @@ case:0
 	plot:BedPlots
 	snd:save,nowait
 	speaking:旁白
-	immersion:,true
+	immersion:,nowait
 	你感到放松，视野渐渐地消失...
 	wait:8
 	resume:

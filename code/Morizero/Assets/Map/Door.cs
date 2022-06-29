@@ -21,6 +21,6 @@ public class Door : CheckObj
             Switcher.Carry(TargetMap);
         }
         if(selfHide)
-            MapCamera.HitCheck = null;
+            MapCamera.AvaliableCheck = null;
     }
 }

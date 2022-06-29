@@ -103,18 +103,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3305f085e51b1b488e9a35e7846ef20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SteppedIn: 0
   Script: {fileID: 4900000, guid: 93952c645268cb74aa73dfb2231067a4, type: 3}
   BindChara: {fileID: 0}
   scriptCarrier:
     code: []
     currentLine: 0
     DramaAvaliable: 0
+    BlockDramaSettings: 0
   Sleep: 0
   JudgeDirection: 0
   triggerType: 0
   AllowDirection: 0200000001000000
-  CheckType: 1
+  DisplayType: 1
+  UseContentAsDramaPrefabName: 0
   Content: 
+  Silent: 0
 --- !u!61 &979042479119310969
 BoxCollider2D:
   m_ObjectHideFlags: 0

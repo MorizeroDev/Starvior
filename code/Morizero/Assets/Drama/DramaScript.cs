@@ -192,7 +192,7 @@ public class DramaScript
         if (cmd == "sleep")
         {
             handler = true;
-            parent.Sleep = true;
+            if(parent != null) parent.Sleep = true;
             carryTask();
         }
         // 调查任务
@@ -379,7 +379,7 @@ public class DramaScript
             if(p[2] == "right") MapCamera.initDir = Chara.walkDir.Right;
             if(p[2] == "up") MapCamera.initDir = Chara.walkDir.Up;
             if(p[2] == "down") MapCamera.initDir = Chara.walkDir.Down;
-            MapCamera.HitCheck = null;
+            MapCamera.AvaliableCheck = null;
             DramaScript nds = DramaCrossScene.Start(this);
             Switcher.Carry(p[0],UnityEngine.SceneManagement.LoadSceneMode.Single,0,nds.carryTask);
             handler = true;
@@ -387,7 +387,7 @@ public class DramaScript
         // 切换场景任务
         // sw:场景名称
         if(cmd == "sw"){
-            MapCamera.HitCheck = null;
+            MapCamera.AvaliableCheck = null;
             DramaScript nds = DramaCrossScene.Start(this);
             Switcher.Carry(p[0],UnityEngine.SceneManagement.LoadSceneMode.Single,0,nds.carryTask);
             if(MapCamera.bgm != null) {GameObject.Destroy(MapCamera.bgm); MapCamera.bgm = null;}
@@ -426,10 +426,10 @@ public class DramaScript
         // [(shake)/(rainbow)/...]对话内容
         if(cmd == "say" || cmd == "immersion"){
             // 创建剧本框架
-            bool dinput = false;
+            bool NoWaitForInput = false;
             if(p.Length > 1){
-                if(p[1] == "true") dinput = true;
-                Debug.Log("DramaScript: say's third param detected:" + dinput);
+                if(p[1] == "nowait") NoWaitForInput = true;
+                Debug.Log("DramaScript: say's third param detected:" + NoWaitForInput);
             }
             Dramas drama = null;
             if (DramaAvaliable)
@@ -461,6 +461,7 @@ public class DramaScript
                 string motion = "Enter";
                 WordEffect.Effect effect = WordEffect.Effect.None;
                 float speed = 0.03f;
+                bool DisableSkip = false;
                 // 如果是对话
                 if(t.Length == 1){
                     // 格式化对话并提取附加参数
@@ -491,6 +492,9 @@ public class DramaScript
                         else if (p[i] == "ultrashake")
                         {
                             effect = WordEffect.Effect.UltraShake;
+                        }else if (p[i] == "noskip")
+                        {
+                            DisableSkip = true;
                         }
                         else if(p[i] == "Leap" || p[i] == "Focus")
                         {
@@ -507,7 +511,8 @@ public class DramaScript
                         motion = motion,
                         Effect = effect,
                         content = p[p.Length - 1],
-                        Speed = speed
+                        Speed = speed,
+                        DisableSkip = DisableSkip
                     };
                     // 添加对话
                     drama.Drama.Add(data);
@@ -524,12 +529,12 @@ public class DramaScript
             }
             // 刷新剧本            
             drama.ReadDrama();
-            drama.DisableInput = dinput;
+            drama.DisableInput = NoWaitForInput;
             drama.gameObject.SetActive(true);
             lastDrama = drama;
             DramaAvaliable = true;
             handler = true;
-            if(dinput) carryTask();
+            if(NoWaitForInput) carryTask();
         }
         // 继续对话
         if(cmd == "resume"){

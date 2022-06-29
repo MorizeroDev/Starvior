@@ -5003,18 +5003,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3305f085e51b1b488e9a35e7846ef20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SteppedIn: 0
   Script: {fileID: 0}
   BindChara: {fileID: 0}
   scriptCarrier:
     code: []
     currentLine: 0
     DramaAvaliable: 0
+    BlockDramaSettings: 0
   Sleep: 0
   JudgeDirection: 0
   triggerType: 0
   AllowDirection: 03000000
-  CheckType: 0
+  DisplayType: 0
+  UseContentAsDramaPrefabName: 0
   Content: "\u660E\u660E\u5899\u5916\u662F\u4E00\u6761\u6CB3\uFF0C\u653E\u773C\u671B\u53BB\u5374\u770B\u4E0D\u89C1\u5F7C\u5CB8\u3002"
+  Silent: 0
 --- !u!1 &1376911234
 GameObject:
   m_ObjectHideFlags: 0

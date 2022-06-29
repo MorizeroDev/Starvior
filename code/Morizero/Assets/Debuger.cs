@@ -260,8 +260,8 @@ public class Debuger : MonoBehaviour
                 $"是否在游戏菜单中：{Settings.Active.ToString()}" + "\n" +
                 $"对话记录总数量：{Dramas.HistoryDrama.Count.ToString()}" + "\n" +
                 $"Plot预定角色名：" + Dramas.ImmersionSpeaking + "\n";
-        if (MapCamera.HitCheck != null)
-            dstr += $"当前调查射线击中对象：" + MapCamera.HitCheck.name + "\n";
+        if (MapCamera.AvaliableCheck != null)
+            dstr += $"当前调查射线击中对象：" + MapCamera.AvaliableCheck.name + "\n";
         if (MapCamera.bgm != null)
             if (MapCamera.bgm.clip != null)
                 dstr += $"BGM播放器装载音乐：" + MapCamera.bgm.clip.name + "\n";

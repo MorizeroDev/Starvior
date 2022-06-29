@@ -9,8 +9,8 @@ public class MapCamera : MonoBehaviour
     public GameObject endDot;
     public static Chara Player;
     public static GameObject PlayerCollider;
-    public static GameObject HitCheck = null;
-    public static Transform HitCheckTransform;
+    public static GameObject AvaliableCheck = null;
+    public static Transform AvaliableCheckTransform;
     public static bool ForbiddenMove = false;
     public static MapCamera mcamera = null;
     public static AudioSource bgm,bgs;
@@ -97,7 +97,7 @@ public class MapCamera : MonoBehaviour
     private void FixedUpdate() {
         if (Disabled) return;
         Vector3 p = bindObj.transform.localPosition;
-        float cs = (HitCheck != null && !MapCamera.ForbiddenMove ? 1.8f : 2f);
+        float cs = (AvaliableCheck != null && !MapCamera.ForbiddenMove ? 1.8f : 2f);
         Vector3 pos = transform.localPosition;
         pos.x = pos.x + (p.x - pos.x) / 20;
         pos.y = pos.y + (p.y - pos.y) / 20;
@@ -108,10 +108,10 @@ public class MapCamera : MonoBehaviour
         Camera camera = this.GetComponent<Camera>();
         camera.orthographicSize += (cs - camera.orthographicSize) / 20;
         transform.localPosition = pos;
-        if(MapCamera.ForbiddenMove && HitCheck != null)
+        if(MapCamera.ForbiddenMove && AvaliableCheck != null)
         {
             if(animator.GetFloat("speed") == 1.0f)
-                HitCheck.GetComponent<CheckObj>().EmptyAvaliableCheck();
+                AvaliableCheck.GetComponent<CheckObj>().EmptyAvaliableCheck();
         }
         
     }

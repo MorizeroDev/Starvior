@@ -17,6 +17,10 @@ public class CheckObj : MonoBehaviour
         [InspectorName("时时刻刻触发")]
         Whenever
     }
+    public enum CheckDisplayType
+    {
+        Object,NPC
+    }
     [Tooltip("附加的剧本脚本。")]
     public TextAsset Script;
     [Tooltip("与之联系的NPC，用于纠正坐标。")]
@@ -34,20 +38,21 @@ public class CheckObj : MonoBehaviour
     private static float checkshowTime;
     [Tooltip("允许人物调查时面朝的方向。")]
     public List<Chara.walkDir> AllowDirection = new List<Chara.walkDir>(3);
-    [Tooltip("调查人物的类型，0为简单调查，1为Drama预制体。\n当Script不为null时，此设定无效。")]
-    public int CheckType = 0;
+    public CheckDisplayType DisplayType = 0;
+    private bool ScriptRunning = false;
+    public bool UseContentAsDramaPrefabName = false;
     [Tooltip("在Script为空的情况下触发的调查内容/预制体名称。")]
     public string Content;
     [Tooltip("静默脚本不会将自己投射到调查按钮之中。")]
     public bool Silent = false;
     public void SetToAvaliableCheck(){
-        MapCamera.HitCheck = this.gameObject;
-        MapCamera.HitCheckTransform = this.transform.parent;
-        if(CheckType == 0) {
+        MapCamera.AvaliableCheck = this.gameObject;
+        MapCamera.AvaliableCheckTransform = this.transform.parent;
+        if(DisplayType == CheckDisplayType.Object) {
             MapCamera.mcamera.CheckText.sprite = MapCamera.mcamera.CheckFore;
             MapCamera.mcamera.CheckImg.sprite = MapCamera.mcamera.CheckBack;
         }
-        if(CheckType == 1) {
+        if(DisplayType == CheckDisplayType.NPC) {
             MapCamera.mcamera.CheckText.sprite = MapCamera.mcamera.TalkFore;
             MapCamera.mcamera.CheckImg.sprite = MapCamera.mcamera.TalkBack;
         }
@@ -58,7 +63,7 @@ public class CheckObj : MonoBehaviour
         CheckAvaliable = true;
     }
     public void EmptyAvaliableCheck(){
-        MapCamera.HitCheck = null;
+        MapCamera.AvaliableCheck = null;
         MapCamera.mcamera.animator.SetFloat("speed",-2.0f);
         // 如果距离调查框显示的时候还太短的话，直接隐藏
         if(Time.time - checkshowTime <= 0.6f)
@@ -146,9 +151,9 @@ public class CheckObj : MonoBehaviour
 
         if (AvaliableCheck == null)
         {
-            if (MapCamera.HitCheck != null)
-                MapCamera.HitCheck.GetComponent<CheckObj>().EmptyAvaliableCheck();
-        }else if(MapCamera.HitCheck != AvaliableCheck.gameObject)
+            if (MapCamera.AvaliableCheck != null)
+                MapCamera.AvaliableCheck.GetComponent<CheckObj>().EmptyAvaliableCheck();
+        }else if(MapCamera.AvaliableCheck != AvaliableCheck.gameObject)
         {
             //Debug.Log("已投射物体到调查按钮。");
             AvaliableCheck.SetToAvaliableCheck();
@@ -171,7 +176,7 @@ public class CheckObj : MonoBehaviour
     }
     private void OnDestroy()
     {
-        if(MapCamera.HitCheck == this.gameObject) EmptyAvaliableCheck();
+        if(MapCamera.AvaliableCheck == this.gameObject) EmptyAvaliableCheck();
     }
     public Chara.walkDir GetPlayerDir()
     {
@@ -181,7 +186,7 @@ public class CheckObj : MonoBehaviour
     public bool IsActive(){
         if (Sleep) return false;
         bool Pressed = (Input.GetKeyUp(KeyCode.Z) || Input.GetKeyUp(KeyCode.Return) || Input.GetKeyUp(KeyCode.Space) || CheckBtnPressed);
-        bool Avaliable = (MapCamera.HitCheck == this.gameObject);
+        bool Avaliable = (MapCamera.AvaliableCheck == this.gameObject);
         switch (triggerType)
         {
             case TriggerType.Passive:
@@ -219,6 +224,7 @@ public class CheckObj : MonoBehaviour
             {
                 scriptCarrier.code[i] = scriptCarrier.code[i].TrimStart();
             }
+            scriptCarrier.callback = () => { ScriptRunning = false; };
         }
     }
 
@@ -262,6 +268,7 @@ public class CheckObj : MonoBehaviour
     }
     public virtual void Update() {
         if (!IsActive()) return;
+        if (ScriptRunning) return;
 
         if (!Silent)
         {
@@ -271,6 +278,7 @@ public class CheckObj : MonoBehaviour
         if (Script != null){
             scriptCarrier.currentLine = 0;
             DramaScript.Active = scriptCarrier;
+            ScriptRunning = true;
             // 修正人物坐标
             if (BindChara != null)
                 FixPlayerPos();
@@ -278,7 +286,8 @@ public class CheckObj : MonoBehaviour
                 scriptCarrier.carryTask();
             return; 
         }
-        if(CheckType == 1){
+        if(UseContentAsDramaPrefabName)
+        {
             Dramas.Launch(Content,() => {
                 if(!Settings.Active && !Settings.Loading) MapCamera.ForbiddenMove = false;
             });

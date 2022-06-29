@@ -38,16 +38,12 @@ case:0
 		distribute_choices:
 		case:0
 			say:雪兰:,true
-			(shake)(0.3)请...请等一下！
-			resume:
-			say:雪兰
+			(shake)(0.3)(noskip)请...请等一下！
 			(Leap)可以请你...关注我们吗？
 			tp:Yard,1,up
 		case:1
 			say:雪兰:,true
-			(shake)(0.3)请...请等一下！
-			resume:
-			say:雪兰
+			(shake)(0.3)(noskip)请...请等一下！
 			(Leap)可以请你...关注我们吗？
 			tp:ROOM_XUELAN,1,up
 		endchoice:
@@ -71,4 +67,5 @@ case:2
 	Sorry. The game is crashed.
 	exit:
 endchoice:
+sleep:
 break

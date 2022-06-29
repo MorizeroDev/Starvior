@@ -47,6 +47,7 @@ public class Dramas : MonoBehaviour
         public float Speed;
         public WordEffect.Effect Effect;
         public string motion;
+        public bool DisableSkip;
     }
     [System.Serializable]
     public enum DramaLifeTime
@@ -270,7 +271,7 @@ public class Dramas : MonoBehaviour
                 }
             }
             if (Touched || Input.GetKeyUp(KeyCode.X)){
-                if(DialogState == 0) Speed = 0;
+                if(DialogState == 0 && !Drama[DramaIndex].DisableSkip) Speed = 0;
             }
             if (AutoContinue == 0)
             {
@@ -283,6 +284,7 @@ public class Dramas : MonoBehaviour
                 if(DialogState == 1) DialogState = 2;
             }
         }
+
         if(DialogState == 2){
             DialogState = 0;
             DramaIndex++;
