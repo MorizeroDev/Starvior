@@ -9,13 +9,20 @@ public class SettingsBackBtn : MonoBehaviour
         //Debuger.InstantMessage("I'm alive!!!", this.transform.position);
         if (Input.GetKeyDown(KeyCode.Q) || Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.X))
         {
-            //Debuger.InstantMessage("KEEEEEEEEEEEEEEEEEEEEEY", this.transform.position);            
-            Settings.Hide();
+            MouseUp();
         }
     }
     public void MouseUp()
     {
-        //Debuger.InstantMessage("MMMMMMMMMMMMMOOOOOOOOOOUSE", this.transform.position);
-        Settings.Hide();
+        if (Settings.MenuOpen)
+        {
+            Settings.ActiveSetAnimator.SetFloat("TabSpeed", -2.0f);
+            Settings.ActiveSetAnimator.Play("TabEnter", 0, 1.0f);
+        }
+        else
+        {
+            Settings.Hide();
+        }
+        
     }
 }

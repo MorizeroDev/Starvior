@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 
 public class Settings : MonoBehaviour
 {
+    public Text Title;
+    public string ENTitle;
     public List<GameObject> MenuItems;
     public GameObject LinkTab;
     private static Transform oldTabTransform;
@@ -16,7 +18,7 @@ public class Settings : MonoBehaviour
     public static Settings MainSettingUI;
     public ScrollController scrollController;
     [HideInInspector]    
-    public int MenuIndex = 0;
+    public int ActiveMenu = 0;
     public static List<VolumeSet> VolumeSets = new List<VolumeSet>();
     public static bool Active = false;
     public static bool Loading = false;
@@ -26,9 +28,11 @@ public class Settings : MonoBehaviour
     public int Index;
     [HideInInspector]
     public Settings Parent;
+    [HideInInspector]
+    public static bool MenuOpen = false;
     public void OnClick()
     {
-        if (Parent.MenuIndex == Index) return;
+        if (MenuOpen) return;
         if (Index == 2)
         {
             // 时空碎片
@@ -55,49 +59,35 @@ public class Settings : MonoBehaviour
             }, "您将丢失所有未保存的存档，确定吗？", new string[] { "退出游戏", "返回标题画面", "取消" }, true);
             return;
         }
-        GameObject oldTab = Parent.MenuItems[Parent.MenuIndex].GetComponent<Settings>().LinkTab, 
-                   newTab = Parent.MenuItems[Index].GetComponent<Settings>().LinkTab;
-        oldTabTransform = oldTab.transform;
-        oldTab.SetActive(false);
-        oldTab.SetActive(true);
-        oldTab.GetComponent<Animator>().enabled = true;
-        oldTab.GetComponent<Animator>().Play("TabHide", 0, 0.0f);
-        Parent.MenuItems[Parent.MenuIndex].GetComponent<Animator>().Play("MenuItemHide", 0, 0.0f);
-        newTab.SetActive(true);
-        newTab.GetComponent<Animator>().enabled = true;
-        newTab.GetComponent<Animator>().Play("TabShow", 0, 0.0f);
-        Parent.MenuItems[Index].GetComponent<Animator>().Play("MenuItemShow", 0, 0.0f);
-        Parent.MenuIndex = Index;
-        Parent.BackIcon.GetComponent<Animator>().Play("BackIconHide", 0, 0.0f);
-        Parent.scrollController.ScrollContainer = newTab.transform;
-        Parent.scrollController.UpdateContainer();
-        if (Parent.MenuIndex == 1 && NeedScrollToBottom)
-        {
-            Parent.scrollController.ScrollToBottom();
-        }
-    }
-    public void DisableAllTabAnimations()
-    {
-        foreach(GameObject go in MenuItems)
-        {
-            GameObject tab = go.GetComponent<Settings>().LinkTab;
-            if (tab != null)
-            {
-                tab.GetComponent<Animator>().enabled = false;
-            }
-        }
-        BackIcon.GetComponent<Animator>().enabled = false;
+        Parent.ActiveMenu = Index;
+        GameObject Tab = Parent.MenuItems[Index].GetComponent<Settings>().LinkTab;
+        oldTabTransform = Tab.transform;
+
+        Tab.SetActive(true);
+        Parent.Title.text = Parent.MenuItems[Parent.ActiveMenu].GetComponent<Settings>().ENTitle;
+        ActiveSetAnimator.SetFloat("TabSpeed", 1.0f);
+        ActiveSetAnimator.Play("TabEnter", 0, 0.0f);
+        MenuOpen = true;
+        Parent.BackIcon.GetComponent<Image>().sprite = Parent.MenuItems[Parent.ActiveMenu].GetComponent<Settings>().BackIcon.GetComponent<Image>().sprite;
     }
     public void MenuItemHideCallback()
     {
-        GameObject newTab = Parent.MenuItems[Parent.MenuIndex].GetComponent<Settings>().LinkTab;
-        Parent.BackIcon.SetActive(false);
-        Parent.BackIcon.SetActive(true);
-        Parent.BackIcon.GetComponent<Image>().sprite = Parent.MenuItems[Parent.MenuIndex].GetComponent<Settings>().BackIcon.GetComponent<Image>().sprite;
-        Parent.BackIcon.GetComponent<Animator>().enabled = true;
-        Parent.BackIcon.GetComponent<Animator>().Play("BackIconShow", 0, 0.0f);
+        GameObject Tab = Parent.MenuItems[Parent.ActiveMenu].GetComponent<Settings>().LinkTab;
+        if (ActiveSetAnimator.GetFloat("TabSpeed") > 0)
+        {
+            if (Tab == null) return;
+            Parent.scrollController.ScrollContainer = Tab.transform;
+            Parent.scrollController.UpdateContainer();
+            if (Parent.ActiveMenu == 1 && NeedScrollToBottom)
+            {
+                Parent.scrollController.ScrollToBottom();
+            }
+            return;
+        }
+        MenuOpen = false; Parent.Title.text = "MENU";
         if (oldTabTransform == null) return;
         Parent.scrollController.ResetSavedPosition(oldTabTransform);
+        if (Tab != null) Tab.SetActive(false);
     }
     private void Awake()
     {
@@ -112,6 +102,7 @@ public class Settings : MonoBehaviour
             MenuItems[i].GetComponent<Settings>().Index = i;
             MenuItems[i].GetComponent<Settings>().Parent = this;
         }
+        Parent = this;
         Settings.ActiveSetAnimator = GetComponent<Animator>();
         string his = "";
         foreach (string s in Dramas.HistoryDrama)
@@ -127,6 +118,7 @@ public class Settings : MonoBehaviour
             
         }
         if (his == "") his = "暂无记录。";
+        HistoryText.transform.parent.parent.parent.parent.gameObject.SetActive(true);
         HistoryText.transform.parent.parent.gameObject.SetActive(true);
         HistoryText.text = his;
         LayoutRebuilder.ForceRebuildLayoutImmediate(HistoryText.gameObject.GetComponent<RectTransform>());
@@ -137,6 +129,7 @@ public class Settings : MonoBehaviour
         NeedScrollToBottom = (height > 1200);
         HistoryEndMark.transform.localPosition = pos;
         HistoryText.transform.parent.parent.gameObject.SetActive(false);
+        HistoryText.transform.parent.parent.parent.parent.gameObject.SetActive(false);
         MainSettingUI = this;
     }
 
@@ -176,7 +169,6 @@ public class Settings : MonoBehaviour
     {
         //Debuger.InstantMessage(Active.ToString() + "/" + Loading.ToString(), Camera.main.ScreenToWorldPoint(Input.mousePosition));
         if (!Active || Loading) return;
-        MainSettingUI.DisableAllTabAnimations();
         Active = false; Loading = true;
         ActiveSetAnimator.SetFloat("Speed", -2.0f);
         ActiveSetAnimator.Play("SettingEnter", 0, 1.0f);

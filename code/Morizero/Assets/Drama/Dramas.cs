@@ -62,6 +62,7 @@ public class Dramas : MonoBehaviour
     public bool Suspense = false;
     public static string PrefabName;
     public DramaLifeTime LifeTime = DramaLifeTime.NeverDie;
+    public bool NoRecord = false;
     private static List<int> existingFingers = new List<int>();
 
     private float x = 0,y = 0,step = 0;
@@ -123,6 +124,7 @@ public class Dramas : MonoBehaviour
             content = content,
             Speed = 0
         });
+        drama.NoRecord = true;
         drama.LifeTime = DramaLifeTime.DieWhenReadToEnd;
         drama.ReadDrama();
         return drama;
@@ -173,26 +175,30 @@ public class Dramas : MonoBehaviour
         DisplayText = Drama[DramaIndex].content;
         Effect = Drama[DramaIndex].Effect;
 
-        if (lcharacter != character)
+        if (!NoRecord)
         {
-            lcharacter = character;
+            if (lcharacter != character)
+            {
+                lcharacter = character;
+                if (character == "旁白")
+                {
+                    AppendHistory("");
+                }
+                else
+                {
+                    AppendHistory(character + "：");
+                }
+            }
             if (character == "旁白")
             {
-                AppendHistory("");
+                AppendHistory("（" + DisplayText + "）");
             }
             else
             {
-                AppendHistory(character + "：");
+                AppendHistory("“" + DisplayText + "”");
             }
         }
-        if (character == "旁白")
-        {
-            AppendHistory("（" + DisplayText + "）");
-        }
-        else
-        {
-            AppendHistory("“" + DisplayText + "”");
-        }
+
         if (character != "旁白" && character != "我"){
             Character.sprite = Resources.Load<Sprite>($"Characters\\{character}");
             Character.SetNativeSize();

@@ -16,6 +16,6 @@ public class ResetBtn : ButtonEvent
                 MovePad.gameObject.GetComponent<MovePadSettings>().MouseUp();
                 FullScreen.Value = 1; DialogSpeed.Value = 1; AutoContinue.Value = 1;
             }
-        }, "确定要重置所有设定吗？", new string[] { "确定", "取消" });
+        }, "确定要重置所有设定吗？", new string[] { "确定", "取消" }, true);
     }
 }

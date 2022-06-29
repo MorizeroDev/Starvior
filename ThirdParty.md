@@ -42,6 +42,10 @@
 
   Icon 'Menu bar' by **Febrian Hidayat** from Flaticon
 
+  Icon 'Cube' by **Vitaly Gorbachev** from Flaticon
+
+  Icon 'Journal' by **SBTS2018** from Flaticon
+
 * Starfield Skybox
 
   许可证： [Standard Unity Asset Store EULA](https://unity3d.com/legal/as_terms)
