@@ -70,7 +70,7 @@ public class CheckObj : MonoBehaviour
         }
         CheckAvaliable = false;
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
         if (triggerType != TriggerType.PassiveTrigger && triggerType != TriggerType.OnceTrigger) return;
         if (MapCamera.Player == null) return;
@@ -92,6 +92,7 @@ public class CheckObj : MonoBehaviour
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
+        if (MapCamera.HitCheck != this.gameObject) return;
         if (collision == null)
         {
             Sleep = false;
@@ -120,7 +121,8 @@ public class CheckObj : MonoBehaviour
     }
     private void OnDestroy()
     {
-        OnTriggerExit2D(null);
+        if(MapCamera.HitCheck == this.gameObject)
+            CheckGoodbye();
     }
     public bool IsActive(){
         if (Sleep) return false;

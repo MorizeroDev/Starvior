@@ -46,14 +46,18 @@ public class LaunchGame : MonoBehaviour
         {
             if(PlayerPrefs.GetString("file" + i, "") != "") hasSave = true;
         }
+        string update = "欢迎来到Alpha-628！|由于存档功能变动，载入旧版本的存档可能引发bug。|载入旧存档引发的bug不需要提交。| |这是倒数第三个Alpha版本！";
         if (hasSave)
         {
             if (isLaunched) return;
             if (Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.Return) || Input.GetKeyUp(KeyCode.Z))
             {
                 isLaunched = true;
-                SaveController.SaveMode = false;
-                SaveController.ShowSave();
+                Dramas.PopupDialog("更新须知", update, () =>
+                {
+                    SaveController.SaveMode = false;
+                    SaveController.ShowSave();
+                });
             }
         }
         else
@@ -62,7 +66,10 @@ public class LaunchGame : MonoBehaviour
             if (Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.Return) || Input.GetKeyUp(KeyCode.Z))
             {
                 isLaunched = true;
-                StartAnimation.Play("StarFly", 0);
+                Dramas.PopupDialog("更新须知", update, () =>
+                {
+                    StartAnimation.Play("StarFly", 0);
+                });
             }
         }
 

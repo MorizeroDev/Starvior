@@ -102,6 +102,30 @@ public class Dramas : MonoBehaviour
         RecordExistingFingers();
         return drama;
     }
+    public static Dramas PopupDialog(string title,string content, DramaCallback Callback)
+    {
+        callback = Callback;
+        Debug.Log("Dramas: launched at " + "Dramas\\BigDialog");
+        PrefabName = "BigDialog";
+        GameObject fab = (GameObject)Resources.Load("Dramas\\BigDialog");    // 载入母体
+        GameObject box = Instantiate(fab, new Vector3(0, 0, -1), Quaternion.identity);
+        Dramas drama = box.transform.Find("Dialog").GetComponent<Dramas>();
+        drama.Drama = new List<DramaData>();
+        ActiveDrama = drama;
+        box.GetComponent<Canvas>().worldCamera = Camera.main;
+        RecordExistingFingers();
+        drama.Drama.Add(new DramaData
+        {
+            Character = title,
+            motion = "",
+            Effect = WordEffect.Effect.None,
+            content = content,
+            Speed = 0
+        });
+        drama.LifeTime = DramaLifeTime.DieWhenReadToEnd;
+        drama.ReadDrama();
+        return drama;
+    }
     public static Dramas Launch(string DramaName,DramaCallback Callback){
         callback = Callback;
         Debug.Log("Dramas: launched at " + "Dramas\\" + DramaName);

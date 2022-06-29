@@ -8,9 +8,11 @@ public class Door : CheckObj
     public Chara.walkDir TPDirection = Chara.walkDir.Down;
     public string TargetMap = "";
     private bool selfHide = false;
+    private bool opened = false;
 
     public override void Update() {
-        if(IsActive()){
+        if(IsActive() && !opened){
+            opened = true;
             MapCamera.initTp = TPPort;MapCamera.initDir = TPDirection;
             //this.transform.parent.GetComponent<SpriteRenderer>().color = new Color(0,0,0,0);
             //this.transform.localPosition = new Vector3(-10000,-10000,-100);

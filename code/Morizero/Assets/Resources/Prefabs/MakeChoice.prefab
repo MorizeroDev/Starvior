@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1253668671806048585}
   - component: {fileID: 3641234161266628587}
   - component: {fileID: 8823127800034482493}
-  m_Layer: 7
+  m_Layer: 5
   m_Name: Tips
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -114,7 +114,7 @@ GameObject:
   - component: {fileID: 2978224646555524503}
   - component: {fileID: 7332467070810087489}
   - component: {fileID: 8994957496244462141}
-  m_Layer: 7
+  m_Layer: 5
   m_Name: RollArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -223,7 +223,7 @@ GameObject:
   - component: {fileID: 5639974035320416990}
   - component: {fileID: 2804038387797113522}
   - component: {fileID: 4448935479424938226}
-  m_Layer: 7
+  m_Layer: 5
   m_Name: UnLitBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -554,7 +554,7 @@ GameObject:
   - component: {fileID: 174627426811886137}
   - component: {fileID: 3410223008004798072}
   - component: {fileID: 1568827145061338890}
-  m_Layer: 7
+  m_Layer: 5
   m_Name: Panel (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -570,7 +570,7 @@ RectTransform:
   m_GameObject: {fileID: 7083131780879838542}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.1, y: 1.1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 9159393394843230286}
@@ -603,7 +603,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 0.392}
-  m_RaycastTarget: 0
+  m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -638,7 +638,7 @@ GameObject:
   - component: {fileID: 7719662095404016950}
   - component: {fileID: 1565184418243156991}
   - component: {fileID: 7551771848763042723}
-  m_Layer: 7
+  m_Layer: 5
   m_Name: MakeChoice
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1104,7 +1104,7 @@ GameObject:
   - component: {fileID: 9159393395352897632}
   - component: {fileID: 9159393395352897633}
   - component: {fileID: 821533570659630716}
-  m_Layer: 7
+  m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1198,7 +1198,7 @@ GameObject:
   - component: {fileID: 9159393395766273969}
   - component: {fileID: 9159393395766273968}
   - component: {fileID: 9159393395766273983}
-  m_Layer: 7
+  m_Layer: 5
   m_Name: Choice
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1287,7 +1287,7 @@ GameObject:
   - component: {fileID: 1417876874}
   - component: {fileID: 6060776725524634944}
   - component: {fileID: 3502015231740720349}
-  m_Layer: 7
+  m_Layer: 5
   m_Name: LitBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1425,7 +1425,7 @@ GameObject:
   - component: {fileID: 9159393396402074890}
   - component: {fileID: 9159393396402074891}
   - component: {fileID: 1720155335407033656}
-  m_Layer: 7
+  m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -184,7 +184,7 @@ public class Chara : MonoBehaviour
     float Move(int x,int y){
         Vector3 pos = transform.localPosition;
         Vector3 opos = pos;
-        float buff = speed * Time.fixedDeltaTime * 60f * (Input.GetKey(KeyCode.X) ? 2 : 1);
+        float buff = speed * Time.fixedDeltaTime * 60f * (Input.GetKey(KeyCode.X) && Controller ? 2 : 1);
         pos.x += buff * x ;
         pos.y += buff * y ;
         if(pos.x < sx) pos.x = sx;

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.23011449, g: 0.23275235, b: 0.27090362, a: 1}
+  m_IndirectSpecularColor: {r: 0.23083082, g: 0.23468912, b: 0.2702401, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -718,7 +718,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioType: 0
-  RelativeOverride: 1
+  RelativeOverride: 0.4
 --- !u!1 &424554667
 GameObject:
   m_ObjectHideFlags: 0
@@ -1002,7 +1002,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Alpha-628(\u5185\u6D4B)"
+  m_Text: "Alpha-630(\u5185\u6D4B)"
 --- !u!222 &557822796
 CanvasRenderer:
   m_ObjectHideFlags: 0
