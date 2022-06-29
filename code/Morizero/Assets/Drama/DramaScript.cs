@@ -69,12 +69,14 @@ public class DramaScript
     public bool DramaAvaliable = false;
     [NonSerialized]
     public CheckObj parent;
+    public bool BlockDramaSettings = false;
 
     public void Done(){
         KillLastDrama();
         if (PlotCreator.Plots.Count > 0) PlotCreator.Clear(null);
-        if (!Settings.Active && !Settings.Loading) MapCamera.SuspensionDrama = false;
-        if(callback != null) callback();
+        if(!BlockDramaSettings)
+            if (!Settings.Active && !Settings.Loading) MapCamera.ForbiddenMove = false;
+        if (callback != null) callback();
     }
     public bool KillLastDrama()
     {
@@ -189,7 +191,9 @@ public class DramaScript
         }
         if (cmd == "sleep")
         {
+            handler = true;
             parent.Sleep = true;
+            carryTask();
         }
         // 调查任务
         // spy:调查内容

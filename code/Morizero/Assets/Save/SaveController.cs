@@ -84,7 +84,7 @@ public class Save
         Save.KeyPairs = file.KeyPairs;
         if (file.DramaData != null || file.ActiveScript != null) 
             if(file.DramaData.Count > 0 || file.ActiveScript.code.Length > 0)
-                MapCamera.SuspensionDrama = true;
+                MapCamera.ForbiddenMove = true;
         Switcher.Carry(file.ActiveScene, loadingCallback: () =>
         {
             Camera.main.Render();
@@ -171,7 +171,7 @@ public class Save
                         {
                             d = Dramas.LaunchCheck("", () =>
                             {
-                                if (!Settings.Active && !Settings.Loading) MapCamera.SuspensionDrama = false;
+                                if (!Settings.Active && !Settings.Loading) MapCamera.ForbiddenMove = false;
                             });
                         }
                         else
@@ -185,7 +185,7 @@ public class Save
                         {
                             d = Dramas.Launch(file.DialogPrefab, () =>
                             {
-                                if (!Settings.Active && !Settings.Loading) MapCamera.SuspensionDrama = false;
+                                if (!Settings.Active && !Settings.Loading) MapCamera.ForbiddenMove = false;
                             });
                         }
                         else
@@ -448,6 +448,7 @@ public class Save
         if (SaveShowed) return;
         SaveShowed = true;
         SceneManager.LoadSceneAsync("Save", LoadSceneMode.Additive);
+        //yield return null;
         //GameObject.Find("SaveUI").GetComponent<Animator>().SetFloat("Speed", 1.0f);
     }
     public void AnimationCallback()

@@ -130,32 +130,32 @@ public class Debuger : MonoBehaviour
             {
                 if (MakeChoice.choiceId != 5)
                 {
-                    if (MapCamera.SuspensionDrama && !Settings.Active)
+                    if (MapCamera.ForbiddenMove && !Settings.Active)
                     {
                         DramaScript.Active.currentLine = DramaScript.Active.code.Length;
                         DramaScript.Active.carryTask();
                     }
-                    MapCamera.SuspensionDrama = true;
+                    MapCamera.ForbiddenMove = true;
                 }
                 if (MakeChoice.choiceId == 0)
                 {
-                    Switcher.Carry("ROOM_XUELAN", callback: () => MapCamera.SuspensionDrama = false);
+                    Switcher.Carry("ROOM_XUELAN", callback: () => MapCamera.ForbiddenMove = false);
                 }
                 if (MakeChoice.choiceId == 1)
                 {
-                    Switcher.Carry("Corridor_3F", callback: () => MapCamera.SuspensionDrama = false);
+                    Switcher.Carry("Corridor_3F", callback: () => MapCamera.ForbiddenMove = false);
                 }
                 if (MakeChoice.choiceId == 2)
                 {
-                    Switcher.Carry("Yard", callback: () => MapCamera.SuspensionDrama = false);
+                    Switcher.Carry("Yard", callback: () => MapCamera.ForbiddenMove = false);
                 }
                 if (MakeChoice.choiceId == 3)
                 {
-                    Switcher.Carry("EmptyScene", callback: () => MapCamera.SuspensionDrama = false);
+                    Switcher.Carry("EmptyScene", callback: () => MapCamera.ForbiddenMove = false);
                 }
                 if (MakeChoice.choiceId == 4)
                 {
-                    Switcher.Carry("ShitSpace", callback: () => MapCamera.SuspensionDrama = false);
+                    Switcher.Carry("ShitSpace", callback: () => MapCamera.ForbiddenMove = false);
                 }
             }, "传送到哪个地图？", new string[] { "雪兰的病房", "三楼走廊", "后院", "虚空", "画中世界", "取消" }, true);
         }
@@ -256,7 +256,7 @@ public class Debuger : MonoBehaviour
 
         if (!Detail.gameObject.activeSelf) return;
         string dstr = "";
-        dstr = $"是否禁止移动（DramaSuspension）：{MapCamera.SuspensionDrama.ToString()}" + "\n" +
+        dstr = $"是否禁止移动（DramaSuspension）：{MapCamera.ForbiddenMove.ToString()}" + "\n" +
                 $"是否在游戏菜单中：{Settings.Active.ToString()}" + "\n" +
                 $"对话记录总数量：{Dramas.HistoryDrama.Count.ToString()}" + "\n" +
                 $"Plot预定角色名：" + Dramas.ImmersionSpeaking + "\n";

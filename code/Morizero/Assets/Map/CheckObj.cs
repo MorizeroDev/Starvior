@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class CheckObj : MonoBehaviour
 {
-    public static bool TriggerRunning = false;
+    public bool SteppedIn = false;
+    public static List<CheckObj> SteppedInCheckObj = new List<CheckObj>();
     public enum TriggerType
     {
         [InspectorName("被动触发")]
@@ -37,26 +38,26 @@ public class CheckObj : MonoBehaviour
     public int CheckType = 0;
     [Tooltip("在Script为空的情况下触发的调查内容/预制体名称。")]
     public string Content;
-    public void CheckEncounter(){
-        if(AllowDirection.Contains(MapCamera.Player.dir) || triggerType != TriggerType.Passive){
-            MapCamera.HitCheck = this.gameObject;
-            MapCamera.HitCheckTransform = this.transform.parent;
-            if(CheckType == 0) {
-                MapCamera.mcamera.CheckText.sprite = MapCamera.mcamera.CheckFore;
-                MapCamera.mcamera.CheckImg.sprite = MapCamera.mcamera.CheckBack;
-            }
-            if(CheckType == 1) {
-                MapCamera.mcamera.CheckText.sprite = MapCamera.mcamera.TalkFore;
-                MapCamera.mcamera.CheckImg.sprite = MapCamera.mcamera.TalkBack;
-            }
-            MapCamera.mcamera.checkHint.SetActive(true);
-            checkshowTime = Time.time;
-            MapCamera.mcamera.animator.SetFloat("speed",1.0f);
-            MapCamera.mcamera.animator.Play("CheckBtn",0,0f);
-            CheckAvaliable = true;
+    [Tooltip("静默脚本不会将自己投射到调查按钮之中。")]
+    public bool Silent = false;
+    public void SetToAvaliableCheck(){
+        MapCamera.HitCheck = this.gameObject;
+        MapCamera.HitCheckTransform = this.transform.parent;
+        if(CheckType == 0) {
+            MapCamera.mcamera.CheckText.sprite = MapCamera.mcamera.CheckFore;
+            MapCamera.mcamera.CheckImg.sprite = MapCamera.mcamera.CheckBack;
         }
+        if(CheckType == 1) {
+            MapCamera.mcamera.CheckText.sprite = MapCamera.mcamera.TalkFore;
+            MapCamera.mcamera.CheckImg.sprite = MapCamera.mcamera.TalkBack;
+        }
+        MapCamera.mcamera.checkHint.SetActive(true);
+        checkshowTime = Time.time;
+        MapCamera.mcamera.animator.SetFloat("speed",1.0f);
+        MapCamera.mcamera.animator.Play("CheckBtn",0,0f);
+        CheckAvaliable = true;
     }
-    public void CheckGoodbye(){
+    public void EmptyAvaliableCheck(){
         MapCamera.HitCheck = null;
         MapCamera.mcamera.animator.SetFloat("speed",-2.0f);
         // 如果距离调查框显示的时候还太短的话，直接隐藏
@@ -70,137 +71,220 @@ public class CheckObj : MonoBehaviour
         }
         CheckAvaliable = false;
     }
-    private void OnTriggerStay2D(Collider2D collision)
+    public bool IsReadyToSet(Chara.walkDir dir)
     {
-        if (triggerType != TriggerType.PassiveTrigger && triggerType != TriggerType.OnceTrigger) return;
-        if (MapCamera.Player == null) return;
-        Chara c = null;
-        if (collision.gameObject.transform.parent == null) return;
-        if (collision.gameObject.transform.parent.TryGetComponent<Chara>(out c))
+        if (Silent || Sleep) return false;
+        switch (triggerType)
         {
-            if (!c.Controller) return;
+            case TriggerType.Passive:
+                return AllowDirection.Contains(dir);
+            case TriggerType.PassiveTrigger:
+                if (JudgeDirection)
+                {
+                    return AllowDirection.Contains(dir) && SteppedIn;
+                }
+                else
+                {
+                    return SteppedIn;
+                }
+            case TriggerType.Whenever:
+            case TriggerType.OnceTrigger:
+                return false;
+        }
+        return false;
+    }
+    public static void SearchAvaliablePassiveCheck(Vector3 pos, Chara.walkDir dir)
+    {
+        // 判定调查
+        Vector2 spyRay = new Vector2(pos.x, pos.y);
+        if (dir == Chara.walkDir.Left)
+        {
+            spyRay.x -= 0.48f;
+        }
+        else if (dir == Chara.walkDir.Right)
+        {
+            spyRay.x += 0.48f;
+        }
+        else if (dir == Chara.walkDir.Up)
+        {
+            spyRay.y += 0.48f;
         }
         else
         {
-            return;
+            spyRay.y -= 0.48f;
         }
-        if (triggerType != TriggerType.Passive && !AllowDirection.Contains(MapCamera.Player.dir) && JudgeDirection) return;
-        if (MapCamera.HitCheck == this.gameObject) return;
-        if (MapCamera.HitCheck != null) MapCamera.HitCheck.GetComponent<CheckObj>().CheckGoodbye();
-        CheckEncounter();
-        TriggerRunning = true;
+        CheckObj AvaliableCheck = null;
+        if (SteppedInCheckObj.Count > 0)
+        {
+            //Debug.Log("踩进的物体存在。");
+            foreach(CheckObj c in SteppedInCheckObj)
+            {
+                if (c.IsReadyToSet(dir))
+                {
+                    //Debug.Log(c.name + "可以投射到调查按钮。");
+                    AvaliableCheck = c;
+                }
+            }
+        }
+        if(AvaliableCheck == null)
+        {
+            CheckObj c = null;
+            foreach (RaycastHit2D crash in Physics2D.RaycastAll(spyRay, new Vector2(0, 0)))
+            {
+                if (crash.collider.gameObject.TryGetComponent<CheckObj>(out c))
+                {
+                    //Debug.Log(c.name + "在调查射线之内。");
+                    if (c.IsReadyToSet(dir))
+                    {
+                        //Debug.Log(c.name + "可以投射到调查按钮。");
+                        AvaliableCheck = c;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (AvaliableCheck == null)
+        {
+            if (MapCamera.HitCheck != null)
+                MapCamera.HitCheck.GetComponent<CheckObj>().EmptyAvaliableCheck();
+        }else if(MapCamera.HitCheck != AvaliableCheck.gameObject)
+        {
+            //Debug.Log("已投射物体到调查按钮。");
+            AvaliableCheck.SetToAvaliableCheck();
+        }
+    }
+    public static bool IsCollisionFromPlayer(Collider2D collision)
+    {
+        return (collision.gameObject.layer == 6);
+    }
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (!IsCollisionFromPlayer(collision)) return;
+        if (SteppedInCheckObj.Contains(this)) return;
+        SteppedIn = true;  SteppedInCheckObj.Add(this);
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (MapCamera.HitCheck != this.gameObject) return;
-        if (collision == null)
-        {
-            Sleep = false;
-            TriggerRunning = false;
-            CheckGoodbye();
-            return;
-        }
-        if (triggerType != TriggerType.PassiveTrigger && triggerType != TriggerType.OnceTrigger) return;
-        if (MapCamera.Player == null) return;
-        Chara c = null;
-        if (collision.gameObject.transform.parent == null) return;
-        if (collision.gameObject.transform.parent.TryGetComponent<Chara>(out c))
-        {
-            if (!c.Controller) return;
-        }
-        else
-        {
-            return;
-        }
-        if (MapCamera.HitCheck == this.gameObject)
-        {
-            Sleep = false;
-            TriggerRunning = false;
-            CheckGoodbye();
-        }
+        if (!SteppedInCheckObj.Contains(this)) return;
+        SteppedIn = false;  SteppedInCheckObj.Remove(this);
     }
     private void OnDestroy()
     {
-        if(MapCamera.HitCheck == this.gameObject)
-            CheckGoodbye();
+        if(MapCamera.HitCheck == this.gameObject) EmptyAvaliableCheck();
+    }
+    public Chara.walkDir GetPlayerDir()
+    {
+        if (MapCamera.Player == null) return Chara.walkDir.Down;
+        return MapCamera.Player.dir;
     }
     public bool IsActive(){
         if (Sleep) return false;
-        if(MapCamera.HitCheck != this.gameObject && triggerType != TriggerType.Whenever) return false;
-        bool ret = (Input.GetKeyUp(KeyCode.Z) || CheckBtnPressed || triggerType == TriggerType.OnceTrigger || triggerType == TriggerType.Whenever);
-        if(MapCamera.SuspensionDrama) ret = false;
-        CheckBtnPressed = false;
-        return ret;
+        bool Pressed = (Input.GetKeyUp(KeyCode.Z) || Input.GetKeyUp(KeyCode.Return) || Input.GetKeyUp(KeyCode.Space) || CheckBtnPressed);
+        bool Avaliable = (MapCamera.HitCheck == this.gameObject);
+        switch (triggerType)
+        {
+            case TriggerType.Passive:
+                return Pressed && Avaliable;
+            case TriggerType.PassiveTrigger:
+                return Pressed && Avaliable;
+            case TriggerType.Whenever:
+                if (JudgeDirection)
+                {
+                    return AllowDirection.Contains(GetPlayerDir());
+                }
+                else
+                {
+                    return true;
+                }                
+            case TriggerType.OnceTrigger:
+                if (JudgeDirection)
+                {
+                    return AllowDirection.Contains(GetPlayerDir()) && SteppedIn;
+                }
+                else
+                {
+                    return SteppedIn;
+                }
+        }
+        return false;
     }
     
     private void Awake() {
         scriptCarrier.parent = this;
-    }
-
-    public virtual void Update() {
-        if(!IsActive()) return;
-
-        MapCamera.SuspensionDrama = true;
-        MapCamera.Player.ClosePadAni();
-        if (Script != null){
-            scriptCarrier.code = Script.text.Split(new string[]{"\r\n"},System.StringSplitOptions.RemoveEmptyEntries);
-            for(int i = 0;i < scriptCarrier.code.Length;i++){
+        if(Script != null)
+        {
+            scriptCarrier.code = Script.text.Split(new string[] { "\r\n" }, System.StringSplitOptions.RemoveEmptyEntries);
+            for (int i = 0; i < scriptCarrier.code.Length; i++)
+            {
                 scriptCarrier.code[i] = scriptCarrier.code[i].TrimStart();
             }
+        }
+    }
+
+    public void FixPlayerPos()
+    {
+        Chara p = MapCamera.Player;
+        Chara.walkDir dir = p.dir;
+        bool needFix = false;
+        if (p.dir == Chara.walkDir.Down || p.dir == Chara.walkDir.Up)
+        {
+            if (Mathf.Abs(p.transform.localPosition.x - BindChara.transform.localPosition.x) > 0.25f)
+            {
+                p.walkTasks.Enqueue(Chara.walkTask.fromRaw(BindChara.transform.localPosition.x, p.transform.localPosition.y));
+                needFix = true;
+            }
+        }
+        else
+        {
+            if (Mathf.Abs(p.transform.localPosition.y - BindChara.transform.localPosition.y) > 0.25f)
+            {
+                p.walkTasks.Enqueue(Chara.walkTask.fromRaw(p.transform.localPosition.x, BindChara.transform.localPosition.y));
+                needFix = true;
+            }
+        }
+        if (needFix)
+        {
+            p.walkTaskCallback = () => {
+                p.walkTaskCallback = null;
+                WaitTicker.Create(0.5f, () =>
+                {
+                    p.dir = dir;
+                    p.UpdateWalkImage();
+                    WaitTicker.Create(0.5f, scriptCarrier.carryTask);
+                });
+            };
+        }
+        else
+        {
+            scriptCarrier.carryTask();
+        }
+    }
+    public virtual void Update() {
+        if (!IsActive()) return;
+
+        if (!Silent)
+        {
+            MapCamera.ForbiddenMove = true;
+            MapCamera.Player.ClosePadAni();
+        }
+        if (Script != null){
             scriptCarrier.currentLine = 0;
             DramaScript.Active = scriptCarrier;
             // 修正人物坐标
             if (BindChara != null)
-            {
-                Chara p = MapCamera.Player;
-                Chara.walkDir dir = p.dir;
-                bool needFix = false;
-                if (p.dir == Chara.walkDir.Down || p.dir == Chara.walkDir.Up)
-                {
-                    if(Mathf.Abs(p.transform.localPosition.x - BindChara.transform.localPosition.x) > 0.25f)
-                    {
-                        p.walkTasks.Enqueue(Chara.walkTask.fromRaw(BindChara.transform.localPosition.x, p.transform.localPosition.y));
-                        needFix = true;
-                    }
-                }
-                else
-                {
-                    if (Mathf.Abs(p.transform.localPosition.y - BindChara.transform.localPosition.y) > 0.25f)
-                    {
-                        p.walkTasks.Enqueue(Chara.walkTask.fromRaw(p.transform.localPosition.x, BindChara.transform.localPosition.y));
-                        needFix = true;
-                    }
-                }
-                if (needFix)
-                {
-                    p.walkTaskCallback = () => {
-                        p.walkTaskCallback = null;
-                        WaitTicker.Create(0.5f, () =>
-                        {
-                            p.dir = dir;
-                            p.UpdateWalkImage();
-                            WaitTicker.Create(0.5f, scriptCarrier.carryTask);
-                        });
-                    };
-                }
-                else
-                {
-                    scriptCarrier.carryTask();
-                }
-            }
+                FixPlayerPos();
             else
-            {
                 scriptCarrier.carryTask();
-            }
             return; 
         }
         if(CheckType == 1){
             Dramas.Launch(Content,() => {
-                if(!Settings.Active && !Settings.Loading) MapCamera.SuspensionDrama = false;
+                if(!Settings.Active && !Settings.Loading) MapCamera.ForbiddenMove = false;
             });
         }else{
             Dramas.LaunchCheck(Content,() => {
-                if (!Settings.Active && !Settings.Loading) MapCamera.SuspensionDrama = false;
+                if (!Settings.Active && !Settings.Loading) MapCamera.ForbiddenMove = false;
             }).LifeTime = Dramas.DramaLifeTime.DieWhenReadToEnd;
         }
     }

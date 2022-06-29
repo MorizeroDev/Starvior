@@ -283,7 +283,7 @@ public class Chara : MonoBehaviour
             NPCUpdate();
         }
         // 如果剧本正在进行则退出
-        if (MapCamera.SuspensionDrama && walkTasks.Count == 0 && Controller)
+        if (MapCamera.ForbiddenMove && walkTasks.Count == 0 && Controller)
         {
             return;
         }
@@ -329,36 +329,7 @@ public class Chara : MonoBehaviour
         // 如果不是玩家
         if(!Controller) return;
         //Debug.Log(GameObject.Find("MapCamera").transform.Find("MovePad").Find("Pad").transform.localPosition.y);
-        // 判定调查
-        Vector2 spyRay = new Vector2(pos.x,pos.y);
-        if(dir == walkDir.Left){
-            spyRay.x -= 0.48f;
-        }else if(dir == walkDir.Right){
-            spyRay.x += 0.48f;
-        }else if(dir == walkDir.Up){
-            spyRay.y += 0.48f;
-        }else{
-            spyRay.y -= 0.48f;
-        }
-        CheckObj checkObj = null;
-        if (!CheckObj.TriggerRunning)
-        {
-            foreach (RaycastHit2D crash in Physics2D.RaycastAll(spyRay, new Vector2(0, 0)))
-            {
-                if (crash.collider.gameObject.TryGetComponent<CheckObj>(out checkObj))
-                {
-                    if (MapCamera.HitCheck != checkObj.gameObject && checkObj.triggerType == CheckObj.TriggerType.Passive)
-                    {
-                        checkObj.CheckEncounter();
-                    }
-                    break;
-                }
-            }
-            if ((checkObj == null || !checkObj.AllowDirection.Contains(dir)) && MapCamera.HitCheck != null)
-            {
-                MapCamera.HitCheck.GetComponent<CheckObj>().CheckGoodbye();
-            }
-        }
+        CheckObj.SearchAvaliablePassiveCheck(pos, dir);
 
         // 如果屏幕被点击
         if (Input.GetMouseButton(0))

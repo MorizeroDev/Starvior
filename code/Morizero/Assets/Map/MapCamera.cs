@@ -11,7 +11,7 @@ public class MapCamera : MonoBehaviour
     public static GameObject PlayerCollider;
     public static GameObject HitCheck = null;
     public static Transform HitCheckTransform;
-    public static bool SuspensionDrama = false;
+    public static bool ForbiddenMove = false;
     public static MapCamera mcamera = null;
     public static AudioSource bgm,bgs;
     public static Chara.walkDir initDir = Chara.walkDir.Down;
@@ -43,7 +43,7 @@ public class MapCamera : MonoBehaviour
 
         Dramas.AppendHistory("");
         Dramas.AppendHistory("<" + MapName.text + ">");
-        if (SuspensionDrama) PadAni.Play("MoveTip", 0, 1.0f);
+        if (ForbiddenMove) PadAni.Play("MoveTip", 0, 1.0f);
         if (bgm == null){
             GameObject fab = (GameObject)Resources.Load("Prefabs\\MusicPlayer");    // 载入母体
             GameObject box = Instantiate(fab,new Vector3(0,0,-1),Quaternion.identity);
@@ -97,7 +97,7 @@ public class MapCamera : MonoBehaviour
     private void FixedUpdate() {
         if (Disabled) return;
         Vector3 p = bindObj.transform.localPosition;
-        float cs = (HitCheck != null && !MapCamera.SuspensionDrama ? 1.8f : 2f);
+        float cs = (HitCheck != null && !MapCamera.ForbiddenMove ? 1.8f : 2f);
         Vector3 pos = transform.localPosition;
         pos.x = pos.x + (p.x - pos.x) / 20;
         pos.y = pos.y + (p.y - pos.y) / 20;
@@ -108,10 +108,10 @@ public class MapCamera : MonoBehaviour
         Camera camera = this.GetComponent<Camera>();
         camera.orthographicSize += (cs - camera.orthographicSize) / 20;
         transform.localPosition = pos;
-        if(MapCamera.SuspensionDrama && HitCheck != null)
+        if(MapCamera.ForbiddenMove && HitCheck != null)
         {
             if(animator.GetFloat("speed") == 1.0f)
-                HitCheck.GetComponent<CheckObj>().CheckGoodbye();
+                HitCheck.GetComponent<CheckObj>().EmptyAvaliableCheck();
         }
         
     }

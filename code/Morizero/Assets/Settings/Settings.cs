@@ -20,7 +20,7 @@ public class Settings : MonoBehaviour
     public static List<VolumeSet> VolumeSets = new List<VolumeSet>();
     public static bool Active = false;
     public static bool Loading = false;
-    public static bool LastSuspensionDrama;
+    public static bool LastForbiddenMove;
     public static Animator ActiveSetAnimator;
     [HideInInspector]
     public int Index;
@@ -44,7 +44,7 @@ public class Settings : MonoBehaviour
                 if (MakeChoice.choiceId == 0) Application.Quit();
                 if (MakeChoice.choiceId == 1)
                 {
-                    MapCamera.SuspensionDrama = false;
+                    MapCamera.ForbiddenMove = false;
                     Active = false; Loading = false;
                     Destroy(MapCamera.bgm);
                     Destroy(MapCamera.bgs);
@@ -142,12 +142,12 @@ public class Settings : MonoBehaviour
 
     public static void Show()
     {
-        if (MapCamera.SuspensionDrama && Dramas.ActiveDrama == null) return;
+        if (MapCamera.ForbiddenMove && Dramas.ActiveDrama == null) return;
         if (Active || Loading) return;
         Active = true; Loading = true;
-        LastSuspensionDrama = MapCamera.SuspensionDrama;
-        if (Dramas.DramaUnloading) LastSuspensionDrama = false;
-        MapCamera.SuspensionDrama = true;
+        LastForbiddenMove = MapCamera.ForbiddenMove;
+        if (Dramas.DramaUnloading) LastForbiddenMove = false;
+        MapCamera.ForbiddenMove = true;
         SettingsBtn.ActiveSettingsBtn.GetComponent<Animator>().Play("SetBtnHide", 0, 0.0f);
         SceneManager.sceneLoaded += SceneManager_sceneLoaded;
         SceneManager.LoadSceneAsync("Settings", LoadSceneMode.Additive);
@@ -170,7 +170,7 @@ public class Settings : MonoBehaviour
         SettingsBtn.ActiveSettingsBtn.SetActive(true);
         SceneManager.sceneUnloaded += SceneManager_sceneUnloaded;
         SceneManager.UnloadSceneAsync("Settings");
-        MapCamera.SuspensionDrama = LastSuspensionDrama;
+        MapCamera.ForbiddenMove = LastForbiddenMove;
     }
     public static void Hide()
     {
