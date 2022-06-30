@@ -11,8 +11,7 @@ public class Switcher : MonoBehaviour
     // 动画控制器
     public static string destination;           // 目标场景
     public static LoadSceneMode loadMode;       // 加载方式
-    public static SwitcherCallback LoadingCallback;
-    public delegate void SwitcherCallback();
+    public static Loading.LoadingCallback LoadingCallback;
     public static int task;                     // 任务（0=加载，1=卸载）
     /// <summary>
     /// 场景切换器
@@ -20,7 +19,7 @@ public class Switcher : MonoBehaviour
     /// <param name="scene">场景名</param>
     /// <param name="mode">加载方式</param>
     /// <param name="Task">提交任务（0=加载，1=卸载）</param>
-    public static void Carry(string scene,LoadSceneMode mode = LoadSceneMode.Single,int task = 0,Loading.LoadingCallback callback = null,bool ShowLoadCircle = false,string LoadingPrefab = "Loading",SwitcherCallback loadingCallback = null){
+    public static void Carry(string scene,LoadSceneMode mode = LoadSceneMode.Single,int task = 0,Loading.LoadingCallback callback = null,bool ShowLoadCircle = false,string LoadingPrefab = "Loading", Loading.LoadingCallback loadingCallback = null){
         if(Loading.isUsing) return;
         Switcher.destination = scene; Switcher.loadMode = mode; Switcher.task = task;
         LoadingCallback = loadingCallback;
@@ -36,7 +35,7 @@ public class Switcher : MonoBehaviour
     public static void CarryWithLoadCircle(string scene){
         Carry(scene,ShowLoadCircle: true);
     }
-    static void Load(){
+    public static void Load(){
         if(task == 0){
             SceneManager.LoadSceneAsync(destination,loadMode);  // 异步加载
         }else{

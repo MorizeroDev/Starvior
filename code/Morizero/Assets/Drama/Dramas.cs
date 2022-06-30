@@ -63,6 +63,7 @@ public class Dramas : MonoBehaviour
     public static string PrefabName;
     public DramaLifeTime LifeTime = DramaLifeTime.NeverDie;
     public bool NoRecord = false;
+    public bool IgnoreSettingBlocks = false;
     private static List<int> existingFingers = new List<int>();
 
     private float x = 0,y = 0,step = 0;
@@ -191,11 +192,11 @@ public class Dramas : MonoBehaviour
             }
             if (character == "旁白")
             {
-                AppendHistory("（" + DisplayText + "）");
+                AppendHistory("（" + DisplayText.Replace("|","\n") + "）");
             }
             else
             {
-                AppendHistory("“" + DisplayText + "”");
+                AppendHistory("“" + DisplayText.Replace("|", "\n") + "”");
             }
         }
 
@@ -252,7 +253,7 @@ public class Dramas : MonoBehaviour
         if (Suspense) return;
         if (DramaIndex >= Drama.Count) return;
         int AutoContinue = PlayerPrefs.GetInt("Settings.AutoContinueDrama", 1);
-        if(!DisableInput && !Settings.Active && !Settings.Loading && !Debuger.DebugerOpening)
+        if(!DisableInput && ((!Settings.Active && !Settings.Loading) || IgnoreSettingBlocks) && !Debuger.DebugerOpening)
         {
             bool Touched = Input.GetMouseButtonUp(0);
             if (Input.touchSupported)

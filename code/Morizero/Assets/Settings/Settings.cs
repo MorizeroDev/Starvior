@@ -8,6 +8,7 @@ public class Settings : MonoBehaviour
 {
     public Text Title;
     public string ENTitle;
+    public GameObject ItemPrefab;
     public List<GameObject> MenuItems;
     public GameObject LinkTab;
     private static Transform oldTabTransform;
@@ -18,7 +19,7 @@ public class Settings : MonoBehaviour
     public static Settings MainSettingUI;
     public ScrollController scrollController;
     [HideInInspector]    
-    public int ActiveMenu = 0;
+    public static int ActiveMenu = 0;
     public static List<VolumeSet> VolumeSets = new List<VolumeSet>();
     public static bool Active = false;
     public static bool Loading = false;
@@ -30,6 +31,7 @@ public class Settings : MonoBehaviour
     public Settings Parent;
     [HideInInspector]
     public static bool MenuOpen = false;
+    public static int AutoOpenIndex = -999;
     public void OnClick()
     {
         if (MenuOpen) return;
@@ -59,26 +61,26 @@ public class Settings : MonoBehaviour
             }, "您将丢失所有未保存的存档，确定吗？", new string[] { "退出游戏", "返回标题画面", "取消" }, true);
             return;
         }
-        Parent.ActiveMenu = Index;
+        ActiveMenu = Index;
         GameObject Tab = Parent.MenuItems[Index].GetComponent<Settings>().LinkTab;
         oldTabTransform = Tab.transform;
 
         Tab.SetActive(true);
-        Parent.Title.text = Parent.MenuItems[Parent.ActiveMenu].GetComponent<Settings>().ENTitle;
+        Parent.Title.text = Parent.MenuItems[ActiveMenu].GetComponent<Settings>().ENTitle;
         ActiveSetAnimator.SetFloat("TabSpeed", 1.0f);
         ActiveSetAnimator.Play("TabEnter", 0, 0.0f);
         MenuOpen = true;
-        Parent.BackIcon.GetComponent<Image>().sprite = Parent.MenuItems[Parent.ActiveMenu].GetComponent<Settings>().BackIcon.GetComponent<Image>().sprite;
+        Parent.BackIcon.GetComponent<Image>().sprite = Parent.MenuItems[ActiveMenu].GetComponent<Settings>().BackIcon.GetComponent<Image>().sprite;
     }
     public void MenuItemHideCallback()
     {
-        GameObject Tab = Parent.MenuItems[Parent.ActiveMenu].GetComponent<Settings>().LinkTab;
+        GameObject Tab = Parent.MenuItems[ActiveMenu].GetComponent<Settings>().LinkTab;
         if (ActiveSetAnimator.GetFloat("TabSpeed") > 0)
         {
             if (Tab == null) return;
             Parent.scrollController.ScrollContainer = Tab.transform;
             Parent.scrollController.UpdateContainer();
-            if (Parent.ActiveMenu == 1 && NeedScrollToBottom)
+            if (ActiveMenu == 1 && NeedScrollToBottom)
             {
                 Parent.scrollController.ScrollToBottom();
             }
@@ -97,11 +99,6 @@ public class Settings : MonoBehaviour
             return;
         }
         oldTabTransform = scrollController.ScrollContainer;
-        for(int i = 0;i < MenuItems.Count;i++)
-        {
-            MenuItems[i].GetComponent<Settings>().Index = i;
-            MenuItems[i].GetComponent<Settings>().Parent = this;
-        }
         Parent = this;
         Settings.ActiveSetAnimator = GetComponent<Animator>();
         string his = "";
@@ -131,6 +128,40 @@ public class Settings : MonoBehaviour
         HistoryText.transform.parent.parent.gameObject.SetActive(false);
         HistoryText.transform.parent.parent.parent.parent.gameObject.SetActive(false);
         MainSettingUI = this;
+
+        if (AutoOpenIndex < 0)
+        {
+            float y = ItemPrefab.transform.localPosition.y;
+            foreach(ItemManager.OwnItem i in ItemManager.OwnItems)
+            {
+                GameObject box = Instantiate(ItemPrefab, ItemPrefab.transform.parent);
+                box.transform.localPosition = new Vector3(ItemPrefab.transform.localPosition.x, y, 0);
+                ItemController ic = box.GetComponent<ItemController>();
+                ic.Title.text = i.Name;
+                ic.Pickup.text = "在" + i.PickMap + "中获得";
+                box.SetActive(true);
+                y -= 300;
+            }
+            GameObject endMark = Instantiate(ItemPrefab, ItemPrefab.transform.parent);
+            endMark.transform.localPosition = new Vector3(ItemPrefab.transform.localPosition.x, y - 300, 0);
+            endMark.transform.localScale = new Vector3(0, 0, 0);
+            endMark.SetActive(true);
+        }
+
+        for (int i = 0; i < MenuItems.Count; i++)
+        {
+            MenuItems[i].GetComponent<Settings>().Index = i;
+            MenuItems[i].GetComponent<Settings>().Parent = this;
+            if (i == AutoOpenIndex)
+            {
+                for (int j = 0; j < MenuItems.Count; j++)
+                {
+                    MenuItems[j].SetActive(false);
+                }
+                MenuItems[i].GetComponent<Settings>().OnClick();
+                break;
+            }
+        }
     }
 
     public static void Show()
@@ -141,7 +172,8 @@ public class Settings : MonoBehaviour
         LastForbiddenMove = MapCamera.ForbiddenMove;
         if (Dramas.DramaUnloading) LastForbiddenMove = false;
         MapCamera.ForbiddenMove = true;
-        SettingsBtn.ActiveSettingsBtn.GetComponent<Animator>().Play("SetBtnHide", 0, 0.0f);
+        if(SettingsBtn.ActiveSettingsBtn != null)
+            SettingsBtn.ActiveSettingsBtn.GetComponent<Animator>().Play("SetBtnHide", 0, 0.0f);
         SceneManager.sceneLoaded += SceneManager_sceneLoaded;
         SceneManager.LoadSceneAsync("Settings", LoadSceneMode.Additive);
     }
@@ -155,12 +187,14 @@ public class Settings : MonoBehaviour
     {
         Loading = false; 
         SceneManager.sceneUnloaded -= SceneManager_sceneUnloaded;
-        SettingsBtn.ActiveSettingsBtn.GetComponent<Animator>().Play("SetBtnShow", 0, 0.0f);
+        if (SettingsBtn.ActiveSettingsBtn != null)
+            SettingsBtn.ActiveSettingsBtn.GetComponent<Animator>().Play("SetBtnShow", 0, 0.0f);
     }
     public void AnimationCallback()
     {
         if (this.GetComponent<Animator>().GetFloat("Speed") == 1.0f) return;
-        SettingsBtn.ActiveSettingsBtn.SetActive(true);
+        if(SettingsBtn.ActiveSettingsBtn != null)
+            SettingsBtn.ActiveSettingsBtn.SetActive(true);
         SceneManager.sceneUnloaded += SceneManager_sceneUnloaded;
         SceneManager.UnloadSceneAsync("Settings");
         MapCamera.ForbiddenMove = LastForbiddenMove;
@@ -169,7 +203,7 @@ public class Settings : MonoBehaviour
     {
         //Debuger.InstantMessage(Active.ToString() + "/" + Loading.ToString(), Camera.main.ScreenToWorldPoint(Input.mousePosition));
         if (!Active || Loading) return;
-        Active = false; Loading = true;
+        Active = false; Loading = true; MenuOpen = false; AutoOpenIndex = -999;
         ActiveSetAnimator.SetFloat("Speed", -2.0f);
         ActiveSetAnimator.Play("SettingEnter", 0, 1.0f);
     }

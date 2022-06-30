@@ -220,8 +220,32 @@ public class DramaScript
             d.ReadDrama();
             handler = true;
         }
+        // 获得道具任务
+        // getitem:获得道具
+        if (cmd == "getitem")
+        {
+            KillLastDrama();
+            Dramas d = Dramas.LaunchScript("ItemGet", carryTask);
+            d.LifeTime = Dramas.DramaLifeTime.DieWhenReadToEnd;
+            d.Drama.Add(new Dramas.DramaData
+            {
+                Character = p[0],
+                motion = "",
+                Effect = WordEffect.Effect.None,
+                content = ItemManager.Items.Find(m => m.Name == p[0]).Description,
+                Speed = 0.03f
+            });
+            ItemManager.OwnItems.Add(new ItemManager.OwnItem
+            {
+                Name = p[0],
+                PickMap = MapCamera.mcamera.MapName.text
+            }); 
+            d.NoRecord = true;
+            d.ReadDrama();
+            handler = true;
+        }
         // 退出脚本（如果最后一项任务是需要等待的，则需要加入此行缓冲）
-        if(cmd == "break"){
+        if (cmd == "break"){
             currentLine = code.Length;
             handler = true;
         }

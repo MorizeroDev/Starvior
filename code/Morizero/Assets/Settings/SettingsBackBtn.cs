@@ -14,7 +14,7 @@ public class SettingsBackBtn : MonoBehaviour
     }
     public void MouseUp()
     {
-        if (Settings.MenuOpen)
+        if (Settings.MenuOpen && Settings.ActiveMenu != 6)
         {
             Settings.ActiveSetAnimator.SetFloat("TabSpeed", -2.0f);
             Settings.ActiveSetAnimator.Play("TabEnter", 0, 1.0f);

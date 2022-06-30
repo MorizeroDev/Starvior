@@ -40,7 +40,7 @@
 
   Icon 'Sign out' by **alkhalifi design** from Flaticon
 
-  Icon 'Menu bar' by **Febrian Hidayat** from Flaticon
+  Icon 'Menu' by **Freepik** from Flaticon
 
   Icon 'Cube' by **Vitaly Gorbachev** from Flaticon
 

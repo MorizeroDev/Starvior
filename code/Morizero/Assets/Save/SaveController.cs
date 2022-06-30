@@ -75,9 +75,11 @@ public class Save
         public bool DramaNoCallback;
         public bool DramaSuspense;
         public Dramas.DramaLifeTime LifeTime;
+        public List<ItemManager.OwnItem> OwnItems;
         public string DramaDialogTyle;
     }
     public const string LatestVersion = "22.627";
+    public static SaveFile CurrentFile;
     public static void RestoreGame(string data)
     {
         SaveFile file = JsonUtility.FromJson<SaveFile>(data);
@@ -85,147 +87,150 @@ public class Save
         if (file.DramaData != null || file.ActiveScript != null) 
             if(file.DramaData.Count > 0 || file.ActiveScript.code.Length > 0)
                 MapCamera.ForbiddenMove = true;
-        Switcher.Carry(file.ActiveScene, loadingCallback: () =>
+        ItemManager.OwnItems = file.OwnItems;
+        CurrentFile = file;
+        Switcher.Carry(file.ActiveScene, loadingCallback: RestoreAfterMapLoaded);
+    }
+    public static void RestoreAfterMapLoaded()
+    {
+        Camera.main.Render();
+        if (CurrentFile.BGMClip != "")
         {
-            Camera.main.Render();
-            if(file.BGMClip != "")
+            MapCamera.bgm.clip = (AudioClip)Resources.Load("BGM\\" + CurrentFile.BGMClip);
+            MapCamera.bgm.Play();
+            MapCamera.bgm.time = CurrentFile.BGMTime;
+        }
+        else
+        {
+            MapCamera.bgm.Stop();
+            MapCamera.bgm.clip = null;
+        }
+        if (CurrentFile.BGSClip != "")
+        {
+            MapCamera.bgs.clip = (AudioClip)Resources.Load("BGM\\" + CurrentFile.BGSClip);
+            MapCamera.bgs.Play();
+            MapCamera.bgs.time = CurrentFile.BGSTime;
+        }
+        else
+        {
+            MapCamera.bgs.Stop();
+            MapCamera.bgs.clip = null;
+        }
+        if (CurrentFile.OBGMClip != "") MapCamera.mcamera.BGM = (AudioClip)Resources.Load("BGM\\" + CurrentFile.OBGMClip);
+        if (CurrentFile.OBGSClip != "") MapCamera.mcamera.BGS = (AudioClip)Resources.Load("BGM\\" + CurrentFile.OBGSClip);
+        foreach (GameObjectState state in CurrentFile.SceneObjects)
+        {
+            GameObject go = GetObject(state.Name);
+            if (go != null)
             {
-                MapCamera.bgm.clip = (AudioClip)Resources.Load("BGM\\" + file.BGMClip);
-                MapCamera.bgm.Play();
-                MapCamera.bgm.time = file.BGMTime;
+                go.transform.position = state.Position;
+                go.SetActive(state.IsActive);
             }
-            else
+        }
+        foreach (CharacterState state in CurrentFile.Characters)
+        {
+            GameObject go = GetObject(state.Name);
+            if (go != null)
             {
-                MapCamera.bgm.Stop();
-                MapCamera.bgm.clip = null;
+                Chara chara = go.GetComponent<Chara>();
+                chara.dir = state.dir;
+                chara.UpdateWalkImage();
             }
-            if (file.BGSClip != "")
+        }
+        MapCamera.mcamera.FixPos();
+        DramaScript s = null;
+        Dramas.HistoryDrama = CurrentFile.History;
+        Dramas.HistoryDrama.RemoveAt(Dramas.HistoryDrama.Count - 1);
+        if (CurrentFile.ActiveScript != null)
+        {
+            if (CurrentFile.ActiveScript.code.Length > 0)
             {
-                MapCamera.bgs.clip = (AudioClip)Resources.Load("BGM\\" + file.BGSClip);
-                MapCamera.bgs.Play();
-                MapCamera.bgs.time = file.BGSTime;
-            }
-            else
-            {
-                MapCamera.bgs.Stop();
-                MapCamera.bgs.clip = null;
-            }
-            if (file.OBGMClip != "") MapCamera.mcamera.BGM = (AudioClip)Resources.Load("BGM\\" + file.OBGMClip);
-            if (file.OBGSClip != "") MapCamera.mcamera.BGS = (AudioClip)Resources.Load("BGM\\" + file.OBGSClip);
-            foreach (GameObjectState state in file.SceneObjects)
-            {
-                GameObject go = GetObject(state.Name);
-                if(go != null)
+                if (CurrentFile.ScriptOwnerName != "")
                 {
-                    go.transform.position = state.Position;
-                    go.SetActive(state.IsActive);
+                    CheckObj check = GetObject(CurrentFile.ScriptOwnerName).GetComponent<CheckObj>();
+                    s = check.scriptCarrier;
+                }
+                if (s == null)
+                {
+                    s = CurrentFile.ActiveScript;
+                    DramaScript.Active = CurrentFile.ActiveScript;
+                }
+                else
+                {
+                    s.currentLine = CurrentFile.ActiveScript.currentLine;
+                    s.code = CurrentFile.ActiveScript.code;
+                    s.DramaAvaliable = CurrentFile.ActiveScript.DramaAvaliable;
+                    DramaScript.Active = s;
                 }
             }
-            foreach (CharacterState state in file.Characters)
+        }
+        foreach (string plot in CurrentFile.PlotName)
+            PlotCreator.LoadPlot(plot);
+        if (CurrentFile.DramaData != null)
+        {
+            if (CurrentFile.DramaData.Count > 0)
             {
-                GameObject go = GetObject(state.Name);
-                if (go != null)
+                Dramas d = null;
+                if (CurrentFile.DialogPrefab == "Check")
                 {
-                    Chara chara = go.GetComponent<Chara>();
-                    chara.dir = state.dir;
-                    chara.UpdateWalkImage();
-                }
-            }
-            MapCamera.mcamera.FixPos();
-            DramaScript s = null;
-            Dramas.HistoryDrama = file.History;
-            Dramas.HistoryDrama.RemoveAt(Dramas.HistoryDrama.Count - 1);
-            if (file.ActiveScript != null) 
-            { 
-                if(file.ActiveScript.code.Length > 0)
-                {
-                    if(file.ScriptOwnerName != "")
-                    {
-                        CheckObj check = GetObject(file.ScriptOwnerName).GetComponent<CheckObj>();
-                        s = check.scriptCarrier;
-                    }
                     if (s == null)
                     {
-                        s = file.ActiveScript;
-                        DramaScript.Active = file.ActiveScript;
+                        d = Dramas.LaunchCheck("", () =>
+                        {
+                            if (!Settings.Active && !Settings.Loading) MapCamera.ForbiddenMove = false;
+                        });
                     }
                     else
                     {
-                        s.currentLine = file.ActiveScript.currentLine;
-                        s.code = file.ActiveScript.code;
-                        s.DramaAvaliable = file.ActiveScript.DramaAvaliable;
-                        DramaScript.Active = s;
+                        d = Dramas.LaunchCheck("", s.carryTask);
                     }
                 }
-            }
-            foreach (string plot in file.PlotName)
-                PlotCreator.LoadPlot(plot);
-            if (file.DramaData != null)
-            {
-                if(file.DramaData.Count > 0)
+                else
                 {
-                    Dramas d = null;
-                    if (file.DialogPrefab == "Check")
+                    if (s == null)
                     {
-                        if (s == null)
+                        d = Dramas.Launch(CurrentFile.DialogPrefab, () =>
                         {
-                            d = Dramas.LaunchCheck("", () =>
-                            {
-                                if (!Settings.Active && !Settings.Loading) MapCamera.ForbiddenMove = false;
-                            });
-                        }
-                        else
-                        {
-                            d = Dramas.LaunchCheck("", s.carryTask);
-                        }
+                            if (!Settings.Active && !Settings.Loading) MapCamera.ForbiddenMove = false;
+                        });
                     }
                     else
                     {
-                        if (s == null)
-                        {
-                            d = Dramas.Launch(file.DialogPrefab, () =>
-                            {
-                                if (!Settings.Active && !Settings.Loading) MapCamera.ForbiddenMove = false;
-                            });
-                        }
-                        else
-                        {
-                            d = Dramas.LaunchScript(file.DialogPrefab, s.carryTask);
-                        }
+                        d = Dramas.LaunchScript(CurrentFile.DialogPrefab, s.carryTask);
                     }
-                    Dramas.ActiveDrama = d;
-                    if (s != null) s.lastDrama = d;
-                    d.Drama = file.DramaData;
-                    d.NoCallback = file.DramaNoCallback;
-                    d.DialogTyle = file.DramaDialogTyle;
-                    d.LifeTime = file.LifeTime;
-                    d.DisableInput = file.DramaDisableInput;
-                    d.Suspense = file.DramaSuspense;
-                    d.DramaIndex = file.DramaIndex;
-                    Dramas.ImmersionSpeaking = file.ImmersionName;
-                    Dramas.lcharacter = file.lCharacter;
-                    d.DialogState = 0;
-                    if(d.DramaIndex < d.Drama.Count) d.ReadDrama();
                 }
+                Dramas.ActiveDrama = d;
+                if (s != null) s.lastDrama = d;
+                d.Drama = CurrentFile.DramaData;
+                d.NoCallback = CurrentFile.DramaNoCallback;
+                d.DialogTyle = CurrentFile.DramaDialogTyle;
+                d.LifeTime = CurrentFile.LifeTime;
+                d.DisableInput = CurrentFile.DramaDisableInput;
+                d.Suspense = CurrentFile.DramaSuspense;
+                d.DramaIndex = CurrentFile.DramaIndex;
+                Dramas.ImmersionSpeaking = CurrentFile.ImmersionName;
+                Dramas.lcharacter = CurrentFile.lCharacter;
+                d.DialogState = 0;
+                if (d.DramaIndex < d.Drama.Count) d.ReadDrama();
             }
-            if (file.ActiveScript.code.Length > 0 && file.ActiveScript.currentLine < file.ActiveScript.code.Length)
+        }
+        if (CurrentFile.ActiveScript.code.Length > 0 && CurrentFile.ActiveScript.currentLine < CurrentFile.ActiveScript.code.Length)
+        {
+            if (CurrentFile.ActiveScript.code[CurrentFile.ActiveScript.currentLine].TrimStart() == "distribute_choices:")
             {
-                if (file.ActiveScript.code[file.ActiveScript.currentLine].TrimStart() == "distribute_choices:")
-                {
-                    Dramas.ActiveDrama.DramaIndex--;
-                    Dramas.ActiveDrama.ReadDrama();
-                    Dramas.ActiveDrama.Suspense = false;
-                    Dramas.ActiveDrama.DialogState = 0;
-                    Dramas.ActiveDrama.Speed = 0;
-                    Dramas.ActiveDrama.Update();
-                    Dramas.ActiveDrama.Suspense = true;
-                    Dramas.ActiveDrama.DramaIndex++;
-                    DramaScript.Active.currentLine--;
-                    DramaScript.Active.carryTask();
-                }
+                Dramas.ActiveDrama.DramaIndex--;
+                Dramas.ActiveDrama.ReadDrama();
+                Dramas.ActiveDrama.Suspense = false;
+                Dramas.ActiveDrama.DialogState = 0;
+                Dramas.ActiveDrama.Speed = 0;
+                Dramas.ActiveDrama.Update();
+                Dramas.ActiveDrama.Suspense = true;
+                Dramas.ActiveDrama.DramaIndex++;
+                DramaScript.Active.currentLine--;
+                DramaScript.Active.carryTask();
             }
-            Loading.Finish();
-        });
+        }
+        Loading.Finish();
     }
     public static GameObject GetObject(string path)
     {
@@ -254,6 +259,7 @@ public class Save
         file.SceneObjects = new List<GameObjectState>();
         file.Characters = new List<CharacterState>();
         file.KeyPairs = Save.KeyPairs;
+        file.OwnItems = ItemManager.OwnItems;
         file.ActiveScene = SceneManager.GetActiveScene().name;
         if(MapCamera.bgm.clip != null)
         {
