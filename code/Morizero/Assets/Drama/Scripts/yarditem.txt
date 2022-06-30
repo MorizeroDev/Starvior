@@ -1,3 +1,5 @@
 spy:这里好像有着什么东西...
 getitem:钥匙
+hide:self
+set:hideself,personal,true
 break

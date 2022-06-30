@@ -83,7 +83,7 @@ public class Save
     public static void RestoreGame(string data)
     {
         SaveFile file = JsonUtility.FromJson<SaveFile>(data);
-        Save.KeyPairs = file.KeyPairs;
+        Save.KeyPairs = file.KeyPairs; MapCamera.initTp = -1;
         if (file.DramaData != null || file.ActiveScript != null) 
             if(file.DramaData.Count > 0 || file.ActiveScript.code.Length > 0)
                 MapCamera.ForbiddenMove = true;

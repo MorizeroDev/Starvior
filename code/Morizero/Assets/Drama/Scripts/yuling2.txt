@@ -28,7 +28,8 @@ killdialog:
 path:域零,down2,right2
 face:奥伦,right
 path:域零,right9
-hide:域零
+hide:self
+set:hideself,personal,true
 say:我
 ......
 break

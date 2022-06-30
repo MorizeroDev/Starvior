@@ -80,6 +80,7 @@ public class Settings : MonoBehaviour
             if (Tab == null) return;
             Parent.scrollController.ScrollContainer = Tab.transform;
             Parent.scrollController.UpdateContainer();
+            Parent.scrollController.NotifyStatus();
             if (ActiveMenu == 1 && NeedScrollToBottom)
             {
                 Parent.scrollController.ScrollToBottom();

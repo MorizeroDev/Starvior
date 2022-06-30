@@ -153,7 +153,7 @@ public class DramaScript
         if(cmd == "show"){
             if (p[0] == "self")
             {
-                parent.gameObject.SetActive(true);
+                parent.DisplayContainer.SetActive(true);
             }
             else
             {
@@ -166,7 +166,7 @@ public class DramaScript
         if(cmd == "hide"){
             if (p[0] == "self")
             {
-                parent.gameObject.SetActive(false);
+                parent.DisplayContainer.SetActive(false);
             }
             else
             {

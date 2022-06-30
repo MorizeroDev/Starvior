@@ -25,6 +25,8 @@ public class CheckObj : MonoBehaviour
     public TextAsset Script;
     [Tooltip("与之联系的NPC，用于纠正坐标。")]
     public Chara BindChara;
+    [Tooltip("显示容器。")]
+    public GameObject DisplayContainer;
     [HideInInspector]
     public DramaScript scriptCarrier = new DramaScript();
     [HideInInspector]
@@ -216,6 +218,14 @@ public class CheckObj : MonoBehaviour
     }
     
     private void Awake() {
+        if (DisplayContainer != null)
+        {
+            if (Save.Get(gameObject.scene + "." + gameObject.name + ".hideself", "false") == "true")
+            {
+                DisplayContainer.SetActive(false);
+                return;
+            }
+        }
         scriptCarrier.parent = this;
         if(Script != null)
         {
