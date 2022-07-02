@@ -7752,7 +7752,6 @@ MonoBehaviour:
   BackIcon: {fileID: 212658787}
   HistoryText: {fileID: 683893469}
   HistoryEndMark: {fileID: 1994082885}
-  ItemEndMark: {fileID: 1783705575}
   scrollController: {fileID: 1117182938}
   Index: 0
   Parent: {fileID: 0}
@@ -8520,10 +8519,10 @@ RectTransform:
   m_Father: {fileID: 1908268385}
   m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 1141, y: 653}
-  m_SizeDelta: {x: 690.2, y: 201.34}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -139, y: -67}
+  m_SizeDelta: {x: 690.19995, y: 201.33997}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &2070407096
 MonoBehaviour:

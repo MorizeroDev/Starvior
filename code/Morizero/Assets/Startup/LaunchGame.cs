@@ -12,11 +12,6 @@ public class LaunchGame : MonoBehaviour
     {
         //Input.gyro.enabled = false;
     }
-    public void AnimationCallback(){
-        // Startup Scene
-        Switcher.Carry("EmptyScene");
-        //Switcher.Carry("Settings");
-    }
     public void Launch()
     {
         if (!WaitFor.activeSelf) return;
@@ -26,6 +21,7 @@ public class LaunchGame : MonoBehaviour
         {
             if (PlayerPrefs.GetString("file" + i, "") != "") hasSave = true;
         }
+        //hasSave = false;
         string update = "欢迎来到Alpha-630！|这是最后一个Alpha版本啦！|也是6月最后一个版本！";
         if (hasSave)
         {

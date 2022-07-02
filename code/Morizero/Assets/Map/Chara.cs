@@ -45,7 +45,6 @@ public class Chara : MonoBehaviour
     public float speed = 0.06f;
     public const float step = 0.48f;
     private int freemoveFinger = 0;
-    private float targetRotation = 0;
     private bool padMode = false;
     private Vector2 srcPadPos,srcClickPos;
     private Transform Pad;
@@ -181,7 +180,7 @@ public class Chara : MonoBehaviour
     }
 
     // ⚠警告：x和y的取值只能为-1，0，1
-    float Move(int x,int y){
+    float Move(float x,float y){
         Vector3 pos = transform.localPosition;
         Vector3 opos = pos;
         float buff = speed * Time.fixedDeltaTime * 60f * (Input.GetKey(KeyCode.X) && Controller ? 2 : 1);
@@ -194,8 +193,10 @@ public class Chara : MonoBehaviour
         transform.Translate(new Vector3(pos.x - opos.x, pos.y - opos.y, 0), Space.World);
         //transform.localPosition = pos;
         walking = true;
-        if(x != 0) dir = x < 0 ? walkDir.Left : walkDir.Right;
-        if(y != 0) dir = y < 0 ? walkDir.Down : walkDir.Up;
+        if(Mathf.Abs(x) > Mathf.Abs(y)) 
+            dir = x < 0 ? walkDir.Left : walkDir.Right;
+        else
+            dir = y < 0 ? walkDir.Down : walkDir.Up;
         return y == 0 ? buff * x : buff * y;
     }
 
@@ -206,7 +207,8 @@ public class Chara : MonoBehaviour
         Animator padAni = Pad.transform.parent.parent.GetComponent<Animator>();
         padAni.SetFloat("speed", -0.5f);
         padAni.Play("MovePad", 0, 1f);
-        Pad.eulerAngles = new Vector3(0, 0, targetRotation);
+        //Pad.eulerAngles = new Vector3(0, 0, targetRotation);
+        //Pad.localPosition = srcPadPos;
         padMode = false;
         walking = false;
         UpdateWalkImage();
@@ -367,10 +369,12 @@ public class Chara : MonoBehaviour
                 // 测算
                 float xp = mpos.x - srcClickPos.x, yp = mpos.y - srcClickPos.y;
                 float xpro = Mathf.Abs(xp) / 30, ypro = Mathf.Abs(yp) / 30;
+                float r = Mathf.Sqrt(xp * xp + yp * yp);
                 if (xpro > 1) xpro = 1;
                 if (ypro > 1) ypro = 1;
                 if (xpro == 1 || ypro == 1)
                 {
+                    /**
                     if (Mathf.Abs(xp) > Mathf.Abs(yp))
                     {
                         Move(xp > 0 ? 1 : -1, 0);
@@ -380,10 +384,12 @@ public class Chara : MonoBehaviour
                     {
                         Move(0, yp > 0 ? 1 : -1);
                         targetRotation = (yp > 0 ? 0f : 180f);
-                    }
+                    }**/
+                    Move(xp / r, yp / r);
                 }
-                float ro = Pad.eulerAngles.z + (targetRotation - Pad.eulerAngles.z) / 5;
-                Pad.eulerAngles = new Vector3(0, 0, ro);
+                Pad.localPosition = new Vector3(srcPadPos.x + 150 * Mathf.Sin(xp / r), srcPadPos.y + 150 * Mathf.Sin(yp / r), 0);
+                //float ro = Pad.eulerAngles.z + (targetRotation - Pad.eulerAngles.z) / 5;
+                //Pad.eulerAngles = new Vector3(0, 0, ro);
             }
         }
         else if (padMode)

@@ -5905,7 +5905,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Alpha-630(\u5185\u6D4B)"
+  m_Text: "Beta-701(\u5C0F\u8303\u56F4\u516C\u6D4B)"
 --- !u!222 &557822796
 CanvasRenderer:
   m_ObjectHideFlags: 0

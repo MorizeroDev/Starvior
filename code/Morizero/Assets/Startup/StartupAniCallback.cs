@@ -22,6 +22,12 @@ public class StartupAniCallback : MonoBehaviour
         }
         //Input.gyro.enabled = true;
     }
+    public void AnimationCallback()
+    {
+        // Startup Scene
+        Switcher.Carry("EmptyScene");
+        //Switcher.Carry("Settings");
+    }
     public void PlayBGM()
     {
         this.GetComponent<AudioSource>().Play();
