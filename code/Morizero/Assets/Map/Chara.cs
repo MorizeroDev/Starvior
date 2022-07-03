@@ -113,15 +113,12 @@ public class Chara : MonoBehaviour
 
     public void ApplyMovePadSettings()
     {
-        srcClickPos = MapCamera.mcamera.GetComponent<Camera>().WorldToScreenPoint(
-                            GameObject.Find("MapCamera").transform.Find("MovePad").Find("PadCore").Find("tipPad").position
-                            );
+        srcClickPos = MapCamera.mcamera.GetComponent<Camera>().WorldToScreenPoint(MovePad.transform.position);
         srcPadPos = Pad.localPosition;
-        float rate = PlayerPrefs.GetFloat("Settings.MovePad", 0.5f);
-        float x = -1084 + rate * (-947 + 1084) * 2;
-        float y = -523.9f + rate * (-386.9f + 523.9f) * 2;
-        MovePad = GameObject.Find("MapCamera").transform.Find("MovePad").Find("PadCore").gameObject;
-        MovePad.transform.localPosition = new Vector3(x, y, 0);
+        //float rate = PlayerPrefs.GetFloat("Settings.MovePad", 0.5f);
+        //float x = -1084 + rate * (-947 + 1084) * 2;
+        //float y = -523.9f + rate * (-386.9f + 523.9f) * 2;
+        //MovePad.transform.localPosition = new Vector3(x, y, 0);
     }
     private void Awake() {
         // 载入行走图图像集，并初始化相关设置
@@ -145,6 +142,7 @@ public class Chara : MonoBehaviour
         {
             MapCamera.PlayerCollider = this.transform.Find("Pathfinding").gameObject;
             Pad = GameObject.Find("MapCamera").transform.Find("MovePad").Find("PadCore").Find("ball");
+            MovePad = GameObject.Find("MapCamera").transform.Find("MovePad").Find("PadCore").gameObject;
             ApplyMovePadSettings();
         }
         if (Controller) // only controller can havve a pathfinding movement
@@ -208,7 +206,7 @@ public class Chara : MonoBehaviour
         padAni.SetFloat("speed", -0.5f);
         padAni.Play("MovePad", 0, 1f);
         //Pad.eulerAngles = new Vector3(0, 0, targetRotation);
-        //Pad.localPosition = srcPadPos;
+        Pad.localPosition = srcPadPos;
         padMode = false;
         walking = false;
         UpdateWalkImage();
@@ -343,21 +341,23 @@ public class Chara : MonoBehaviour
                 {
                     foreach (Vector3 cp in cpos)
                     {
-                        Vector3 mpos = cp; int fId = (int)cp.z;
-                        mpos.z = 0;
-                        mpos = MapCamera.mcamera.GetComponent<Camera>().ScreenToWorldPoint(cp);
-                        foreach (RaycastHit2D hit in Physics2D.RaycastAll(new Vector2(mpos.x, mpos.y), new Vector2(0, 0)))
+                        int fId = (int)cp.z;
+                        if (cp.x < Screen.width / 2)
                         {
-                            if (hit.collider.gameObject.name == "PadCore")
-                            {
-                                Animator padAni = Pad.transform.parent.parent.GetComponent<Animator>();
-                                padAni.SetFloat("speed", 1.0f);
-                                padAni.Play("MovePad", 0, 0f);
-                                padMode = true;
-                                freemoveFinger = fId;
-                                break;
-                            }
+                            Animator padAni = Pad.transform.parent.parent.GetComponent<Animator>();
+                            padAni.SetFloat("speed", 1.0f);
+                            padAni.Play("MovePad", 0, 0f);
+                            padMode = true;
+                            freemoveFinger = fId;
+
+                            Vector2 p;
+                            RectTransform canvasRT = MovePad.transform.parent.GetComponent<RectTransform>();
+                            RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRT, cp, Camera.main, out p);
+                            MovePad.transform.localPosition = new Vector3(p.x, p.y, 0);
+                            ApplyMovePadSettings();
+                            break;
                         }
+
                     }
                 }
             }
@@ -386,8 +386,16 @@ public class Chara : MonoBehaviour
                         targetRotation = (yp > 0 ? 0f : 180f);
                     }**/
                     Move(xp / r, yp / r);
+                    Pad.localPosition = new Vector3(srcPadPos.x + 150 * Mathf.Sin(xp / r), srcPadPos.y + 150 * Mathf.Sin(yp / r), 0);
                 }
-                Pad.localPosition = new Vector3(srcPadPos.x + 150 * Mathf.Sin(xp / r), srcPadPos.y + 150 * Mathf.Sin(yp / r), 0);
+                else
+                {
+                    Vector2 p;
+                    RectTransform canvasRT = MovePad.GetComponent<RectTransform>();
+                    RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRT, mpos, Camera.main, out p);
+                    Pad.localPosition = new Vector3(p.x, p.y, 0);
+                }
+                
                 //float ro = Pad.eulerAngles.z + (targetRotation - Pad.eulerAngles.z) / 5;
                 //Pad.eulerAngles = new Vector3(0, 0, ro);
             }
@@ -404,15 +412,15 @@ public class Chara : MonoBehaviour
             {
                 Move(-1, 0);
             }
-            else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
             {
                 Move(1, 0);
             }
-            else if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
+            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
             {
                 Move(0, 1);
             }
-            else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
+            if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
             {
                 Move(0, -1);
             }

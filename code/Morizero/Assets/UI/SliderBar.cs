@@ -22,7 +22,7 @@ public class SliderBarEvent : MonoBehaviour
 public class SliderBar : MonoBehaviour
 {
 
-    public RectTransform Background, Foreground;
+    public RectTransform Background, Foreground, Ball;
     public float Value
     {
         get
@@ -103,5 +103,6 @@ public class SliderBar : MonoBehaviour
     public void UpdateDisplay()
     {
         Foreground.sizeDelta = new Vector2(Value * Background.sizeDelta.x, Background.sizeDelta.y);
+        Ball.localPosition = new Vector3(Background.localPosition.x + Value * Background.sizeDelta.x, Ball.localPosition.y, 0);
     }
 }

@@ -51,3 +51,11 @@
   许可证： [Standard Unity Asset Store EULA](https://unity3d.com/legal/as_terms)
 
   来自：Unity Assets Store
+  
+* 字体
+
+  思源黑体 by Adobe Inc
+
+  思源宋体 by Adobe Inc
+
+  胡晓波真帅体 by 胡晓波字库
