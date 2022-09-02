@@ -114,7 +114,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -238,12 +238,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3305f085e51b1b488e9a35e7846ef20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SteppedIn: 0
   Script: {fileID: 0}
   BindChara: {fileID: 0}
-  StartOnTrigger: 0
+  DisplayContainer: {fileID: 0}
+  scriptCarrier:
+    code: []
+    currentLine: 0
+    DramaAvaliable: 0
+    BlockDramaSettings: 0
+  Sleep: 0
+  JudgeDirection: 0
+  triggerType: 0
   AllowDirection: 00000000030000000100000002000000
-  CheckType: 0
+  DisplayType: 0
+  UseContentAsDramaPrefabName: 0
   Content: "\u7B3C\u7F69\u5728\u8FD9\u68F5\u6811\u7684\u7EFF\u53F6\u4E0B\uFF0C\u9759\u8C27\u548C\u5B89\u5FC3\u5145\u76C8\u4E86\u8EAB\u4F53\u3002"
+  Silent: 0
 --- !u!1 &8919878987977123913
 GameObject:
   m_ObjectHideFlags: 0
@@ -296,7 +307,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

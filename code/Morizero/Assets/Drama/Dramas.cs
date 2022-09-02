@@ -28,7 +28,7 @@ public class Dramas : MonoBehaviour
     [HideInInspector]
     public float Speed;                            // 等待计数
     public int DialogState;                        // 对话框状态（-1=未就绪，0=等待显示，1=等待确认，2=完毕）
-    public Sprite Dialog1,Dialog2;
+    public GameObject NameBar;
     public string DialogTyle;
     public Image DialogBox;
     public GameObject Continue;
@@ -205,14 +205,14 @@ public class Dramas : MonoBehaviour
             Character.SetNativeSize();
             RectTransform rect = Character.GetComponent<RectTransform>();
             rect.sizeDelta = new Vector2(760f / rect.sizeDelta.y * rect.sizeDelta.x, 760f);
-            DialogBox.sprite = Dialog1;
+            NameBar.SetActive(true);
             Title.text = character; 
             Motion.Play("Drama_" + Drama[DramaIndex].motion,0);
             Character.gameObject.SetActive(true);
         }else if(Character.color.a == 1){
             Motion.Play("Drama_Lostfocus",0);
             Title.text = "";
-            DialogBox.sprite = Dialog2;
+            NameBar.SetActive(false);
         }
         //Character.gameObject.SetActive(character != "旁白" && character != "我");
 

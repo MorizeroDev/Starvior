@@ -12,16 +12,38 @@
 
   来源：Steam 正版购买
 
-* Rain Maker, (c) 2015 Digital Ruby, LLC 
+* Unity Engine
+
+  许可证：Personal
+
+* Rain Maker - 2D and 3D Rain Particle System for Unity
 
   许可证： [Standard Unity Asset Store EULA](https://unity3d.com/legal/as_terms)
 
-  来自：Unity Assets Store
+  Unity Assets Store - [Digital Ruby (Jeff Johnson)](https://assetstore.unity.com/publishers/11088)
 
 * Adobe Audition Sound Effects
 
   许可证：[End User License Agreement (“EULA”) for Adobe Audition](https://www.adobe.com/legal/terms.html)
-  
+
+* Starfield Skybox
+
+  许可证： [Standard Unity Asset Store EULA](https://unity3d.com/legal/as_terms)
+
+  Unity Assets Store - [PULSAR BYTES](https://assetstore.unity.com/publishers/26166)
+
+* UI Sound Effects Collection Pack 2: Buttons
+
+  许可证： [Standard Unity Asset Store EULA](https://unity3d.com/legal/as_terms)
+
+  Unity Assets Store - [Nectar Sonic Lab.](https://assetstore.unity.com/publishers/10169)
+
+* Translucent Image - Fast UI Background Blur
+
+  许可证： [Standard Unity Asset Store EULA](https://unity3d.com/legal/as_terms)
+
+  Unity Assets Store - [Tai's Assets](https://assetstore.unity.com/publishers/17505)
+
 * 部分图标
 
   许可证：[Flaticon License Certificate](https://media.flaticon.com/license/license.pdf)
@@ -46,16 +68,14 @@
 
   Icon 'Journal' by **SBTS2018** from Flaticon
 
-* Starfield Skybox
+  Call By Freepik from Flaticon
 
-  许可证： [Standard Unity Asset Store EULA](https://unity3d.com/legal/as_terms)
+  Photos By Freepik from Flaticon
 
-  来自：Unity Assets Store
-  
 * 字体
 
   思源黑体 by Adobe Inc
 
   思源宋体 by Adobe Inc
 
-  胡晓波真帅体 by 胡晓波字库
+  新叶念体 by 新叶传媒 from 字体天下

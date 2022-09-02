@@ -97,7 +97,7 @@ public class MapCamera : MonoBehaviour
     private void FixedUpdate() {
         if (Disabled) return;
         Vector3 p = bindObj.transform.localPosition;
-        float cs = (AvaliableCheck != null && !MapCamera.ForbiddenMove ? 1.8f : 2f);
+        float cs = (AvaliableCheck != null && !MapCamera.ForbiddenMove ? 2.8f : 3f);
         Vector3 pos = transform.localPosition;
         pos.x = pos.x + (p.x - pos.x) / 20;
         pos.y = pos.y + (p.y - pos.y) / 20;

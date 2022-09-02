@@ -40,9 +40,9 @@ public class MakeChoice : MonoBehaviour
         UI.Add(mc);
         mc.NoRecord = NoRecords;
         float y = (choices.Length - 1) * 100 - 40;
-        Dramas.lcharacter = "MakeChoice";
         if (!mc.NoRecord)
         {
+            Dramas.lcharacter = "MakeChoice";
             Dramas.AppendHistory("");
             Dramas.AppendHistory("[" + explain + "]");
             mc.gameObject.GetComponent<Canvas>().sortingOrder = 51;

@@ -47,11 +47,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0c672795af493147ae3ea5e5042e6a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SteppedIn: 0
   Script: {fileID: 0}
-  StartOnTrigger: 0
+  BindChara: {fileID: 0}
+  DisplayContainer: {fileID: 0}
+  scriptCarrier:
+    code: []
+    currentLine: 0
+    DramaAvaliable: 0
+    BlockDramaSettings: 0
+  Sleep: 0
+  JudgeDirection: 0
+  triggerType: 0
   AllowDirection: 00000000
-  CheckType: 0
+  DisplayType: 0
+  UseContentAsDramaPrefabName: 0
   Content: 
+  Silent: 0
   TPPort: 1
   TPDirection: 0
   TargetMap: Corridor_3F
@@ -190,6 +202,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioType: 2
+  RelativeOverride: 1
 --- !u!1 &9221026782038236609
 GameObject:
   m_ObjectHideFlags: 0
@@ -243,7 +256,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

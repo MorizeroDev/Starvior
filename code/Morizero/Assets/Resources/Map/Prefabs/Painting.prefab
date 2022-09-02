@@ -53,7 +53,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -130,12 +130,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3305f085e51b1b488e9a35e7846ef20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SteppedIn: 0
   Script: {fileID: 0}
   BindChara: {fileID: 0}
-  StartOnTrigger: 0
+  DisplayContainer: {fileID: 0}
+  scriptCarrier:
+    code: []
+    currentLine: 0
+    DramaAvaliable: 0
+    BlockDramaSettings: 0
+  Sleep: 0
+  JudgeDirection: 0
+  triggerType: 0
   AllowDirection: 03000000
-  CheckType: 0
+  DisplayType: 0
+  UseContentAsDramaPrefabName: 0
   Content: "\u4E00\u526F\u753B\uFF0C\u770B\u8D77\u6765\u6709\u4E9B\u5E74\u4EE3\u4E86\u3002"
+  Silent: 0
 --- !u!61 &6269994162494886252
 BoxCollider2D:
   m_ObjectHideFlags: 0

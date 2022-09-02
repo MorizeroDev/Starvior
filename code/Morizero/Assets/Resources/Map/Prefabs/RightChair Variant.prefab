@@ -347,6 +347,10 @@ PrefabInstance:
       propertyPath: m_FlipX
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6874164156019595390, guid: a71d7f807bcb29f498f499c81b49556f, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
     - target: {fileID: 6874164156019595391, guid: a71d7f807bcb29f498f499c81b49556f, type: 3}
       propertyPath: m_RootOrder
       value: 0

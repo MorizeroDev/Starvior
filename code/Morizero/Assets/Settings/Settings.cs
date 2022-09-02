@@ -105,7 +105,7 @@ public class Settings : MonoBehaviour
         string his = "";
         foreach (string s in Dramas.HistoryDrama)
         {
-            if (s.EndsWith('£º'))
+            if (s.EndsWith("£º"))
             {
                 his += "\n<b>" + s + "</b>\n";
             }

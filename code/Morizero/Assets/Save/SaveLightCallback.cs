@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class SaveLightCallback : MonoBehaviour
 {
-    public SaveController controller;
+    public SaveBtnController controller;
+    public static SaveLightCallback current;
     private void Awake()
     {
-        controller = transform.parent.GetComponent<SaveController>();
+        current = this;
     }
     public void Stage1()
     {
