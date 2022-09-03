@@ -29,7 +29,7 @@ public class SaveBtnController : UIController
         UIAni = GameObject.Find("SaveUI").GetComponent<Animator>();
         /**if (Id == 5) this.gameObject.SetActive(!SaveMode);
         if (Id == -1 || Id == 4 || Id == 5) return;**/
-        mapPreview = new Texture2D(renderTexture.width, renderTexture.height);
+        mapPreview = new Texture2D(2560, 1440, TextureFormat.RGB24, false);
         UpdateAppearance();
         if (uibase.id == 0)
         {
@@ -86,6 +86,11 @@ public class SaveBtnController : UIController
         {
             CurrentMap.text = "空白的故事"; CurrentDialog.text = "一切还定格在发生之前。";
             Character.gameObject.SetActive(false);
+            if (this.name == "NewStart")
+            {
+                CurrentMap.text = "新的故事"; CurrentDialog.text = "让一切开始发生。";
+                TmpChara.gameObject.SetActive(false);
+            }
         }
         else
         {
@@ -123,6 +128,11 @@ public class SaveBtnController : UIController
         {
             CurrentMap.text = "空白的故事"; CurrentDialog.text = "一切还定格在发生之前。";
             TmpChara.gameObject.SetActive(false);
+            if (this.name == "NewStart")
+            {
+                CurrentMap.text = "新的故事"; CurrentDialog.text = "让一切开始发生。";
+                TmpChara.gameObject.SetActive(false);
+            }
         }
         else
         {
@@ -144,14 +154,13 @@ public class SaveBtnController : UIController
     }
     public void ApplyOverwriteSave()
     {
-        CatchCamera.gameObject.SetActive(true);
         CatchCamera.GetComponent<CameraPlayerFollow>().Update();
-        CatchCamera.Render();
+        CatchCamera.gameObject.SetActive(true);
         CatchCamera.Render();
         RenderTexture.active = renderTexture;
-        mapPreview.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
+        mapPreview.ReadPixels(new Rect(0, 0, 2560, 1440), 0, 0, true);
         RenderTexture.active = null;
-        mapPreview.Apply();
+        //mapPreview.Apply();
         CatchCamera.gameObject.SetActive(false);
         System.IO.File.WriteAllBytes(Application.persistentDataPath + "\\file" + uibase.id + ".jpg", mapPreview.EncodeToJPG());
         PlayerPrefs.SetString("file" + uibase.id, SaveGame());
@@ -179,6 +188,13 @@ public class SaveBtnController : UIController
         }
         if (SaveMode)
         {
+            Character.gameObject.SetActive(TmpChara.gameObject.activeSelf);
+            Character.sprite = TmpChara.sprite;
+            Character.SetNativeSize();
+            RectTransform rect = Character.GetComponent<RectTransform>();
+            rect.sizeDelta = new Vector2(1424f / rect.sizeDelta.y * rect.sizeDelta.x, 1424f);
+            Screenhost.texture = TmpScreenhost.texture;
+            TmpScreenhost.texture = mapPreview;
             if (FileCode != "")
             {
                 MakeChoice.Create(() =>

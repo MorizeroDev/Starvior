@@ -74,7 +74,7 @@ Material:
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
-    - _Flatten: 0.473
+    - _Flatten: 0.51
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
@@ -93,7 +93,7 @@ Material:
     - _StencilWriteMask: 255
     - _UVSec: 0
     - _UseUIAlphaClip: 0
-    - _Vibrancy: 1.91
+    - _Vibrancy: 1.26
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}

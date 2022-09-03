@@ -80,6 +80,7 @@ public class SaveController : MonoBehaviour
     }
     public const string LatestVersion = "22.627";
     public static bool SaveMode;
+    public static SaveBtnController SaveBtn;
     public static bool SaveShowed = false;
     public static SaveFile CurrentFile;
     public static void RestoreGame(string data)
