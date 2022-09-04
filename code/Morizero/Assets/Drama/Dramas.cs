@@ -323,14 +323,14 @@ public class Dramas : MonoBehaviour
             GameObject word = Instantiate(WordChild,new Vector3(0,0,-1),new Quaternion(0,0,0,0),this.transform);
             RectTransform rect = word.GetComponent<RectTransform>();
             word.GetComponent<Text>().text = DisplayText[i].ToString();
+            word.SetActive(true);
             LayoutRebuilder.ForceRebuildLayoutImmediate(rect);
             if(i > 0) x += ((rect.sizeDelta.x + 10) / 2); //step;
             rect.localPosition = new Vector3(x, y, 0);
             word.GetComponent<WordEffect>().basex = x;
             word.GetComponent<WordEffect>().basey = y;
             word.GetComponent<WordEffect>().Index = i;
-            word.GetComponent<WordEffect>().effect = Effect; 
-            word.SetActive(true);
+            word.GetComponent<WordEffect>().effect = Effect;
             DisWords.Add(word);
             x += ((rect.sizeDelta.x + 10) / 2); //step;
             if (x >= eWord.localPosition.x + step){

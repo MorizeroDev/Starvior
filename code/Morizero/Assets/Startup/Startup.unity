@@ -697,6 +697,7 @@ GameObject:
   - component: {fileID: 389261061}
   - component: {fileID: 389261060}
   - component: {fileID: 389261063}
+  - component: {fileID: 389261064}
   m_Layer: 0
   m_Name: Sky Camera
   m_TagString: Untagged
@@ -820,6 +821,29 @@ MonoBehaviour:
   speedFast: 50
   mouseSensitivityX: 5
   mouseSensitivityY: 5
+--- !u!114 &389261064
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 389261058}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ee01e66702087b4798e633ca34c7956, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxUpdateRate: Infinity
+  preview: 0
+  blurAlgorithmSelection: 0
+  blurConfig: {fileID: 11400000, guid: 45ac4b3d5f9dfc746a89d180929cc72e, type: 2}
+  downsample: 0
+  blurRegion:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
 --- !u!1 &400466801
 GameObject:
   m_ObjectHideFlags: 0

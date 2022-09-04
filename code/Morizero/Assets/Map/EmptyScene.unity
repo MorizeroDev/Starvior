@@ -605,6 +605,34 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &963530960 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7293165566190216848, guid: b43b1c85a0b81e14c978fc1f7fcf779c, type: 3}
+  m_PrefabInstance: {fileID: 583177899}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &963530965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963530960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ee01e66702087b4798e633ca34c7956, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxUpdateRate: Infinity
+  preview: 0
+  blurAlgorithmSelection: 0
+  blurConfig: {fileID: 11400000, guid: 45ac4b3d5f9dfc746a89d180929cc72e, type: 2}
+  downsample: 0
+  blurRegion:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
 --- !u!1001 &1312060263
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -612,6 +640,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3264080760490268723, guid: 347fa75e90e60fa47b10ed3c861410e7, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 34.799988
+      objectReference: {fileID: 0}
+    - target: {fileID: 8486327736814558380, guid: 347fa75e90e60fa47b10ed3c861410e7, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -70.599976
+      objectReference: {fileID: 0}
     - target: {fileID: 8486327737233835284, guid: 347fa75e90e60fa47b10ed3c861410e7, type: 3}
       propertyPath: m_Name
       value: Debuger
@@ -781,13 +817,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3305f085e51b1b488e9a35e7846ef20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SteppedIn: 0
   Script: {fileID: 4900000, guid: 49f02429f007da443a236c22aed1a39d, type: 3}
   BindChara: {fileID: 0}
+  DisplayContainer: {fileID: 0}
   scriptCarrier:
     code: []
     currentLine: 0
     DramaAvaliable: 0
+    BlockDramaSettings: 0
+  Sleep: 0
+  JudgeDirection: 0
   triggerType: 3
   AllowDirection: 00000000030000000100000002000000
-  CheckType: 2
+  DisplayType: 0
+  UseContentAsDramaPrefabName: 0
   Content: 
+  Silent: 0

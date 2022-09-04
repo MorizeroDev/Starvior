@@ -21,6 +21,7 @@ public class MakeChoice : MonoBehaviour
     public static int choiceFinished = 0;
     private bool finished = false;
     public AudioSource switchSnd,finishSnd;
+    private GameObject Focuser;
     private List<GameObject> Choices = new List<GameObject>();
 
     public void DisableAnimator()
@@ -39,7 +40,7 @@ public class MakeChoice : MonoBehaviour
         mc.choiceLayer = choiceFinished + 1;
         UI.Add(mc);
         mc.NoRecord = NoRecords;
-        float y = (choices.Length - 1) * 100 - 40;
+        float y = (choices.Length - 1) * 50 + 100;
         if (!mc.NoRecord)
         {
             Dramas.lcharacter = "MakeChoice";
@@ -47,7 +48,7 @@ public class MakeChoice : MonoBehaviour
             Dramas.AppendHistory("[" + explain + "]");
             mc.gameObject.GetComponent<Canvas>().sortingOrder = 51;
         }
-        if (choices.Length > 3)
+        if (choices.Length > 5)
         {
             y = 240;
             mc.AreaScrollBar.SetActive(true);
@@ -75,7 +76,7 @@ public class MakeChoice : MonoBehaviour
                 choice.Lit.gameObject.SetActive(false);
                 choice.UnLit.gameObject.SetActive(true);
             }
-            y -= 200;
+            y -= 150;
         }
         mc.parent = mc;
         mc.Explaination.text = explain;
@@ -123,6 +124,15 @@ public class MakeChoice : MonoBehaviour
         }
         finished = true;
     }
+
+    private void Start()
+    {
+        if (id == -1)
+        {
+            Focuser =  transform.Find("RollArea").Find("Focuser").gameObject;
+        }
+    }
+
     private void Update()
     {
         if (id == -1)
@@ -130,7 +140,10 @@ public class MakeChoice : MonoBehaviour
             if (Input.GetKeyUp(KeyCode.DownArrow)) { choiceId++; switchSnd.Play(); }
             if (Input.GetKeyUp(KeyCode.UpArrow)) { choiceId--; switchSnd.Play(); }
             if (choiceId < 0) choiceId = choiceMax; 
-            if (choiceId > choiceMax) choiceId = 0; 
+            if (choiceId > choiceMax) choiceId = 0;
+            Vector3 pos = Focuser.transform.localPosition;
+            pos.y = Choices[choiceId].transform.localPosition.y;
+            Focuser.transform.localPosition = pos;
             if (Input.GetKeyUp(KeyCode.Z) || Input.GetKeyUp(KeyCode.Return) || Input.GetKeyUp(KeyCode.Space)) ChoiceClick(choiceId);
             return;
         }
