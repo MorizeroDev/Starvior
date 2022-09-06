@@ -3254,12 +3254,24 @@ PrefabInstance:
       value: 65342
       objectReference: {fileID: 0}
     - target: {fileID: 19901972, guid: b046278bb9b6e104790392b566667ba5, type: 3}
+      propertyPath: m_SortingOrder
+      value: 330
+      objectReference: {fileID: 0}
+    - target: {fileID: 19901972, guid: b046278bb9b6e104790392b566667ba5, type: 3}
       propertyPath: m_Materials.Array.size
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 19943526, guid: b046278bb9b6e104790392b566667ba5, type: 3}
+      propertyPath: m_SortingOrder
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 19943526, guid: b046278bb9b6e104790392b566667ba5, type: 3}
       propertyPath: m_Materials.Array.size
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 19962092, guid: b046278bb9b6e104790392b566667ba5, type: 3}
+      propertyPath: m_SortingOrder
+      value: 320
       objectReference: {fileID: 0}
     - target: {fileID: 19962092, guid: b046278bb9b6e104790392b566667ba5, type: 3}
       propertyPath: m_Materials.Array.size

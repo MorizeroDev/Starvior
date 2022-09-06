@@ -4,15 +4,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class Settings : MonoBehaviour
+public class Settings : UIController
 {
-    public Text Title;
+    public Text TitleObj, ENTitleObj;
     public string ENTitle;
     public GameObject ItemPrefab;
     public List<GameObject> MenuItems;
     public GameObject LinkTab;
     private static Transform oldTabTransform;
-    public GameObject BackIcon;
     public Text HistoryText;
     public Transform HistoryEndMark;
     private static bool NeedScrollToBottom = false;
@@ -32,17 +31,17 @@ public class Settings : MonoBehaviour
     [HideInInspector]
     public static bool MenuOpen = false;
     public static int AutoOpenIndex = -999;
-    public void OnClick()
+    public override void Click()
     {
         if (MenuOpen) return;
-        if (Index == 2)
+        if (Index == 3)
         {
             // 时空碎片
             SaveController.SaveMode = true;
             SaveController.ShowSave();
             return;
         }
-        if (Index == 4)
+        /**if (Index == 4)
         {
             // 退出游戏
             MakeChoice.Create(() =>
@@ -60,17 +59,19 @@ public class Settings : MonoBehaviour
                 }
             }, "您将丢失所有未保存的存档，确定吗？", new string[] { "退出游戏", "返回标题画面", "取消" }, true);
             return;
-        }
+        }**/
         ActiveMenu = Index;
         GameObject Tab = Parent.MenuItems[Index].GetComponent<Settings>().LinkTab;
         oldTabTransform = Tab.transform;
 
         Tab.SetActive(true);
-        Parent.Title.text = Parent.MenuItems[ActiveMenu].GetComponent<Settings>().ENTitle;
+        Parent.ENTitleObj.text = Parent.MenuItems[ActiveMenu].GetComponent<Settings>().ENTitle;
+        Parent.TitleObj.text = Parent.MenuItems[ActiveMenu].GetComponent<Settings>().TitleObj.text;
         ActiveSetAnimator.SetFloat("TabSpeed", 1.0f);
         ActiveSetAnimator.Play("TabEnter", 0, 0.0f);
+        UIFocus.active.PlayExit();
         MenuOpen = true;
-        Parent.BackIcon.GetComponent<Image>().sprite = Parent.MenuItems[ActiveMenu].GetComponent<Settings>().BackIcon.GetComponent<Image>().sprite;
+        //Parent.BackIcon.GetComponent<Image>().sprite = Parent.MenuItems[ActiveMenu].GetComponent<Settings>().BackIcon.GetComponent<Image>().sprite;
     }
     public void MenuItemHideCallback()
     {
@@ -87,7 +88,8 @@ public class Settings : MonoBehaviour
             }
             return;
         }
-        MenuOpen = false; Parent.Title.text = "MENU";
+        MenuOpen = false; Parent.ENTitleObj.text = "MENU"; Parent.TitleObj.text = "菜单";
+        UIFocus.active.PlayEnter();
         if (oldTabTransform == null) return;
         Parent.scrollController.ResetSavedPosition(oldTabTransform);
         if (Tab != null) Tab.SetActive(false);
@@ -159,7 +161,7 @@ public class Settings : MonoBehaviour
                 {
                     MenuItems[j].SetActive(false);
                 }
-                MenuItems[i].GetComponent<Settings>().OnClick();
+                MenuItems[i].GetComponent<Settings>().Click();
                 break;
             }
         }
@@ -206,6 +208,7 @@ public class Settings : MonoBehaviour
         if (!Active || Loading) return;
         Active = false; Loading = true; MenuOpen = false; AutoOpenIndex = -999;
         ActiveSetAnimator.SetFloat("Speed", -2.0f);
+        UIFocus.active.PlayExit();
         ActiveSetAnimator.Play("SettingEnter", 0, 1.0f);
     }
 

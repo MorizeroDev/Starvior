@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations;
+using UnityEngine.Rendering.UI;
 
 public class UIFocus : MonoBehaviour
 {
+    public static UIFocus active;
     [HideInInspector]
     public List<UIBase> UI;
     [HideInInspector]
@@ -35,6 +37,7 @@ public class UIFocus : MonoBehaviour
         if (row == -1) row = UI.Count;
         if (column == -1) column = UI.Count;
         AdjustPosition();
+        active = this;
     }
     public void AdjustPosition()
     {
@@ -57,30 +60,42 @@ public class UIFocus : MonoBehaviour
             ui.PlayExit();
         this.transform.Find("Sprite").GetComponent<Animator>().SetBool("Exit", true);
     }
+    public void PlayEnter()
+    {
+        foreach (UIBase ui in UI)
+        {
+            ui.PlayEnter();
+        }
+        this.transform.Find("Sprite").GetComponent<Animator>().SetBool("Exit", false);
+        this.transform.Find("Sprite").GetComponent<Animator>().Play("FocuserLoop", 0, 0.0f);
+    }
     public void Update()
     {
+        int f = lastFocus;
         if (Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetAxis("Mouse ScrollWheel") > 0)
         {
-            int f = lastFocus - 1;
+            f = lastFocus - 1;
             if (f < 0) f = UI.Count - 1;
-            ChangeFocus(f);
         }
         if (Input.GetKeyUp(KeyCode.RightArrow) || Input.GetAxis("Mouse ScrollWheel") < 0)
         {
-            int f = lastFocus + 1;
+            f = lastFocus + 1;
             if (f >= UI.Count) f = 0;
-            ChangeFocus(f);
         }
         if (Input.GetKeyUp(KeyCode.UpArrow))
         {
-            int f = lastFocus - column;
+            f = lastFocus - column;
             if (f < 0) f += row * column;
-            ChangeFocus(f);
+            if (f < 0 || f >= UI.Count) f = lastFocus;
         }
         if (Input.GetKeyUp(KeyCode.DownArrow))
         {
-            int f = lastFocus + column;
+            f = lastFocus + column;
             if (f >= UI.Count) f -= row * column;
+            if (f < 0 || f >= UI.Count) f = lastFocus;
+        }
+        if (f != lastFocus)
+        {
             ChangeFocus(f);
         }
     }

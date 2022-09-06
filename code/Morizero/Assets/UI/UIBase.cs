@@ -51,6 +51,16 @@ public class UIBase : MonoBehaviour
         animator.SetBool("Exit", true);
         if (extraAnimator != null) extraAnimator.SetBool("Exit", true);
     }
+    public void PlayEnter()
+    {
+        animator.SetBool("Exit", false);
+        animator.Play("UIEnter" + (focuser.lastFocus == id ? "" : "_UnLit"), 0, 0.0f);
+        if (extraAnimator != null)
+        {
+            extraAnimator.SetBool("Exit", false);
+            extraAnimator.Play("UIEnter" + (focuser.lastFocus == id ? "" : "_UnLit"), 0, 0.0f);
+        }
+    }
     public void Click()
     {
         if (!isActive)
