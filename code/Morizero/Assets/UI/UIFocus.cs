@@ -6,7 +6,17 @@ using UnityEngine.Rendering.UI;
 
 public class UIFocus : MonoBehaviour
 {
-    public static UIFocus active;
+    public static List<UIFocus> focusers = new List<UIFocus>();
+    public static UIFocus active
+    {
+        get
+        {
+            if (focusers.Count == 0)
+                return null;
+            else
+                return focusers[^1];
+        }
+    }
     [HideInInspector]
     public List<UIBase> UI;
     [HideInInspector]
@@ -37,7 +47,13 @@ public class UIFocus : MonoBehaviour
         if (row == -1) row = UI.Count;
         if (column == -1) column = UI.Count;
         AdjustPosition();
-        active = this;
+        focusers.Add(this);
+        Debug.Log("New focuser is created.");
+    }
+    private void OnDestroy()
+    {
+        focusers.Remove(this);
+        Debug.Log("A focuser is destroyed.");
     }
     public void AdjustPosition()
     {
@@ -71,6 +87,7 @@ public class UIFocus : MonoBehaviour
     }
     public void Update()
     {
+        if (active != this) return;
         int f = lastFocus;
         if (Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetAxis("Mouse ScrollWheel") > 0)
         {

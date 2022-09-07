@@ -69,7 +69,7 @@ public class Settings : UIController
         Parent.TitleObj.text = Parent.MenuItems[ActiveMenu].GetComponent<Settings>().TitleObj.text;
         ActiveSetAnimator.SetFloat("TabSpeed", 1.0f);
         ActiveSetAnimator.Play("TabEnter", 0, 0.0f);
-        UIFocus.active.PlayExit();
+        UIFocus.active.PlayExit(); UIFocus.focusers.Add(null);
         MenuOpen = true;
         //Parent.BackIcon.GetComponent<Image>().sprite = Parent.MenuItems[ActiveMenu].GetComponent<Settings>().BackIcon.GetComponent<Image>().sprite;
     }
@@ -88,6 +88,7 @@ public class Settings : UIController
             }
             return;
         }
+        UIFocus.focusers.Remove(null);
         MenuOpen = false; Parent.ENTitleObj.text = "MENU"; Parent.TitleObj.text = "²Ëµ¥";
         UIFocus.active.PlayEnter();
         if (oldTabTransform == null) return;

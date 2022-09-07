@@ -348,7 +348,7 @@ public class DramaScript
         }
         // 停止BGM
         // stopbgm
-        if(cmd == "stopbgm"){
+        if (cmd == "stopbgm"){
             MapCamera.bgm.Stop();
             carryTask();
             handler = true;

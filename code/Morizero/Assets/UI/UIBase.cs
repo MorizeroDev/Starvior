@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -63,6 +64,7 @@ public class UIBase : MonoBehaviour
     }
     public void Click()
     {
+        if (UIFocus.active != focuser) return;
         if (!isActive)
         {
             focuser.ChangeFocus(id);
