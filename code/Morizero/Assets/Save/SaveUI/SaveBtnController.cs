@@ -9,6 +9,7 @@ public class SaveBtnController : UIController
 {
     public Sprite SaveLitSprite, SaveUnLitSprite, BtnLitSprite, BtnUnLitSprite;
     public Image Character, TmpChara, LitI, UnLitI;
+    public GameObject Panel;
     public RawImage Screenhost, TmpScreenhost;
     public RenderTexture renderTexture;
     private Texture2D mapPreview;
@@ -82,6 +83,10 @@ public class SaveBtnController : UIController
         FileCode = PlayerPrefs.GetString("file" + uibase.id, "");
         Screenhost.texture = mapPreview;
         TmpScreenhost.texture = mapPreview;
+        // TODO：背景的不同机型分辨率的适配
+        /*
+         * 
+         */
         if (FileCode == "")
         {
             CurrentMap.text = "空白的故事"; CurrentDialog.text = "一切还定格在发生之前。";

@@ -256,7 +256,8 @@ public class Debuger : MonoBehaviour
 
         if (!Detail.gameObject.activeSelf) return;
         string dstr = "";
-        dstr = $"是否禁止移动（DramaSuspension）：{MapCamera.ForbiddenMove.ToString()}" + "\n" +
+        dstr = $"游戏内时间：{TimeZone.DisplayTime}（游戏刻：{TimeZone.Ticks}）\n" +
+                $"是否禁止移动（DramaSuspension）：{MapCamera.ForbiddenMove.ToString()}" + "\n" +
                 $"是否在游戏菜单中：{Settings.Active.ToString()}" + "\n" +
                 $"对话记录总数量：{Dramas.HistoryDrama.Count.ToString()}" + "\n" +
                 $"Plot预定角色名：" + Dramas.ImmersionSpeaking + "\n";

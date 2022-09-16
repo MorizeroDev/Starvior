@@ -255,6 +255,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3799754708699547882, guid: dba0d898340ba474d9477750f4be0c4a, type: 3}
+      propertyPath: Panel
+      value: 
+      objectReference: {fileID: 706510244}
+    - target: {fileID: 3799754708699547882, guid: dba0d898340ba474d9477750f4be0c4a, type: 3}
       propertyPath: TmpChara
       value: 
       objectReference: {fileID: 83261899}
@@ -1060,6 +1064,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3799754708699547882, guid: dba0d898340ba474d9477750f4be0c4a, type: 3}
+      propertyPath: Panel
+      value: 
+      objectReference: {fileID: 706510244}
+    - target: {fileID: 3799754708699547882, guid: dba0d898340ba474d9477750f4be0c4a, type: 3}
       propertyPath: TmpChara
       value: 
       objectReference: {fileID: 83261899}
@@ -1379,6 +1387,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3799754708699547882, guid: dba0d898340ba474d9477750f4be0c4a, type: 3}
+      propertyPath: Panel
+      value: 
+      objectReference: {fileID: 706510244}
+    - target: {fileID: 3799754708699547882, guid: dba0d898340ba474d9477750f4be0c4a, type: 3}
       propertyPath: TmpChara
       value: 
       objectReference: {fileID: 83261899}
@@ -1693,6 +1705,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3799754708699547882, guid: dba0d898340ba474d9477750f4be0c4a, type: 3}
+      propertyPath: Panel
+      value: 
+      objectReference: {fileID: 706510244}
+    - target: {fileID: 3799754708699547882, guid: dba0d898340ba474d9477750f4be0c4a, type: 3}
       propertyPath: TmpChara
       value: 
       objectReference: {fileID: 83261899}
@@ -1898,6 +1914,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3799754708699547882, guid: dba0d898340ba474d9477750f4be0c4a, type: 3}
+      propertyPath: Panel
+      value: 
+      objectReference: {fileID: 706510244}
     - target: {fileID: 3799754708699547882, guid: dba0d898340ba474d9477750f4be0c4a, type: 3}
       propertyPath: TmpChara
       value: 
@@ -2111,6 +2131,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3799754708699547882, guid: dba0d898340ba474d9477750f4be0c4a, type: 3}
+      propertyPath: Panel
+      value: 
+      objectReference: {fileID: 706510244}
+    - target: {fileID: 3799754708699547882, guid: dba0d898340ba474d9477750f4be0c4a, type: 3}
       propertyPath: TmpChara
       value: 
       objectReference: {fileID: 83261899}
@@ -2273,6 +2297,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3799754708699547882, guid: dba0d898340ba474d9477750f4be0c4a, type: 3}
+      propertyPath: Panel
+      value: 
+      objectReference: {fileID: 706510244}
     - target: {fileID: 3799754708699547882, guid: dba0d898340ba474d9477750f4be0c4a, type: 3}
       propertyPath: TmpChara
       value: 
@@ -2485,6 +2513,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3799754708699547882, guid: dba0d898340ba474d9477750f4be0c4a, type: 3}
+      propertyPath: Panel
+      value: 
+      objectReference: {fileID: 706510244}
     - target: {fileID: 3799754708699547882, guid: dba0d898340ba474d9477750f4be0c4a, type: 3}
       propertyPath: TmpChara
       value: 

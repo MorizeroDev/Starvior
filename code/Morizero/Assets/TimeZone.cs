@@ -18,6 +18,25 @@ public class TimeZone : MonoBehaviour
         MidNight2 = 1440,
     }
     public static long Ticks = 1000;
+    public static string DisplayTime
+    {
+        get
+        {
+            string spanname = "";
+            if (Ticks < (long)DayTick.SunRise)
+                spanname = "Áè³¿";
+            else if (Ticks >= (long)DayTick.Night)
+                spanname = "Ò¹Íí";
+            else if (Ticks >= (long)DayTick.SunRise && Ticks < (long)DayTick.Morning)
+                spanname = "·÷Ïþ";
+            else if (Ticks >= (long)DayTick.Dusk && Ticks < (long)DayTick.Night)
+                spanname = "»Æ»è";
+            else
+                spanname = "Ò¹Íí";
+
+            return $"{Math.Floor(Ticks * 1.0 / 60)}:{(Ticks % 60).ToString("00")}({spanname})";
+        }
+    }
     public static Dictionary<long, Color> DayColor;
     private float deltaTime = 0;
     public Light2D sun;
