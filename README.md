@@ -1,5 +1,9 @@
 # 拾落星辰
 
+⚠️ 我们已永久终止了这个项目。
+
+⚠️ We have terminated this project permanently.
+
 **简体中文** | [English](https://github.com/MorizeroDev/Starvior/blob/master/README_EN.md)
 
 制作组 Taptap 页面：https://www.taptap.com/developer/97100
